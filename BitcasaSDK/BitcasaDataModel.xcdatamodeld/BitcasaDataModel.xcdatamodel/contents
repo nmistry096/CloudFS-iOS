@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<model userDefinedModelVersionIdentifier="" type="com.apple.IDECoreDataModeler.DataModel" documentVersion="1.0" lastSavedToolsVersion="5064" systemVersion="13E28" minimumToolsVersion="Xcode 4.3" macOSVersion="Automatic" iOSVersion="Automatic">
+    <entity name="Audio" representedClassName="Audio" parentEntity="File" syncable="YES"/>
+    <entity name="Container" representedClassName="Container" parentEntity="Item" syncable="YES">
+        <attribute name="itemCount" optional="YES" attributeType="Integer 64" defaultValueString="0" syncable="YES"/>
+    </entity>
+    <entity name="Document" representedClassName="Document" parentEntity="File" syncable="YES"/>
+    <entity name="File" representedClassName="File" parentEntity="Item" syncable="YES">
+        <attribute name="extension" optional="YES" attributeType="String" syncable="YES"/>
+        <attribute name="mime" optional="YES" attributeType="String" syncable="YES"/>
+        <attribute name="size" optional="YES" attributeType="Integer 64" defaultValueString="0" syncable="YES"/>
+    </entity>
+    <entity name="Folder" representedClassName="Folder" parentEntity="Container" syncable="YES"/>
+    <entity name="Item" representedClassName="Item" isAbstract="YES" syncable="YES">
+        <attribute name="dateContentLastModified" optional="YES" attributeType="Date" syncable="YES"/>
+        <attribute name="dateCreated" optional="YES" attributeType="Date" syncable="YES"/>
+        <attribute name="name" optional="YES" attributeType="String" syncable="YES"/>
+        <attribute name="url" optional="YES" attributeType="String" syncable="YES"/>
+        <attribute name="version" optional="YES" attributeType="Integer 64" defaultValueString="0" syncable="YES"/>
+    </entity>
+    <entity name="Photo" representedClassName="Photo" parentEntity="File" syncable="YES"/>
+    <entity name="Video" representedClassName="Video" parentEntity="File" syncable="YES"/>
+    <elements>
+        <element name="Item" positionX="-54" positionY="-9" width="128" height="118"/>
+        <element name="File" positionX="-36" positionY="36" width="128" height="88"/>
+        <element name="Container" positionX="-18" positionY="54" width="128" height="58"/>
+        <element name="Folder" positionX="0" positionY="72" width="128" height="43"/>
+        <element name="Photo" positionX="18" positionY="81" width="128" height="43"/>
+        <element name="Video" positionX="36" positionY="90" width="128" height="43"/>
+        <element name="Audio" positionX="-9" positionY="36" width="128" height="43"/>
+        <element name="Document" positionX="0" positionY="45" width="128" height="43"/>
+    </elements>
+</model>
