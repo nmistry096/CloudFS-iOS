@@ -10,4 +10,5 @@
 
 @interface BitcasaAPI : NSObject
 + (NSString *)accessTokenWithEmail:(NSString *)email password:(NSString *)password appId:(NSString*)appId secret:(NSString*)secret;
++ (void)getProfileWithCompletion:(void(^)(NSDictionary* response))completion;
 @end

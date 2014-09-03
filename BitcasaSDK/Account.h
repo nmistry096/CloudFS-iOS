@@ -13,5 +13,5 @@
 @property (nonatomic, strong) NSNumber* usage;
 @property (nonatomic, strong) NSNumber* quota;
 @property (nonatomic, strong) NSString* planName;
-
+- (id)initWithDictionary:(NSDictionary*)dictionary;
 @end

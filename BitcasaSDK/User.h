@@ -12,4 +12,6 @@
 @property (nonatomic, strong) NSString* email;
 @property (nonatomic, strong) NSString* firstName;
 @property (nonatomic, strong) NSString* lastName;
+
+- (id)initWithDictionary:(NSDictionary*)dict;
 @end

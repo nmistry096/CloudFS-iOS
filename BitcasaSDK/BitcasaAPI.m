@@ -43,6 +43,47 @@ NSString* const kHTTPMethodDELETE = @"DELETE";
 
 NSString* const kQueryParameterOperation = @"operation";
 
+@interface BitcasaAPI ()
++ (NSString*)baseURL;
++ (NSString*)apiVersion;
++ (NSString*)authContentType;
++ (NSString*)contentType;
+@end
+
+@implementation NSURLRequest (Bitcasa)
+
+- (id)initWithMethod:(NSString*)httpMethod endpoint:(NSString*)endpoint queryParameters:(NSArray*)queryParams formParameters:(NSArray*)formParams
+{
+    NSMutableString* urlStr = [NSMutableString stringWithFormat:@"%@%@%@", [BitcasaAPI baseURL], [BitcasaAPI apiVersion], endpoint];
+    
+    if (queryParams)
+        [urlStr appendFormat:@"?%@", [NSString parameterStringWithArray:queryParams]];
+    
+    NSURL* profileRequestURL = [NSURL URLWithString:urlStr];
+    
+    NSMutableURLRequest* request = [NSMutableURLRequest requestWithURL:profileRequestURL];
+    
+    [request setHTTPMethod:httpMethod];
+    [request addValue:[BitcasaAPI contentType] forHTTPHeaderField:kHeaderContentType];
+    [request addValue:[NSString stringWithFormat:@"Bearer %@", [[Configurations sharedInstance] accessToken]] forHTTPHeaderField:kHeaderAuth];
+    
+    if (formParams)
+    {
+        NSString* formParameters = [NSString parameterStringWithArray:formParams];
+        [request setHTTPBody:[formParameters dataUsingEncoding:NSUTF8StringEncoding]];
+    }
+    
+    return request;
+}
+
+- (id)initWithMethod:(NSString*)httpMethod endpoint:(NSString *)endpoint
+{
+    return [self initWithMethod:httpMethod endpoint:endpoint queryParameters:nil formParameters:nil];
+}
+
+@end
+
+
 @implementation BitcasaAPI
 
 + (NSString*)baseURL
@@ -121,6 +162,36 @@ NSString* const kQueryParameterOperation = @"operation";
     }
     
     return nil;
+}
+
+#pragma mark - Profile
++ (void)getProfileWithCompletion:(void(^)(NSDictionary* response))completion
+{
+    NSString *profileEndpoint = [NSString stringWithFormat:@"%@%@", kAPIEndpointUser, kAPIEndpointProfile];
+    NSURLRequest* profileRequest = [[NSURLRequest alloc] initWithMethod:kHTTPMethodGET endpoint:profileEndpoint];
+    
+    [NSURLConnection sendAsynchronousRequest:profileRequest queue:[NSOperationQueue currentQueue] completionHandler:^(NSURLResponse *response, NSData *data, NSError *connectionError)
+     {
+         NSInteger responseStatusCode = [((NSHTTPURLResponse*)response) statusCode];
+         if (responseStatusCode == 200)
+         {
+             NSDictionary* responseDict;
+             if (data)
+             {
+                 NSError* err;
+                 responseDict = [NSJSONSerialization JSONObjectWithData:data options:NSJSONReadingAllowFragments error:&err];
+             }
+             if (completion)
+                 completion(responseDict[@"result"]);
+             return;
+         }
+         else if (responseStatusCode == 401)
+         {
+             //[[BCTransferManager sharedManager] reauthenticate];
+         }
+         if (completion)
+             completion(nil);
+     }];
 }
 
 

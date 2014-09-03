@@ -12,4 +12,17 @@
 @synthesize usage;
 @synthesize quota;
 @synthesize planName;
+
+- (id)initWithDictionary:(NSDictionary*)dictionary
+{
+    self = [super init];
+    if (self)
+    {
+        NSDictionary* storageDict = dictionary[@"storage"];
+        self.usage = storageDict[@"usage"];
+        self.quota = storageDict[@"limit"];
+        self.planName = dictionary[@"account_plan"][@"display_name"];
+    }
+    return self;
+}
 @end

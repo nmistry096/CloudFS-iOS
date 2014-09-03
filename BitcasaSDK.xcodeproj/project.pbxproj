@@ -1,0 +1,531 @@
+// !$*UTF8*$!
+{
+	archiveVersion = 1;
+	classes = {
+	};
+	objectVersion = 46;
+	objects = {
+
+/* Begin PBXBuildFile section */
+		776A387019A7A2F200E64737 /* Configurations.m in Sources */ = {isa = PBXBuildFile; fileRef = 776A386F19A7A2F200E64737 /* Configurations.m */; };
+		776A387119A7E0A700E64737 /* NSString+API.m in Sources */ = {isa = PBXBuildFile; fileRef = 77BEB38F19A6CA2C00D4BE80 /* NSString+API.m */; };
+		77BEB33519A68F5C00D4BE80 /* Foundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 77BEB33419A68F5C00D4BE80 /* Foundation.framework */; };
+		77BEB33A19A68F5C00D4BE80 /* BitcasaSDK.h in CopyFiles */ = {isa = PBXBuildFile; fileRef = 77BEB33919A68F5C00D4BE80 /* BitcasaSDK.h */; };
+		77BEB33C19A68F5C00D4BE80 /* BitcasaSDK.m in Sources */ = {isa = PBXBuildFile; fileRef = 77BEB33B19A68F5C00D4BE80 /* BitcasaSDK.m */; };
+		77BEB34319A68F5C00D4BE80 /* XCTest.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 77BEB34219A68F5C00D4BE80 /* XCTest.framework */; };
+		77BEB34419A68F5C00D4BE80 /* Foundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 77BEB33419A68F5C00D4BE80 /* Foundation.framework */; };
+		77BEB34619A68F5C00D4BE80 /* UIKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 77BEB34519A68F5C00D4BE80 /* UIKit.framework */; };
+		77BEB34919A68F5C00D4BE80 /* libBitcasaSDK.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 77BEB33119A68F5C00D4BE80 /* libBitcasaSDK.a */; };
+		77BEB34F19A68F5C00D4BE80 /* InfoPlist.strings in Resources */ = {isa = PBXBuildFile; fileRef = 77BEB34D19A68F5C00D4BE80 /* InfoPlist.strings */; };
+		77BEB35119A68F5C00D4BE80 /* BitcasaSDKTests.m in Sources */ = {isa = PBXBuildFile; fileRef = 77BEB35019A68F5C00D4BE80 /* BitcasaSDKTests.m */; };
+		77BEB35F19A696ED00D4BE80 /* BitcasaDataModel.xcdatamodeld in Sources */ = {isa = PBXBuildFile; fileRef = 77BEB35D19A696ED00D4BE80 /* BitcasaDataModel.xcdatamodeld */; };
+		77BEB36819A69D2800D4BE80 /* Audio.m in Sources */ = {isa = PBXBuildFile; fileRef = 77BEB36719A69D2800D4BE80 /* Audio.m */; };
+		77BEB36B19A69D2800D4BE80 /* Document.m in Sources */ = {isa = PBXBuildFile; fileRef = 77BEB36A19A69D2800D4BE80 /* Document.m */; };
+		77BEB36E19A69D2800D4BE80 /* File.m in Sources */ = {isa = PBXBuildFile; fileRef = 77BEB36D19A69D2800D4BE80 /* File.m */; };
+		77BEB37119A69D2800D4BE80 /* Photo.m in Sources */ = {isa = PBXBuildFile; fileRef = 77BEB37019A69D2800D4BE80 /* Photo.m */; };
+		77BEB37419A69D2800D4BE80 /* Container.m in Sources */ = {isa = PBXBuildFile; fileRef = 77BEB37319A69D2800D4BE80 /* Container.m */; };
+		77BEB37719A69D2800D4BE80 /* Item.m in Sources */ = {isa = PBXBuildFile; fileRef = 77BEB37619A69D2800D4BE80 /* Item.m */; };
+		77BEB37A19A69D2800D4BE80 /* Video.m in Sources */ = {isa = PBXBuildFile; fileRef = 77BEB37919A69D2800D4BE80 /* Video.m */; };
+		77BEB37D19A69D2800D4BE80 /* Folder.m in Sources */ = {isa = PBXBuildFile; fileRef = 77BEB37C19A69D2800D4BE80 /* Folder.m */; };
+		77BEB38019A69E0200D4BE80 /* User.m in Sources */ = {isa = PBXBuildFile; fileRef = 77BEB37F19A69E0200D4BE80 /* User.m */; };
+		77BEB38319A69F5300D4BE80 /* Account.m in Sources */ = {isa = PBXBuildFile; fileRef = 77BEB38219A69F5300D4BE80 /* Account.m */; };
+		77BEB38619A6A01A00D4BE80 /* Session.m in Sources */ = {isa = PBXBuildFile; fileRef = 77BEB38519A6A01A00D4BE80 /* Session.m */; };
+		77BEB38919A6A8B600D4BE80 /* Filesystem.m in Sources */ = {isa = PBXBuildFile; fileRef = 77BEB38819A6A8B600D4BE80 /* Filesystem.m */; };
+		77BEB38D19A6C95100D4BE80 /* BitcasaAPI.m in Sources */ = {isa = PBXBuildFile; fileRef = 77BEB38C19A6C95100D4BE80 /* BitcasaAPI.m */; };
+		77BEB39019A6CA2C00D4BE80 /* NSString+API.m in Sources */ = {isa = PBXBuildFile; fileRef = 77BEB38F19A6CA2C00D4BE80 /* NSString+API.m */; };
+/* End PBXBuildFile section */
+
+/* Begin PBXContainerItemProxy section */
+		77BEB34719A68F5C00D4BE80 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 77BEB32919A68F5B00D4BE80 /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = 77BEB33019A68F5C00D4BE80;
+			remoteInfo = BitcasaSDK;
+		};
+/* End PBXContainerItemProxy section */
+
+/* Begin PBXCopyFilesBuildPhase section */
+		77BEB32F19A68F5C00D4BE80 /* CopyFiles */ = {
+			isa = PBXCopyFilesBuildPhase;
+			buildActionMask = 2147483647;
+			dstPath = "include/$(PRODUCT_NAME)";
+			dstSubfolderSpec = 16;
+			files = (
+				77BEB33A19A68F5C00D4BE80 /* BitcasaSDK.h in CopyFiles */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXCopyFilesBuildPhase section */
+
+/* Begin PBXFileReference section */
+		776A386E19A7A2F200E64737 /* Configurations.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Configurations.h; sourceTree = "<group>"; };
+		776A386F19A7A2F200E64737 /* Configurations.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = Configurations.m; sourceTree = "<group>"; };
+		77BEB33119A68F5C00D4BE80 /* libBitcasaSDK.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = libBitcasaSDK.a; sourceTree = BUILT_PRODUCTS_DIR; };
+		77BEB33419A68F5C00D4BE80 /* Foundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Foundation.framework; path = System/Library/Frameworks/Foundation.framework; sourceTree = SDKROOT; };
+		77BEB33819A68F5C00D4BE80 /* BitcasaSDK-Prefix.pch */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "BitcasaSDK-Prefix.pch"; sourceTree = "<group>"; };
+		77BEB33919A68F5C00D4BE80 /* BitcasaSDK.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = BitcasaSDK.h; sourceTree = "<group>"; };
+		77BEB33B19A68F5C00D4BE80 /* BitcasaSDK.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = BitcasaSDK.m; sourceTree = "<group>"; };
+		77BEB34119A68F5C00D4BE80 /* BitcasaSDKTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = BitcasaSDKTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
+		77BEB34219A68F5C00D4BE80 /* XCTest.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = XCTest.framework; path = Library/Frameworks/XCTest.framework; sourceTree = DEVELOPER_DIR; };
+		77BEB34519A68F5C00D4BE80 /* UIKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = UIKit.framework; path = Library/Frameworks/UIKit.framework; sourceTree = DEVELOPER_DIR; };
+		77BEB34C19A68F5C00D4BE80 /* BitcasaSDKTests-Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = "BitcasaSDKTests-Info.plist"; sourceTree = "<group>"; };
+		77BEB34E19A68F5C00D4BE80 /* en */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = en; path = en.lproj/InfoPlist.strings; sourceTree = "<group>"; };
+		77BEB35019A68F5C00D4BE80 /* BitcasaSDKTests.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = BitcasaSDKTests.m; sourceTree = "<group>"; };
+		77BEB35E19A696ED00D4BE80 /* BitcasaDataModel.xcdatamodel */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcdatamodel; path = BitcasaDataModel.xcdatamodel; sourceTree = "<group>"; };
+		77BEB36619A69D2800D4BE80 /* Audio.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Audio.h; sourceTree = "<group>"; };
+		77BEB36719A69D2800D4BE80 /* Audio.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = Audio.m; sourceTree = "<group>"; };
+		77BEB36919A69D2800D4BE80 /* Document.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Document.h; sourceTree = "<group>"; };
+		77BEB36A19A69D2800D4BE80 /* Document.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = Document.m; sourceTree = "<group>"; };
+		77BEB36C19A69D2800D4BE80 /* File.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = File.h; sourceTree = "<group>"; };
+		77BEB36D19A69D2800D4BE80 /* File.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = File.m; sourceTree = "<group>"; };
+		77BEB36F19A69D2800D4BE80 /* Photo.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Photo.h; sourceTree = "<group>"; };
+		77BEB37019A69D2800D4BE80 /* Photo.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = Photo.m; sourceTree = "<group>"; };
+		77BEB37219A69D2800D4BE80 /* Container.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Container.h; sourceTree = "<group>"; };
+		77BEB37319A69D2800D4BE80 /* Container.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = Container.m; sourceTree = "<group>"; };
+		77BEB37519A69D2800D4BE80 /* Item.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Item.h; sourceTree = "<group>"; };
+		77BEB37619A69D2800D4BE80 /* Item.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = Item.m; sourceTree = "<group>"; };
+		77BEB37819A69D2800D4BE80 /* Video.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Video.h; sourceTree = "<group>"; };
+		77BEB37919A69D2800D4BE80 /* Video.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = Video.m; sourceTree = "<group>"; };
+		77BEB37B19A69D2800D4BE80 /* Folder.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Folder.h; sourceTree = "<group>"; };
+		77BEB37C19A69D2800D4BE80 /* Folder.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = Folder.m; sourceTree = "<group>"; };
+		77BEB37E19A69E0200D4BE80 /* User.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = User.h; sourceTree = "<group>"; };
+		77BEB37F19A69E0200D4BE80 /* User.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = User.m; sourceTree = "<group>"; };
+		77BEB38119A69F5300D4BE80 /* Account.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Account.h; sourceTree = "<group>"; };
+		77BEB38219A69F5300D4BE80 /* Account.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = Account.m; sourceTree = "<group>"; };
+		77BEB38419A6A01A00D4BE80 /* Session.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Session.h; sourceTree = "<group>"; };
+		77BEB38519A6A01A00D4BE80 /* Session.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = Session.m; sourceTree = "<group>"; };
+		77BEB38719A6A8B600D4BE80 /* Filesystem.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Filesystem.h; sourceTree = "<group>"; };
+		77BEB38819A6A8B600D4BE80 /* Filesystem.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = Filesystem.m; sourceTree = "<group>"; };
+		77BEB38B19A6C95100D4BE80 /* BitcasaAPI.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = BitcasaAPI.h; sourceTree = "<group>"; };
+		77BEB38C19A6C95100D4BE80 /* BitcasaAPI.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = BitcasaAPI.m; sourceTree = "<group>"; };
+		77BEB38E19A6CA2C00D4BE80 /* NSString+API.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "NSString+API.h"; sourceTree = "<group>"; };
+		77BEB38F19A6CA2C00D4BE80 /* NSString+API.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "NSString+API.m"; sourceTree = "<group>"; };
+/* End PBXFileReference section */
+
+/* Begin PBXFrameworksBuildPhase section */
+		77BEB32E19A68F5C00D4BE80 /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				77BEB33519A68F5C00D4BE80 /* Foundation.framework in Frameworks */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		77BEB33E19A68F5C00D4BE80 /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				77BEB34319A68F5C00D4BE80 /* XCTest.framework in Frameworks */,
+				77BEB34619A68F5C00D4BE80 /* UIKit.framework in Frameworks */,
+				77BEB34919A68F5C00D4BE80 /* libBitcasaSDK.a in Frameworks */,
+				77BEB34419A68F5C00D4BE80 /* Foundation.framework in Frameworks */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXFrameworksBuildPhase section */
+
+/* Begin PBXGroup section */
+		77BEB32819A68F5B00D4BE80 = {
+			isa = PBXGroup;
+			children = (
+				77BEB33619A68F5C00D4BE80 /* BitcasaSDK */,
+				77BEB34A19A68F5C00D4BE80 /* BitcasaSDKTests */,
+				77BEB33319A68F5C00D4BE80 /* Frameworks */,
+				77BEB33219A68F5C00D4BE80 /* Products */,
+			);
+			sourceTree = "<group>";
+		};
+		77BEB33219A68F5C00D4BE80 /* Products */ = {
+			isa = PBXGroup;
+			children = (
+				77BEB33119A68F5C00D4BE80 /* libBitcasaSDK.a */,
+				77BEB34119A68F5C00D4BE80 /* BitcasaSDKTests.xctest */,
+			);
+			name = Products;
+			sourceTree = "<group>";
+		};
+		77BEB33319A68F5C00D4BE80 /* Frameworks */ = {
+			isa = PBXGroup;
+			children = (
+				77BEB33419A68F5C00D4BE80 /* Foundation.framework */,
+				77BEB34219A68F5C00D4BE80 /* XCTest.framework */,
+				77BEB34519A68F5C00D4BE80 /* UIKit.framework */,
+			);
+			name = Frameworks;
+			sourceTree = "<group>";
+		};
+		77BEB33619A68F5C00D4BE80 /* BitcasaSDK */ = {
+			isa = PBXGroup;
+			children = (
+				77BEB33919A68F5C00D4BE80 /* BitcasaSDK.h */,
+				77BEB33B19A68F5C00D4BE80 /* BitcasaSDK.m */,
+				77BEB33719A68F5C00D4BE80 /* Supporting Files */,
+				77BEB35D19A696ED00D4BE80 /* BitcasaDataModel.xcdatamodeld */,
+				77BEB37B19A69D2800D4BE80 /* Folder.h */,
+				77BEB37C19A69D2800D4BE80 /* Folder.m */,
+				77BEB37819A69D2800D4BE80 /* Video.h */,
+				77BEB37919A69D2800D4BE80 /* Video.m */,
+				77BEB37519A69D2800D4BE80 /* Item.h */,
+				77BEB37619A69D2800D4BE80 /* Item.m */,
+				77BEB37219A69D2800D4BE80 /* Container.h */,
+				77BEB37319A69D2800D4BE80 /* Container.m */,
+				77BEB36F19A69D2800D4BE80 /* Photo.h */,
+				77BEB37019A69D2800D4BE80 /* Photo.m */,
+				77BEB36C19A69D2800D4BE80 /* File.h */,
+				77BEB36D19A69D2800D4BE80 /* File.m */,
+				77BEB36919A69D2800D4BE80 /* Document.h */,
+				77BEB36A19A69D2800D4BE80 /* Document.m */,
+				77BEB36619A69D2800D4BE80 /* Audio.h */,
+				77BEB36719A69D2800D4BE80 /* Audio.m */,
+				77BEB37E19A69E0200D4BE80 /* User.h */,
+				77BEB37F19A69E0200D4BE80 /* User.m */,
+				77BEB38119A69F5300D4BE80 /* Account.h */,
+				77BEB38219A69F5300D4BE80 /* Account.m */,
+				77BEB38419A6A01A00D4BE80 /* Session.h */,
+				77BEB38519A6A01A00D4BE80 /* Session.m */,
+				77BEB38719A6A8B600D4BE80 /* Filesystem.h */,
+				77BEB38819A6A8B600D4BE80 /* Filesystem.m */,
+				77BEB38B19A6C95100D4BE80 /* BitcasaAPI.h */,
+				77BEB38C19A6C95100D4BE80 /* BitcasaAPI.m */,
+				77BEB38E19A6CA2C00D4BE80 /* NSString+API.h */,
+				77BEB38F19A6CA2C00D4BE80 /* NSString+API.m */,
+				776A386E19A7A2F200E64737 /* Configurations.h */,
+				776A386F19A7A2F200E64737 /* Configurations.m */,
+			);
+			path = BitcasaSDK;
+			sourceTree = "<group>";
+		};
+		77BEB33719A68F5C00D4BE80 /* Supporting Files */ = {
+			isa = PBXGroup;
+			children = (
+				77BEB33819A68F5C00D4BE80 /* BitcasaSDK-Prefix.pch */,
+			);
+			name = "Supporting Files";
+			sourceTree = "<group>";
+		};
+		77BEB34A19A68F5C00D4BE80 /* BitcasaSDKTests */ = {
+			isa = PBXGroup;
+			children = (
+				77BEB35019A68F5C00D4BE80 /* BitcasaSDKTests.m */,
+				77BEB34B19A68F5C00D4BE80 /* Supporting Files */,
+			);
+			path = BitcasaSDKTests;
+			sourceTree = "<group>";
+		};
+		77BEB34B19A68F5C00D4BE80 /* Supporting Files */ = {
+			isa = PBXGroup;
+			children = (
+				77BEB34C19A68F5C00D4BE80 /* BitcasaSDKTests-Info.plist */,
+				77BEB34D19A68F5C00D4BE80 /* InfoPlist.strings */,
+			);
+			name = "Supporting Files";
+			sourceTree = "<group>";
+		};
+/* End PBXGroup section */
+
+/* Begin PBXNativeTarget section */
+		77BEB33019A68F5C00D4BE80 /* BitcasaSDK */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = 77BEB35419A68F5C00D4BE80 /* Build configuration list for PBXNativeTarget "BitcasaSDK" */;
+			buildPhases = (
+				77BEB32D19A68F5C00D4BE80 /* Sources */,
+				77BEB32E19A68F5C00D4BE80 /* Frameworks */,
+				77BEB32F19A68F5C00D4BE80 /* CopyFiles */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+			);
+			name = BitcasaSDK;
+			productName = BitcasaSDK;
+			productReference = 77BEB33119A68F5C00D4BE80 /* libBitcasaSDK.a */;
+			productType = "com.apple.product-type.library.static";
+		};
+		77BEB34019A68F5C00D4BE80 /* BitcasaSDKTests */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = 77BEB35719A68F5C00D4BE80 /* Build configuration list for PBXNativeTarget "BitcasaSDKTests" */;
+			buildPhases = (
+				77BEB33D19A68F5C00D4BE80 /* Sources */,
+				77BEB33E19A68F5C00D4BE80 /* Frameworks */,
+				77BEB33F19A68F5C00D4BE80 /* Resources */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+				77BEB34819A68F5C00D4BE80 /* PBXTargetDependency */,
+			);
+			name = BitcasaSDKTests;
+			productName = BitcasaSDKTests;
+			productReference = 77BEB34119A68F5C00D4BE80 /* BitcasaSDKTests.xctest */;
+			productType = "com.apple.product-type.bundle.unit-test";
+		};
+/* End PBXNativeTarget section */
+
+/* Begin PBXProject section */
+		77BEB32919A68F5B00D4BE80 /* Project object */ = {
+			isa = PBXProject;
+			attributes = {
+				LastUpgradeCheck = 0510;
+				ORGANIZATIONNAME = Bitcasa;
+			};
+			buildConfigurationList = 77BEB32C19A68F5B00D4BE80 /* Build configuration list for PBXProject "BitcasaSDK" */;
+			compatibilityVersion = "Xcode 3.2";
+			developmentRegion = English;
+			hasScannedForEncodings = 0;
+			knownRegions = (
+				en,
+			);
+			mainGroup = 77BEB32819A68F5B00D4BE80;
+			productRefGroup = 77BEB33219A68F5C00D4BE80 /* Products */;
+			projectDirPath = "";
+			projectRoot = "";
+			targets = (
+				77BEB33019A68F5C00D4BE80 /* BitcasaSDK */,
+				77BEB34019A68F5C00D4BE80 /* BitcasaSDKTests */,
+			);
+		};
+/* End PBXProject section */
+
+/* Begin PBXResourcesBuildPhase section */
+		77BEB33F19A68F5C00D4BE80 /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				77BEB34F19A68F5C00D4BE80 /* InfoPlist.strings in Resources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXResourcesBuildPhase section */
+
+/* Begin PBXSourcesBuildPhase section */
+		77BEB32D19A68F5C00D4BE80 /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				77BEB37719A69D2800D4BE80 /* Item.m in Sources */,
+				77BEB37119A69D2800D4BE80 /* Photo.m in Sources */,
+				77BEB38919A6A8B600D4BE80 /* Filesystem.m in Sources */,
+				77BEB36E19A69D2800D4BE80 /* File.m in Sources */,
+				77BEB38619A6A01A00D4BE80 /* Session.m in Sources */,
+				77BEB37A19A69D2800D4BE80 /* Video.m in Sources */,
+				77BEB39019A6CA2C00D4BE80 /* NSString+API.m in Sources */,
+				77BEB38D19A6C95100D4BE80 /* BitcasaAPI.m in Sources */,
+				77BEB36B19A69D2800D4BE80 /* Document.m in Sources */,
+				776A387019A7A2F200E64737 /* Configurations.m in Sources */,
+				77BEB36819A69D2800D4BE80 /* Audio.m in Sources */,
+				77BEB38019A69E0200D4BE80 /* User.m in Sources */,
+				77BEB33C19A68F5C00D4BE80 /* BitcasaSDK.m in Sources */,
+				77BEB35F19A696ED00D4BE80 /* BitcasaDataModel.xcdatamodeld in Sources */,
+				77BEB38319A69F5300D4BE80 /* Account.m in Sources */,
+				77BEB37419A69D2800D4BE80 /* Container.m in Sources */,
+				77BEB37D19A69D2800D4BE80 /* Folder.m in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		77BEB33D19A68F5C00D4BE80 /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				776A387119A7E0A700E64737 /* NSString+API.m in Sources */,
+				77BEB35119A68F5C00D4BE80 /* BitcasaSDKTests.m in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXSourcesBuildPhase section */
+
+/* Begin PBXTargetDependency section */
+		77BEB34819A68F5C00D4BE80 /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			target = 77BEB33019A68F5C00D4BE80 /* BitcasaSDK */;
+			targetProxy = 77BEB34719A68F5C00D4BE80 /* PBXContainerItemProxy */;
+		};
+/* End PBXTargetDependency section */
+
+/* Begin PBXVariantGroup section */
+		77BEB34D19A68F5C00D4BE80 /* InfoPlist.strings */ = {
+			isa = PBXVariantGroup;
+			children = (
+				77BEB34E19A68F5C00D4BE80 /* en */,
+			);
+			name = InfoPlist.strings;
+			sourceTree = "<group>";
+		};
+/* End PBXVariantGroup section */
+
+/* Begin XCBuildConfiguration section */
+		77BEB35219A68F5C00D4BE80 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				CLANG_CXX_LANGUAGE_STANDARD = "gnu++0x";
+				CLANG_CXX_LIBRARY = "libc++";
+				CLANG_ENABLE_MODULES = YES;
+				CLANG_ENABLE_OBJC_ARC = YES;
+				CLANG_WARN_BOOL_CONVERSION = YES;
+				CLANG_WARN_CONSTANT_CONVERSION = YES;
+				CLANG_WARN_DIRECT_OBJC_ISA_USAGE = YES_ERROR;
+				CLANG_WARN_EMPTY_BODY = YES;
+				CLANG_WARN_ENUM_CONVERSION = YES;
+				CLANG_WARN_INT_CONVERSION = YES;
+				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
+				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
+				COPY_PHASE_STRIP = NO;
+				GCC_C_LANGUAGE_STANDARD = gnu99;
+				GCC_DYNAMIC_NO_PIC = NO;
+				GCC_OPTIMIZATION_LEVEL = 0;
+				GCC_PREPROCESSOR_DEFINITIONS = (
+					"DEBUG=1",
+					"$(inherited)",
+				);
+				GCC_SYMBOLS_PRIVATE_EXTERN = NO;
+				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
+				GCC_WARN_ABOUT_RETURN_TYPE = YES_ERROR;
+				GCC_WARN_UNDECLARED_SELECTOR = YES;
+				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
+				GCC_WARN_UNUSED_FUNCTION = YES;
+				GCC_WARN_UNUSED_VARIABLE = YES;
+				IPHONEOS_DEPLOYMENT_TARGET = 7.1;
+				ONLY_ACTIVE_ARCH = YES;
+				SDKROOT = iphoneos;
+			};
+			name = Debug;
+		};
+		77BEB35319A68F5C00D4BE80 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				CLANG_CXX_LANGUAGE_STANDARD = "gnu++0x";
+				CLANG_CXX_LIBRARY = "libc++";
+				CLANG_ENABLE_MODULES = YES;
+				CLANG_ENABLE_OBJC_ARC = YES;
+				CLANG_WARN_BOOL_CONVERSION = YES;
+				CLANG_WARN_CONSTANT_CONVERSION = YES;
+				CLANG_WARN_DIRECT_OBJC_ISA_USAGE = YES_ERROR;
+				CLANG_WARN_EMPTY_BODY = YES;
+				CLANG_WARN_ENUM_CONVERSION = YES;
+				CLANG_WARN_INT_CONVERSION = YES;
+				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
+				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
+				COPY_PHASE_STRIP = YES;
+				ENABLE_NS_ASSERTIONS = NO;
+				GCC_C_LANGUAGE_STANDARD = gnu99;
+				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
+				GCC_WARN_ABOUT_RETURN_TYPE = YES_ERROR;
+				GCC_WARN_UNDECLARED_SELECTOR = YES;
+				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
+				GCC_WARN_UNUSED_FUNCTION = YES;
+				GCC_WARN_UNUSED_VARIABLE = YES;
+				IPHONEOS_DEPLOYMENT_TARGET = 7.1;
+				SDKROOT = iphoneos;
+				VALIDATE_PRODUCT = YES;
+			};
+			name = Release;
+		};
+		77BEB35519A68F5C00D4BE80 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				DSTROOT = /tmp/BitcasaSDK.dst;
+				GCC_PRECOMPILE_PREFIX_HEADER = YES;
+				GCC_PREFIX_HEADER = "BitcasaSDK/BitcasaSDK-Prefix.pch";
+				OTHER_LDFLAGS = "-ObjC";
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SKIP_INSTALL = YES;
+			};
+			name = Debug;
+		};
+		77BEB35619A68F5C00D4BE80 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				DSTROOT = /tmp/BitcasaSDK.dst;
+				GCC_PRECOMPILE_PREFIX_HEADER = YES;
+				GCC_PREFIX_HEADER = "BitcasaSDK/BitcasaSDK-Prefix.pch";
+				OTHER_LDFLAGS = "-ObjC";
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SKIP_INSTALL = YES;
+			};
+			name = Release;
+		};
+		77BEB35819A68F5C00D4BE80 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				FRAMEWORK_SEARCH_PATHS = (
+					"$(SDKROOT)/Developer/Library/Frameworks",
+					"$(inherited)",
+					"$(DEVELOPER_FRAMEWORKS_DIR)",
+				);
+				GCC_PRECOMPILE_PREFIX_HEADER = YES;
+				GCC_PREFIX_HEADER = "BitcasaSDK/BitcasaSDK-Prefix.pch";
+				GCC_PREPROCESSOR_DEFINITIONS = (
+					"DEBUG=1",
+					"$(inherited)",
+				);
+				INFOPLIST_FILE = "BitcasaSDKTests/BitcasaSDKTests-Info.plist";
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				WRAPPER_EXTENSION = xctest;
+			};
+			name = Debug;
+		};
+		77BEB35919A68F5C00D4BE80 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				FRAMEWORK_SEARCH_PATHS = (
+					"$(SDKROOT)/Developer/Library/Frameworks",
+					"$(inherited)",
+					"$(DEVELOPER_FRAMEWORKS_DIR)",
+				);
+				GCC_PRECOMPILE_PREFIX_HEADER = YES;
+				GCC_PREFIX_HEADER = "BitcasaSDK/BitcasaSDK-Prefix.pch";
+				INFOPLIST_FILE = "BitcasaSDKTests/BitcasaSDKTests-Info.plist";
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				WRAPPER_EXTENSION = xctest;
+			};
+			name = Release;
+		};
+/* End XCBuildConfiguration section */
+
+/* Begin XCConfigurationList section */
+		77BEB32C19A68F5B00D4BE80 /* Build configuration list for PBXProject "BitcasaSDK" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				77BEB35219A68F5C00D4BE80 /* Debug */,
+				77BEB35319A68F5C00D4BE80 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		77BEB35419A68F5C00D4BE80 /* Build configuration list for PBXNativeTarget "BitcasaSDK" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				77BEB35519A68F5C00D4BE80 /* Debug */,
+				77BEB35619A68F5C00D4BE80 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		77BEB35719A68F5C00D4BE80 /* Build configuration list for PBXNativeTarget "BitcasaSDKTests" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				77BEB35819A68F5C00D4BE80 /* Debug */,
+				77BEB35919A68F5C00D4BE80 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+/* End XCConfigurationList section */
+
+/* Begin XCVersionGroup section */
+		77BEB35D19A696ED00D4BE80 /* BitcasaDataModel.xcdatamodeld */ = {
+			isa = XCVersionGroup;
+			children = (
+				77BEB35E19A696ED00D4BE80 /* BitcasaDataModel.xcdatamodel */,
+			);
+			currentVersion = 77BEB35E19A696ED00D4BE80 /* BitcasaDataModel.xcdatamodel */;
+			path = BitcasaDataModel.xcdatamodeld;
+			sourceTree = "<group>";
+			versionGroupType = wrapper.xcdatamodel;
+		};
+/* End XCVersionGroup section */
+	};
+	rootObject = 77BEB32919A68F5B00D4BE80 /* Project object */;
+}

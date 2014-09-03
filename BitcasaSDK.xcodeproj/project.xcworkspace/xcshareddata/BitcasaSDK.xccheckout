@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<plist version="1.0">
+<dict>
+	<key>IDESourceControlProjectFavoriteDictionaryKey</key>
+	<false/>
+	<key>IDESourceControlProjectIdentifier</key>
+	<string>6A927FF9-5E9A-442C-846D-D01C95081AF3</string>
+	<key>IDESourceControlProjectName</key>
+	<string>BitcasaSDK</string>
+	<key>IDESourceControlProjectOriginsDictionary</key>
+	<dict>
+		<key>1F32EDA4-FF0D-40AE-8169-A6CD96319F88</key>
+		<string>ssh://git.co.bitcasa.com/olga/bitcasasdk.git</string>
+	</dict>
+	<key>IDESourceControlProjectPath</key>
+	<string>BitcasaSDK.xcodeproj/project.xcworkspace</string>
+	<key>IDESourceControlProjectRelativeInstallPathDictionary</key>
+	<dict>
+		<key>1F32EDA4-FF0D-40AE-8169-A6CD96319F88</key>
+		<string>../..</string>
+	</dict>
+	<key>IDESourceControlProjectURL</key>
+	<string>ssh://git.co.bitcasa.com/olga/bitcasasdk.git</string>
+	<key>IDESourceControlProjectVersion</key>
+	<integer>110</integer>
+	<key>IDESourceControlProjectWCCIdentifier</key>
+	<string>1F32EDA4-FF0D-40AE-8169-A6CD96319F88</string>
+	<key>IDESourceControlProjectWCConfigurations</key>
+	<array>
+		<dict>
+			<key>IDESourceControlRepositoryExtensionIdentifierKey</key>
+			<string>public.vcs.git</string>
+			<key>IDESourceControlWCCIdentifierKey</key>
+			<string>1F32EDA4-FF0D-40AE-8169-A6CD96319F88</string>
+			<key>IDESourceControlWCCName</key>
+			<string>BitcasaSDK</string>
+		</dict>
+	</array>
+</dict>
+</plist>

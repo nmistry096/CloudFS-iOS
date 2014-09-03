@@ -9,6 +9,8 @@
 #import "Session.h"
 #import "BitcasaAPI.h"
 #import "Configurations.h"
+#import "User.h"
+#import "Account.h"
 
 @interface Session ()
 {
@@ -29,6 +31,12 @@
         [[Configurations sharedInstance] setServerURL:url];
         NSString* token = [BitcasaAPI accessTokenWithEmail:username password:password appId:clientId secret:secret];
         [[Configurations sharedInstance] setAccessToken:token];
+        
+        [BitcasaAPI getProfileWithCompletion:^(NSDictionary* response)
+        {
+            self.user = [[User alloc] initWithDictionary:response];
+            self.account = [[Account alloc] initWithDictionary:response];
+        }];
     }
     return self;
 }
