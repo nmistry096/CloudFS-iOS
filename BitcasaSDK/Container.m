@@ -7,10 +7,18 @@
 //
 
 #import "Container.h"
-
+#import "BitcasaAPI.h"
 
 @implementation Container
 
 @dynamic itemCount;
+
+- (void) createFolder:(NSString*)name completion:(void (^)(Container* newDir))completion
+{
+    [BitcasaAPI createFolderAtPath:self.url withName:name completion:^(NSURLResponse *response, NSData *data)
+    {
+        
+    }];
+}
 
 @end

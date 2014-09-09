@@ -328,5 +328,18 @@ NSString* const kBatchRequestJsonBody = @"body";
      }];
 }
 
-
+#pragma mark - Make new directory
+- (void)createFolderAtPath:(NSString*)path withName:(NSString*)name completion:(void (^)(NSURLResponse* response, NSData* data))completion
+{
+    NSString* createFolderEndpoint = [NSString stringWithFormat:@"%@%@", kAPIEndpointFolderAction, path];
+    NSArray* createFolderQueryParams = @[@{kQueryParameterOperation : kQueryParameterOperationCreate}];
+    NSMutableArray* createFolderFormParams = [NSMutableArray arrayWithObjects:@{@"name": name}, @{@"exists":@"rename"}, nil];
+    
+    NSURLRequest* createFolderRequest = [[NSURLRequest alloc] initWithMethod:kHTTPMethodPOST endpoint:createFolderEndpoint queryParameters:createFolderQueryParams formParameters:createFolderFormParams];
+    
+    [NSURLConnection sendAsynchronousRequest:createFolderRequest queue:[NSOperationQueue currentQueue] completionHandler:^(NSURLResponse *response, NSData *data, NSError *connectionError)
+     {
+         completion(response, data);
+     }];
+}
 @end
