@@ -60,4 +60,9 @@
     // Run until 'terminateRunLoop' is flagged
     while (CFRunLoopRunInMode(kCFRunLoopDefaultMode, 0, true) && !terminateRunLoop){};
 }
+
+- (void)testGetListOfItems
+{
+    
+}
 @end

@@ -17,4 +17,17 @@
 @dynamic dateContentLastModified;
 @dynamic dateCreated;
 
+- (id)initWithDictionary:(NSDictionary*)dict
+{
+    self = [super init];
+    if (self)
+    {
+        self.name = dict[@"name"];
+        self.dateContentLastModified = [NSDate dateWithTimeIntervalSince1970:[dict[@"date_content_last_modified"] doubleValue]];
+        self.dateCreated = [NSDate dateWithTimeIntervalSince1970:[dict[@"date_created"] doubleValue]];
+        self.version = [dict[@"version"] integerValue];
+    }
+    return self;
+}
+
 @end

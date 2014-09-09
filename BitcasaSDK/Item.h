@@ -15,7 +15,9 @@
 @property (nonatomic, retain) NSString * url;
 @property (nonatomic) int64_t version;
 @property (nonatomic, retain) NSString * name;
-@property (nonatomic) NSTimeInterval dateContentLastModified;
-@property (nonatomic) NSTimeInterval dateCreated;
+@property (nonatomic) NSDate* dateContentLastModified;
+@property (nonatomic) NSDate* dateCreated;
+
+- (id)initWithDictionary:(NSDictionary*)dict;
 
 @end

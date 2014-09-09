@@ -10,6 +10,7 @@
 #import "NSString+API.h"
 #import "Session.h"
 #import "Configurations.h"
+#import "Item.h"
 
 #import <CommonCrypto/CommonDigest.h>
 #import <CommonCrypto/CommonHMAC.h>
@@ -30,6 +31,7 @@ NSString* const kAPIEndpointEntrypoint = @"/filesystem/entrypoints/";
 NSString* const kAPIEndpointTranscode = @"/transcode";
 NSString* const kAPIEndpointVideo = @"/video";
 NSString* const kAPIEndpointAudio = @"/audio";
+NSString* const kAPIEndpointBatch = @"/batch";
 
 NSString* const kCameraBackupEntrypointID = @"015199f04c044c5fa95fc69556cf723e";
 
@@ -37,11 +39,27 @@ NSString* const kHeaderContentType = @"Content-Type";
 NSString* const kHeaderAuth = @"Authorization";
 NSString* const kHeaderDate = @"Date";
 
+NSString* const kHeaderContentTypeForm = @"application/x-www-form-urlencoded";
+NSString* const kHeaderContentTypeJson = @"application/json";
+
 NSString* const kHTTPMethodGET = @"GET";
 NSString* const kHTTPMethodPOST = @"POST";
 NSString* const kHTTPMethodDELETE = @"DELETE";
 
 NSString* const kQueryParameterOperation = @"operation";
+NSString* const kQueryParameterOperationMove = @"move";
+NSString* const kQueryParameterOperationCreate = @"create";
+
+NSString* const kDeleteRequestParameterCommit = @"commit";
+NSString* const kDeleteRequestParameterForce = @"force";
+
+NSString* const kRequestParameterTrue = @"true";
+NSString* const kRequestParameterFalse = @"false";
+
+NSString* const kBatchRequestJsonRequestsKey = @"requests";
+NSString* const kBatchRequestJsonRelativeURLKey = @"relative_url";
+NSString* const kBatchRequestJsonMethodKey = @"method";
+NSString* const kBatchRequestJsonBody = @"body";
 
 @interface BitcasaAPI ()
 + (NSString*)baseURL;
@@ -52,7 +70,7 @@ NSString* const kQueryParameterOperation = @"operation";
 
 @implementation NSURLRequest (Bitcasa)
 
-- (id)initWithMethod:(NSString*)httpMethod endpoint:(NSString*)endpoint queryParameters:(NSArray*)queryParams formParameters:(NSArray*)formParams
+- (id)initWithMethod:(NSString*)httpMethod endpoint:(NSString*)endpoint queryParameters:(NSArray*)queryParams formParameters:(id)formParams
 {
     NSMutableString* urlStr = [NSMutableString stringWithFormat:@"%@%@%@", [BitcasaAPI baseURL], [BitcasaAPI apiVersion], endpoint];
     
@@ -64,14 +82,28 @@ NSString* const kQueryParameterOperation = @"operation";
     NSMutableURLRequest* request = [NSMutableURLRequest requestWithURL:profileRequestURL];
     
     [request setHTTPMethod:httpMethod];
-    [request addValue:[BitcasaAPI contentType] forHTTPHeaderField:kHeaderContentType];
     [request addValue:[NSString stringWithFormat:@"Bearer %@", [[Configurations sharedInstance] accessToken]] forHTTPHeaderField:kHeaderAuth];
     
-    if (formParams)
+    NSData* formParamJsonData;
+    NSString* contentTypeStr;
+    if ([formParams isKindOfClass:[NSArray class]])
     {
+        contentTypeStr = kHeaderContentTypeForm;
         NSString* formParameters = [NSString parameterStringWithArray:formParams];
-        [request setHTTPBody:[formParameters dataUsingEncoding:NSUTF8StringEncoding]];
+        formParamJsonData = [formParameters dataUsingEncoding:NSUTF8StringEncoding];
     }
+    else if ([formParams isKindOfClass:[NSDictionary class]])
+    {
+        contentTypeStr = kHeaderContentTypeJson;
+        NSError* err;
+        formParamJsonData = [NSJSONSerialization dataWithJSONObject:formParams options:0 error:&err];
+        
+        NSString* jsonStr = [[NSString alloc] initWithData:formParamJsonData encoding:NSUTF8StringEncoding];
+        jsonStr = [jsonStr stringByReplacingOccurrencesOfString:@"\\/" withString:@"/"];
+        formParamJsonData = [jsonStr dataUsingEncoding:NSUTF8StringEncoding];
+    }
+    [request setValue:contentTypeStr forKey:kHeaderContentType];
+    [request setHTTPBody:formParamJsonData];
     
     return request;
 }
@@ -104,6 +136,16 @@ NSString* const kQueryParameterOperation = @"operation";
 + (NSString*)contentType
 {
     return @"application/x-www-form-urlencoded";
+}
+
++ (NSString*)relativeURLWithEndpoint:(NSString*)endpoint andQueryParams:(NSArray*)queryParams
+{
+    NSMutableString* urlStr = [NSMutableString stringWithFormat:@"%@%@", [BitcasaAPI apiVersion], endpoint];
+    
+    if (queryParams)
+        [urlStr appendFormat:@"?%@", [NSString parameterStringWithArray:queryParams]];
+    
+    return urlStr;
 }
 
 #pragma mark - access token
@@ -191,6 +233,98 @@ NSString* const kQueryParameterOperation = @"operation";
          }
          if (completion)
              completion(nil);
+     }];
+}
+
+#pragma mark - Directory contents
++ (void)getContentsOfDirectory:(NSString*)directoryPath completion:(void (^)(NSArray* response))completion
+{
+    // Expect directoryPath in form /folderID/subFolderID to any depth or nil for root
+    // Ex. "/d2fe48a238844cf28750241b41516e50/8f41560133ad4a1c8a9ca005eede9730"
+    NSString* dirReqEndpoint = [NSString stringWithFormat:@"%@%@", kAPIEndpointFolderAction, directoryPath];
+    NSURLRequest* dirContentsRequest = [[NSURLRequest alloc] initWithMethod:kHTTPMethodGET endpoint:dirReqEndpoint];
+    
+    [NSURLConnection sendAsynchronousRequest:dirContentsRequest queue:[NSOperationQueue currentQueue] completionHandler:^(NSURLResponse *response, NSData *data, NSError *connectionError)
+     {
+         NSArray* responseArray;
+         if (data)
+         {
+             NSError* err;
+             responseArray = [NSJSONSerialization JSONObjectWithData:data options:NSJSONReadingAllowFragments error:&err];
+         }
+         
+         completion(responseArray);
+     }];
+}
+
+#pragma mark - Move item(s)
++ (void)moveItems:(NSArray*)items to:(id)toItem completion:(void (^)(NSURLResponse* response, NSData* data))completion
+{
+    NSMutableArray* requests = [NSMutableArray array];
+    for (id item in items)
+    {
+        NSString* moveEndpoint;
+        if ([item isKindOfClass:[Item class]])
+            moveEndpoint = ((Item*)item).url;
+        else
+            moveEndpoint = item;
+        NSArray* moveQueryParams = @[@{kQueryParameterOperation : kQueryParameterOperationMove}];
+        NSString* moveRelativeURL = [BitcasaAPI relativeURLWithEndpoint:moveEndpoint andQueryParams:moveQueryParams];
+        
+        NSString* destURL;
+        if ([toItem isKindOfClass:[Item class]])
+            destURL = ((Item*)toItem).url;
+        else
+            destURL = toItem;
+        NSDictionary* moveFormParams = @{@"to": destURL, @"name": moveEndpoint};
+        
+        [requests addObject:@{kBatchRequestJsonRelativeURLKey:moveRelativeURL, kBatchRequestJsonMethodKey:kHTTPMethodPOST, kBatchRequestJsonBody:moveFormParams}];
+    }
+    
+    NSDictionary* formParamDict = @{kBatchRequestJsonRequestsKey: requests};
+    
+    NSURLRequest* batchMoveRequest = [[NSURLRequest alloc] initWithMethod:kHTTPMethodPOST endpoint:kAPIEndpointBatch queryParameters:nil formParameters:formParamDict];
+    
+    [NSURLConnection sendAsynchronousRequest:batchMoveRequest queue:[NSOperationQueue currentQueue] completionHandler:^(NSURLResponse *response, NSData *data, NSError *connectionError)
+     {
+         completion(response, data);
+     }];
+}
+
+#pragma mark - Delete item(s)
++ (NSArray*)deleteQueryParamsForNode:(Item*)item deletePermanently:(BOOL)permanently
+{
+    NSMutableArray* deleteQueryParams = [NSMutableArray arrayWithArray:@[@{kDeleteRequestParameterCommit : permanently ? kRequestParameterTrue : kRequestParameterFalse}]];
+    if (NO) // add item is container check
+        [deleteQueryParams addObject:@{kDeleteRequestParameterForce : kRequestParameterTrue}];
+    
+    return deleteQueryParams;
+}
+
++ (void)deleteItems:(NSArray*)items completion:(void (^)(NSURLResponse* response, NSData* data))completion
+{
+    NSMutableArray* requests = [NSMutableArray array];
+    for (id item in items)
+    {
+        NSString* deleteEndpoint;
+        if ([item isKindOfClass:[Item class]])
+            deleteEndpoint = ((Item*)item).url;
+        else
+            deleteEndpoint = (NSString*)item;
+        
+        NSArray* deleteQueryParams = [self deleteQueryParamsForNode:item deletePermanently:NO];
+        NSString* relativeURL = [BitcasaAPI relativeURLWithEndpoint:deleteEndpoint andQueryParams:deleteQueryParams];
+        
+        [requests addObject:@{kBatchRequestJsonRelativeURLKey:relativeURL, kBatchRequestJsonMethodKey:kHTTPMethodDELETE, kBatchRequestJsonBody:[NSNull null]}];
+    }
+    
+    NSDictionary* formParamDict = @{kBatchRequestJsonRequestsKey: requests};
+    
+    NSURLRequest* batchDeleteRequest = [[NSURLRequest alloc] initWithMethod:kHTTPMethodPOST endpoint:kAPIEndpointBatch queryParameters:nil formParameters:formParamDict];
+    
+    [NSURLConnection sendAsynchronousRequest:batchDeleteRequest queue:[NSOperationQueue currentQueue] completionHandler:^(NSURLResponse *response, NSData *data, NSError *connectionError)
+     {
+         completion(response, data);
      }];
 }
 
