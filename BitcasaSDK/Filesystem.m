@@ -34,33 +34,20 @@
 }
 
 #pragma mark - delete
-- (void)deleteItems:(NSArray*)items completion:(void (^)(BOOL success))completion
+- (void)deleteItems:(NSArray*)items completion:(void (^)(NSArray* successArray))completion
 {
-    [BitcasaAPI deleteItems:items completion:^(NSURLResponse *response, NSData *data)
-    {
-        completion(YES);
-    }];
-}
-
-- (void)deleteItemsAtPaths:(NSArray*)paths completion:(void (^)(BOOL success))completion
-{
-    [self deleteItems:paths completion:completion];
+    [BitcasaAPI deleteItems:items completion:completion];
 }
 
 #pragma mark - move
-- (void)moveItems:(NSArray*)items toContainer:(id)destination completion:(void (^)(BOOL success))completion
+- (void)moveItems:(NSArray*)items toContainer:(Container*)destinationContainer completion:(void (^)(NSArray* successArray))completion
 {
-    [self moveItemsAtPaths:items toPath:destination completion:completion];
+    [BitcasaAPI moveItems:items to:destinationContainer completion:completion];
 }
 
-- (void)moveItemsAtPaths:(NSArray*)paths toPath:(NSString*)destination completion:(void (^)(BOOL success))completion
+- (void)moveItems:(NSArray*)items toPath:(NSString*)destinationPath completion:(void (^)(NSArray* successArray))completion
 {
-    [BitcasaAPI moveItems:paths to:destination completion:^(NSURLResponse *response, NSData *data)
-    {
-        completion(YES);
-    }];
+    [BitcasaAPI moveItems:items to:destinationPath completion:completion];
 }
-
-
 
 @end

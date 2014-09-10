@@ -16,11 +16,10 @@
 - (void)listItemsAtPath:(NSString*)path completion:(void (^)(NSArray* items))completion;
 
 #pragma mark - delete
-- (void)deleteItems:(NSArray*)items completion:(void (^)(BOOL success))completion;
-- (void)deleteItemsAtPaths:(NSArray*)paths completion:(void (^)(BOOL success))completion;
+- (void)deleteItems:(NSArray*)items completion:(void (^)(NSArray* successArray))completion;
 
 #pragma mark - move
-- (void)moveItems:(NSArray*)items toContainer:(Container*)destination completion:(void (^)(BOOL success))completion;
-- (void)moveItemsAtPaths:(NSArray*)paths toPath:(NSString*)destination completion:(void (^)(BOOL success))completion;
+- (void)moveItems:(NSArray*)items toContainer:(Container*)destinationContainer completion:(void (^)(NSArray* successArray))completion;
+- (void)moveItems:(NSArray*)items toPath:(NSString*)destinationPath completion:(void (^)(NSArray* successArray))completion;
 
 @end

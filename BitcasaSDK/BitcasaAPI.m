@@ -11,6 +11,7 @@
 #import "Session.h"
 #import "Credentials.h"
 #import "Item.h"
+#import "Container.h"
 
 #import <CommonCrypto/CommonDigest.h>
 #import <CommonCrypto/CommonHMAC.h>
@@ -133,16 +134,6 @@ NSString* const kBatchRequestJsonBody = @"body";
     return @"application/x-www-form-urlencoded";
 }
 
-+ (NSString*)relativeURLWithEndpoint:(NSString*)endpoint andQueryParams:(NSArray*)queryParams
-{
-    NSMutableString* urlStr = [NSMutableString stringWithFormat:@"%@%@", [BitcasaAPI apiVersion], endpoint];
-    
-    if (queryParams)
-        [urlStr appendFormat:@"?%@", [NSString parameterStringWithArray:queryParams]];
-    
-    return urlStr;
-}
-
 #pragma mark - access token
 + (NSString *)accessTokenWithEmail:(NSString *)email password:(NSString *)password
 {
@@ -202,7 +193,7 @@ NSString* const kBatchRequestJsonBody = @"body";
     return nil;
 }
 
-#pragma mark - Profile
+#pragma mark - Get profile
 + (void)getProfileWithCompletion:(void(^)(NSDictionary* response))completion
 {
     NSString *profileEndpoint = [NSString stringWithFormat:@"%@%@", kAPIEndpointUser, kAPIEndpointProfile];
@@ -232,7 +223,7 @@ NSString* const kBatchRequestJsonBody = @"body";
      }];
 }
 
-#pragma mark - Directory contents
+#pragma mark - List directory contents
 + (void)getContentsOfDirectory:(NSString*)directoryPath completion:(void (^)(NSArray* response))completion
 {
     // Expect directoryPath in form /folderID/subFolderID to any depth or nil for root
@@ -254,77 +245,97 @@ NSString* const kBatchRequestJsonBody = @"body";
 }
 
 #pragma mark - Move item(s)
-+ (void)moveItems:(NSArray*)items to:(id)toItem completion:(void (^)(NSURLResponse* response, NSData* data))completion
++ (void)moveItem:(Item*)itemToMove to:(id)destItem withSuccessIndex:(NSInteger)successIndex completion:(void (^)(BOOL success, NSInteger index))completion
 {
-    NSMutableArray* requests = [NSMutableArray array];
-    for (id item in items)
+    NSString* moveEndpoint = [NSString stringWithFormat:@"%@%@", kAPIEndpointFileAction, itemToMove.url];
+    NSArray* moveQueryParams = @[@{kQueryParameterOperation : kQueryParameterOperationMove}];
+    
+    NSString* toItemPath;
+    if ([destItem isKindOfClass:[Container class]])
+        toItemPath = ((Container*)destItem).url;
+    else
+        toItemPath = destItem;
+    
+    NSDictionary* moveFormParams = @{@"to": toItemPath, @"name": itemToMove.name};
+    
+    NSURLRequest* moveRequest = [[NSURLRequest alloc] initWithMethod:kHTTPMethodPOST endpoint:moveEndpoint queryParameters:moveQueryParams formParameters:moveFormParams];
+    
+    [NSURLConnection sendAsynchronousRequest:moveRequest queue:[NSOperationQueue currentQueue] completionHandler:^(NSURLResponse *response, NSData *data, NSError *connectionError)
+     {
+         if ( ((NSHTTPURLResponse*)response).statusCode == 200 )
+             completion(YES, successIndex);
+         else
+             completion(NO, successIndex);
+     }];
+}
+
++ (void)moveItem:(Item *)itemToMove to:(id)toItem completion:(void (^)(BOOL))completion
+{
+    [BitcasaAPI moveItem:itemToMove to:toItem withSuccessIndex:-1 completion:^(BOOL success, NSInteger index)
     {
-        NSString* moveEndpoint;
-        if ([item isKindOfClass:[Item class]])
-            moveEndpoint = ((Item*)item).url;
-        else
-            moveEndpoint = item;
-        NSArray* moveQueryParams = @[@{kQueryParameterOperation : kQueryParameterOperationMove}];
-        NSString* moveRelativeURL = [BitcasaAPI relativeURLWithEndpoint:moveEndpoint andQueryParams:moveQueryParams];
-        
-        NSString* destURL;
-        if ([toItem isKindOfClass:[Item class]])
-            destURL = ((Item*)toItem).url;
-        else
-            destURL = toItem;
-        NSDictionary* moveFormParams = @{@"to": destURL, @"name": moveEndpoint};
-        
-        [requests addObject:@{kBatchRequestJsonRelativeURLKey:moveRelativeURL, kBatchRequestJsonMethodKey:kHTTPMethodPOST, kBatchRequestJsonBody:moveFormParams}];
+        completion(success);
+    }];
+}
+
++ (void)moveItems:(NSArray*)itemsToMove to:(id)toItem completion:(void (^)(NSArray* success))completion
+{
+    __block NSInteger indexOfSuccessArray = 0;
+    __block NSMutableArray* successArray = [NSMutableArray arrayWithObjects:nil count:[itemsToMove count]];
+    for (Item* item in itemsToMove)
+    {
+        [BitcasaAPI moveItem:item to:toItem withSuccessIndex:indexOfSuccessArray completion:^(BOOL success, NSInteger index)
+        {
+             [successArray setObject:@(success) atIndexedSubscript:index];
+        }];
+        indexOfSuccessArray++;
     }
     
-    NSDictionary* formParamDict = @{kBatchRequestJsonRequestsKey: requests};
-    
-    NSURLRequest* batchMoveRequest = [[NSURLRequest alloc] initWithMethod:kHTTPMethodPOST endpoint:kAPIEndpointBatch queryParameters:nil formParameters:formParamDict];
-    
-    [NSURLConnection sendAsynchronousRequest:batchMoveRequest queue:[NSOperationQueue currentQueue] completionHandler:^(NSURLResponse *response, NSData *data, NSError *connectionError)
-     {
-         completion(response, data);
-     }];
+    completion(successArray);
 }
 
 #pragma mark - Delete item(s)
-+ (NSArray*)deleteQueryParamsForNode:(Item*)item deletePermanently:(BOOL)permanently
++ (void)deleteItem:(Item*)itemToDelete withSuccessIndex:(NSInteger)successIndex completion:(void (^)(BOOL success, NSInteger successArrayIndex))completion
 {
-    NSMutableArray* deleteQueryParams = [NSMutableArray arrayWithArray:@[@{kDeleteRequestParameterCommit : permanently ? kRequestParameterTrue : kRequestParameterFalse}]];
-    if (NO) // add item is container check
-        [deleteQueryParams addObject:@{kDeleteRequestParameterForce : kRequestParameterTrue}];
+    NSString* deleteEndpoint = [NSString stringWithFormat:@"%@%@", kAPIEndpointFileAction,itemToDelete.url];
+    NSArray* deleteQueryParams = @[@{kDeleteRequestParameterCommit:kRequestParameterFalse}];//, @{kDeleteRequestParameterForce:kRequestParameterTrue}];
     
-    return deleteQueryParams;
-}
-
-+ (void)deleteItems:(NSArray*)items completion:(void (^)(NSURLResponse* response, NSData* data))completion
-{
-    NSMutableArray* requests = [NSMutableArray array];
-    for (id item in items)
-    {
-        NSString* deleteEndpoint;
-        if ([item isKindOfClass:[Item class]])
-            deleteEndpoint = ((Item*)item).url;
-        else
-            deleteEndpoint = (NSString*)item;
-        
-        NSArray* deleteQueryParams = [self deleteQueryParamsForNode:item deletePermanently:NO];
-        NSString* relativeURL = [BitcasaAPI relativeURLWithEndpoint:deleteEndpoint andQueryParams:deleteQueryParams];
-        
-        [requests addObject:@{kBatchRequestJsonRelativeURLKey:relativeURL, kBatchRequestJsonMethodKey:kHTTPMethodDELETE, kBatchRequestJsonBody:[NSNull null]}];
-    }
+    NSURLRequest* deleteRequest = [[NSURLRequest alloc] initWithMethod:kHTTPMethodDELETE endpoint:deleteEndpoint queryParameters:deleteQueryParams formParameters:nil];
     
-    NSDictionary* formParamDict = @{kBatchRequestJsonRequestsKey: requests};
-    
-    NSURLRequest* batchDeleteRequest = [[NSURLRequest alloc] initWithMethod:kHTTPMethodPOST endpoint:kAPIEndpointBatch queryParameters:nil formParameters:formParamDict];
-    
-    [NSURLConnection sendAsynchronousRequest:batchDeleteRequest queue:[NSOperationQueue currentQueue] completionHandler:^(NSURLResponse *response, NSData *data, NSError *connectionError)
+    [NSURLConnection sendAsynchronousRequest:deleteRequest queue:[NSOperationQueue currentQueue] completionHandler:^(NSURLResponse *response, NSData *data, NSError *connectionError)
      {
-         completion(response, data);
+         if ( ((NSHTTPURLResponse*)response).statusCode == 200 )
+             completion(YES, successIndex);
+         else
+             completion(NO, successIndex);
      }];
 }
 
-#pragma mark - Make new directory
++ (void)deleteItem:(Item*)itemToDelete completion:(void (^)(BOOL success))completion
+{
+    [BitcasaAPI deleteItem:itemToDelete withSuccessIndex:-1 completion:^(BOOL success, NSInteger successArrayIndex)
+    {
+        completion(success);
+    }];
+}
+
++ (void)deleteItems:(NSArray *)items completion:(void (^)(NSArray* results))completion
+{
+    __block NSInteger indexOfSuccessArray = 0;
+    __block NSMutableArray* successArray = [NSMutableArray arrayWithObjects:nil count:[items count]];
+
+    for (Item* item in items)
+    {
+        [BitcasaAPI deleteItem:item withSuccessIndex:indexOfSuccessArray completion:^(BOOL success, NSInteger successArrayIndex)
+        {
+            [successArray setObject:@(success) atIndexedSubscript:successArrayIndex];
+        }];
+        indexOfSuccessArray++;
+    }
+    
+    completion(successArray);
+}
+
+#pragma mark - Create new directory
 + (void)createFolderAtPath:(NSString*)path withName:(NSString*)name completion:(void (^)(NSURLResponse* response, NSData* data))completion
 {
     NSString* createFolderEndpoint = [NSString stringWithFormat:@"%@%@", kAPIEndpointFolderAction, path];
