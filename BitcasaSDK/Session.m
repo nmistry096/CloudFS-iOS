@@ -8,37 +8,57 @@
 
 #import "Session.h"
 #import "BitcasaAPI.h"
-#import "Configurations.h"
+#import "Credentials.h"
 #import "User.h"
 #import "Account.h"
 
 @interface Session ()
 {
-    Configurations* configs;
+    Credentials* credentials;
 }
 @end
 
-@implementation Session
-@synthesize user;
-@synthesize account;
-@synthesize serverURL;
+static Session* _sharedSession = nil;
 
-- (id)initWithServerURL:(NSString*)url clientId:(NSString*)clientId clientSecret:(NSString*)secret username:(NSString*)username andPassword:(NSString*)password
+@implementation Session
+
++ (id)sharedSession
+{
+    return _sharedSession;
+}
+
+- (id)initWithServerURL:(NSString*)url clientId:(NSString*)clientId clientSecret:(NSString*)secret
 {
     self = [super init];
     if (self)
     {
-        [[Configurations sharedInstance] setServerURL:url];
-        NSString* token = [BitcasaAPI accessTokenWithEmail:username password:password appId:clientId secret:secret];
-        [[Configurations sharedInstance] setAccessToken:token];
+        credentials = [[Credentials alloc] initWithServerURL:url clientId:clientId andSecret:secret];
         
-        [BitcasaAPI getProfileWithCompletion:^(NSDictionary* response)
-        {
-            self.user = [[User alloc] initWithDictionary:response];
-            self.account = [[Account alloc] initWithDictionary:response];
-        }];
+        _sharedSession = self;
     }
     return self;
+}
+
+- (void)authenticateWithUsername:(NSString*)username andPassword:(NSString*)password
+{
+    NSString* token = [BitcasaAPI accessTokenWithEmail:username password:password];
+    [credentials setAccessToken:token];
+    
+    [BitcasaAPI getProfileWithCompletion:^(NSDictionary* response)
+     {
+         self.user = [[User alloc] initWithDictionary:response];
+         self.account = [[Account alloc] initWithDictionary:response];
+     }];
+}
+
+- (void)unlink
+{
+    [credentials setAccessToken:@""];
+}
+
+- (BOOL)isLinked
+{
+    return ![credentials.accessToken isEqualToString:@""];
 }
 
 @end

@@ -7,14 +7,16 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
-		776A387019A7A2F200E64737 /* Configurations.m in Sources */ = {isa = PBXBuildFile; fileRef = 776A386F19A7A2F200E64737 /* Configurations.m */; };
+		77616EB319BFCFD3002C35E6 /* CoreData.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 77616EB119BFCF69002C35E6 /* CoreData.framework */; };
+		77616EB419BFCFDE002C35E6 /* CoreData.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 77616EB119BFCF69002C35E6 /* CoreData.framework */; };
+		77616EB619BFD001002C35E6 /* UIKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 77616EB519BFD001002C35E6 /* UIKit.framework */; };
+		776A387019A7A2F200E64737 /* Credentials.m in Sources */ = {isa = PBXBuildFile; fileRef = 776A386F19A7A2F200E64737 /* Credentials.m */; };
 		776A387119A7E0A700E64737 /* NSString+API.m in Sources */ = {isa = PBXBuildFile; fileRef = 77BEB38F19A6CA2C00D4BE80 /* NSString+API.m */; };
 		77BEB33519A68F5C00D4BE80 /* Foundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 77BEB33419A68F5C00D4BE80 /* Foundation.framework */; };
 		77BEB33A19A68F5C00D4BE80 /* BitcasaSDK.h in CopyFiles */ = {isa = PBXBuildFile; fileRef = 77BEB33919A68F5C00D4BE80 /* BitcasaSDK.h */; };
 		77BEB33C19A68F5C00D4BE80 /* BitcasaSDK.m in Sources */ = {isa = PBXBuildFile; fileRef = 77BEB33B19A68F5C00D4BE80 /* BitcasaSDK.m */; };
 		77BEB34319A68F5C00D4BE80 /* XCTest.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 77BEB34219A68F5C00D4BE80 /* XCTest.framework */; };
 		77BEB34419A68F5C00D4BE80 /* Foundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 77BEB33419A68F5C00D4BE80 /* Foundation.framework */; };
-		77BEB34619A68F5C00D4BE80 /* UIKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 77BEB34519A68F5C00D4BE80 /* UIKit.framework */; };
 		77BEB34919A68F5C00D4BE80 /* libBitcasaSDK.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 77BEB33119A68F5C00D4BE80 /* libBitcasaSDK.a */; };
 		77BEB34F19A68F5C00D4BE80 /* InfoPlist.strings in Resources */ = {isa = PBXBuildFile; fileRef = 77BEB34D19A68F5C00D4BE80 /* InfoPlist.strings */; };
 		77BEB35119A68F5C00D4BE80 /* BitcasaSDKTests.m in Sources */ = {isa = PBXBuildFile; fileRef = 77BEB35019A68F5C00D4BE80 /* BitcasaSDKTests.m */; };
@@ -59,8 +61,10 @@
 /* End PBXCopyFilesBuildPhase section */
 
 /* Begin PBXFileReference section */
-		776A386E19A7A2F200E64737 /* Configurations.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Configurations.h; sourceTree = "<group>"; };
-		776A386F19A7A2F200E64737 /* Configurations.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = Configurations.m; sourceTree = "<group>"; };
+		77616EB119BFCF69002C35E6 /* CoreData.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreData.framework; path = System/Library/Frameworks/CoreData.framework; sourceTree = SDKROOT; };
+		77616EB519BFD001002C35E6 /* UIKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = UIKit.framework; path = System/Library/Frameworks/UIKit.framework; sourceTree = SDKROOT; };
+		776A386E19A7A2F200E64737 /* Credentials.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Credentials.h; sourceTree = "<group>"; };
+		776A386F19A7A2F200E64737 /* Credentials.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = Credentials.m; sourceTree = "<group>"; };
 		77BEB33119A68F5C00D4BE80 /* libBitcasaSDK.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = libBitcasaSDK.a; sourceTree = BUILT_PRODUCTS_DIR; };
 		77BEB33419A68F5C00D4BE80 /* Foundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Foundation.framework; path = System/Library/Frameworks/Foundation.framework; sourceTree = SDKROOT; };
 		77BEB33819A68F5C00D4BE80 /* BitcasaSDK-Prefix.pch */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "BitcasaSDK-Prefix.pch"; sourceTree = "<group>"; };
@@ -68,7 +72,6 @@
 		77BEB33B19A68F5C00D4BE80 /* BitcasaSDK.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = BitcasaSDK.m; sourceTree = "<group>"; };
 		77BEB34119A68F5C00D4BE80 /* BitcasaSDKTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = BitcasaSDKTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 		77BEB34219A68F5C00D4BE80 /* XCTest.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = XCTest.framework; path = Library/Frameworks/XCTest.framework; sourceTree = DEVELOPER_DIR; };
-		77BEB34519A68F5C00D4BE80 /* UIKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = UIKit.framework; path = Library/Frameworks/UIKit.framework; sourceTree = DEVELOPER_DIR; };
 		77BEB34C19A68F5C00D4BE80 /* BitcasaSDKTests-Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = "BitcasaSDKTests-Info.plist"; sourceTree = "<group>"; };
 		77BEB34E19A68F5C00D4BE80 /* en */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = en; path = en.lproj/InfoPlist.strings; sourceTree = "<group>"; };
 		77BEB35019A68F5C00D4BE80 /* BitcasaSDKTests.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = BitcasaSDKTests.m; sourceTree = "<group>"; };
@@ -108,6 +111,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				77616EB319BFCFD3002C35E6 /* CoreData.framework in Frameworks */,
 				77BEB33519A68F5C00D4BE80 /* Foundation.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -116,8 +120,9 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				77616EB619BFD001002C35E6 /* UIKit.framework in Frameworks */,
+				77616EB419BFCFDE002C35E6 /* CoreData.framework in Frameworks */,
 				77BEB34319A68F5C00D4BE80 /* XCTest.framework in Frameworks */,
-				77BEB34619A68F5C00D4BE80 /* UIKit.framework in Frameworks */,
 				77BEB34919A68F5C00D4BE80 /* libBitcasaSDK.a in Frameworks */,
 				77BEB34419A68F5C00D4BE80 /* Foundation.framework in Frameworks */,
 			);
@@ -148,9 +153,10 @@
 		77BEB33319A68F5C00D4BE80 /* Frameworks */ = {
 			isa = PBXGroup;
 			children = (
+				77616EB519BFD001002C35E6 /* UIKit.framework */,
+				77616EB119BFCF69002C35E6 /* CoreData.framework */,
 				77BEB33419A68F5C00D4BE80 /* Foundation.framework */,
 				77BEB34219A68F5C00D4BE80 /* XCTest.framework */,
-				77BEB34519A68F5C00D4BE80 /* UIKit.framework */,
 			);
 			name = Frameworks;
 			sourceTree = "<group>";
@@ -190,8 +196,8 @@
 				77BEB38C19A6C95100D4BE80 /* BitcasaAPI.m */,
 				77BEB38E19A6CA2C00D4BE80 /* NSString+API.h */,
 				77BEB38F19A6CA2C00D4BE80 /* NSString+API.m */,
-				776A386E19A7A2F200E64737 /* Configurations.h */,
-				776A386F19A7A2F200E64737 /* Configurations.m */,
+				776A386E19A7A2F200E64737 /* Credentials.h */,
+				776A386F19A7A2F200E64737 /* Credentials.m */,
 			);
 			path = BitcasaSDK;
 			sourceTree = "<group>";
@@ -312,7 +318,7 @@
 				77BEB39019A6CA2C00D4BE80 /* NSString+API.m in Sources */,
 				77BEB38D19A6C95100D4BE80 /* BitcasaAPI.m in Sources */,
 				77BEB36B19A69D2800D4BE80 /* Document.m in Sources */,
-				776A387019A7A2F200E64737 /* Configurations.m in Sources */,
+				776A387019A7A2F200E64737 /* Credentials.m in Sources */,
 				77BEB36819A69D2800D4BE80 /* Audio.m in Sources */,
 				77BEB38019A69E0200D4BE80 /* User.m in Sources */,
 				77BEB33C19A68F5C00D4BE80 /* BitcasaSDK.m in Sources */,

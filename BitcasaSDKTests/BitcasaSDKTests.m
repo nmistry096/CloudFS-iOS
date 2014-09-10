@@ -8,7 +8,7 @@
 
 #import <XCTest/XCTest.h>
 #import "Session.h"
-#import "Configurations.h"
+#import "Credentials.h"
 #import "BitcasaAPI.h"
 #import "User.h"
 #import "Account.h"
@@ -26,9 +26,10 @@
     
     Session* session = [[Session alloc] initWithServerURL:@"https://w2krfscy4f.cloudfs.io"
                                                  clientId:@"aajNc4HKqv1cBR8y9g62YTrXyE6jn3zXJ_Nw8yXRQKU"
-                                             clientSecret:@"yHTQD57owFI9kEJmKnjMDUyK-233Xx-dADxsf17MdaDd1zCCp2Vuiy8aGEj6GHFzeSxLntdJN51fPI2guTaGCw"
-                                                 username:@"hchou@bitcasa.com"
-                                              andPassword:@"bitcasa543"];
+                                             clientSecret:@"yHTQD57owFI9kEJmKnjMDUyK-233Xx-dADxsf17MdaDd1zCCp2Vuiy8aGEj6GHFzeSxLntdJN51fPI2guTaGCw"];
+    
+    [session authenticateWithUsername:@"hchou@bitcasa.com"
+                          andPassword:@"bitcasa543"];
 }
 
 - (void)tearDown
@@ -39,8 +40,8 @@
 
 - (void)testAuth
 {
-    XCTAssertNotNil([Configurations sharedInstance].serverURL, @"");
-    XCTAssertNotNil([Configurations sharedInstance].accessToken, @"");
+    XCTAssertNotNil([Credentials sharedInstance].serverURL, @"");
+    XCTAssertNotNil([Credentials sharedInstance].accessToken, @"");
 }
 
 - (void)testGetProfile

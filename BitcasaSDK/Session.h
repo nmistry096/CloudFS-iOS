@@ -11,13 +11,26 @@
 @class User;
 @class Filesystem;
 
+@protocol DBSessionDelegate;
+
 @interface Session : NSObject
 
 @property (nonatomic, strong) User* user;
 @property (nonatomic, strong) Account* account;
 @property (nonatomic, strong) Filesystem* fs;
-@property (nonatomic, strong) NSString* serverURL;
 
-- (id)initWithServerURL:(NSString*)url clientId:(NSString*)clientId clientSecret:(NSString*)secret username:(NSString*)username andPassword:(NSString*)password;
+@property (nonatomic, assign) id<DBSessionDelegate> delegate;
+
+- (id)initWithServerURL:(NSString*)url clientId:(NSString*)clientId clientSecret:(NSString*)secret;
+
+- (void)authenticateWithUsername:(NSString*)username andPassword:(NSString*)password;
+- (void)unlink;
+- (BOOL)isLinked;
+@end
+
+@protocol DBSessionDelegate
+
+- (void)sessionDidReceiveAuthorizationFailure:(Session *)session userId:(NSString *)userId;
 
 @end
+

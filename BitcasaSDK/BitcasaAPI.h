@@ -9,7 +9,7 @@
 #import <Foundation/Foundation.h>
 
 @interface BitcasaAPI : NSObject
-+ (NSString *)accessTokenWithEmail:(NSString *)email password:(NSString *)password appId:(NSString*)appId secret:(NSString*)secret;
++ (NSString *)accessTokenWithEmail:(NSString *)email password:(NSString *)password;
 + (void)getProfileWithCompletion:(void(^)(NSDictionary* response))completion;
 + (void)getContentsOfDirectory:(NSString*)directoryPath completion:(void (^)(NSArray* response))completion;
 

@@ -21,13 +21,13 @@
     <entity name="Photo" representedClassName="Photo" parentEntity="File" syncable="YES"/>
     <entity name="Video" representedClassName="Video" parentEntity="File" syncable="YES"/>
     <elements>
-        <element name="Item" positionX="-54" positionY="-9" width="128" height="118"/>
-        <element name="File" positionX="-36" positionY="36" width="128" height="88"/>
+        <element name="Audio" positionX="-9" positionY="36" width="128" height="43"/>
         <element name="Container" positionX="-18" positionY="54" width="128" height="58"/>
+        <element name="Document" positionX="0" positionY="45" width="128" height="43"/>
+        <element name="File" positionX="-36" positionY="36" width="128" height="88"/>
         <element name="Folder" positionX="0" positionY="72" width="128" height="43"/>
+        <element name="Item" positionX="-54" positionY="-9" width="128" height="118"/>
         <element name="Photo" positionX="18" positionY="81" width="128" height="43"/>
         <element name="Video" positionX="36" positionY="90" width="128" height="43"/>
-        <element name="Audio" positionX="-9" positionY="36" width="128" height="43"/>
-        <element name="Document" positionX="0" positionY="45" width="128" height="43"/>
     </elements>
 </model>

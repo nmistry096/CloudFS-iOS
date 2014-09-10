@@ -9,7 +9,7 @@
 #import "BitcasaAPI.h"
 #import "NSString+API.h"
 #import "Session.h"
-#import "Configurations.h"
+#import "Credentials.h"
 #import "Item.h"
 
 #import <CommonCrypto/CommonDigest.h>
@@ -62,7 +62,6 @@ NSString* const kBatchRequestJsonMethodKey = @"method";
 NSString* const kBatchRequestJsonBody = @"body";
 
 @interface BitcasaAPI ()
-+ (NSString*)baseURL;
 + (NSString*)apiVersion;
 + (NSString*)authContentType;
 + (NSString*)contentType;
@@ -72,7 +71,8 @@ NSString* const kBatchRequestJsonBody = @"body";
 
 - (id)initWithMethod:(NSString*)httpMethod endpoint:(NSString*)endpoint queryParameters:(NSArray*)queryParams formParameters:(id)formParams
 {
-    NSMutableString* urlStr = [NSMutableString stringWithFormat:@"%@%@%@", [BitcasaAPI baseURL], [BitcasaAPI apiVersion], endpoint];
+    Credentials* baseCredentials = [Credentials sharedInstance];
+    NSMutableString* urlStr = [NSMutableString stringWithFormat:@"%@%@%@", baseCredentials.serverURL, [BitcasaAPI apiVersion], endpoint];
     
     if (queryParams)
         [urlStr appendFormat:@"?%@", [NSString parameterStringWithArray:queryParams]];
@@ -82,7 +82,7 @@ NSString* const kBatchRequestJsonBody = @"body";
     NSMutableURLRequest* request = [NSMutableURLRequest requestWithURL:profileRequestURL];
     
     [request setHTTPMethod:httpMethod];
-    [request addValue:[NSString stringWithFormat:@"Bearer %@", [[Configurations sharedInstance] accessToken]] forHTTPHeaderField:kHeaderAuth];
+    [request addValue:[NSString stringWithFormat:@"Bearer %@", baseCredentials.accessToken] forHTTPHeaderField:kHeaderAuth];
     
     NSData* formParamJsonData;
     NSString* contentTypeStr;
@@ -102,7 +102,7 @@ NSString* const kBatchRequestJsonBody = @"body";
         jsonStr = [jsonStr stringByReplacingOccurrencesOfString:@"\\/" withString:@"/"];
         formParamJsonData = [jsonStr dataUsingEncoding:NSUTF8StringEncoding];
     }
-    [request setValue:contentTypeStr forKey:kHeaderContentType];
+    [request setValue:contentTypeStr forHTTPHeaderField:kHeaderContentType];
     [request setHTTPBody:formParamJsonData];
     
     return request;
@@ -117,11 +117,6 @@ NSString* const kBatchRequestJsonBody = @"body";
 
 
 @implementation BitcasaAPI
-
-+ (NSString*)baseURL
-{
-    return [[Configurations sharedInstance] serverURL];
-}
 
 + (NSString*)apiVersion
 {
@@ -149,8 +144,10 @@ NSString* const kBatchRequestJsonBody = @"body";
 }
 
 #pragma mark - access token
-+ (NSString *)accessTokenWithEmail:(NSString *)email password:(NSString *)password appId:(NSString*)appId secret:(NSString*)secret
++ (NSString *)accessTokenWithEmail:(NSString *)email password:(NSString *)password
 {
+    Credentials* baseCredentials = [Credentials sharedInstance];
+    
     // formatting the request string (to be signed)
     NSMutableString* requestString = [NSMutableString stringWithString:kHTTPMethodPOST];
     [requestString appendString:[NSString stringWithFormat:@"&%@%@", [BitcasaAPI apiVersion], kAPIEndpointToken]];
@@ -165,7 +162,7 @@ NSString* const kBatchRequestJsonBody = @"body";
     [requestString appendString:[NSString stringWithFormat:@"&%@:%@", kHeaderDate, [dateStr encode]]];
     
     // generating the signed request string
-    NSData* secretData = [secret dataUsingEncoding:NSUTF8StringEncoding];
+    NSData* secretData = [baseCredentials.appSecret dataUsingEncoding:NSUTF8StringEncoding];
     NSData* requestStrData = [requestString dataUsingEncoding:NSUTF8StringEncoding];
     
     NSMutableData* signedRequestData = [NSMutableData dataWithLength:CC_SHA1_DIGEST_LENGTH];
@@ -173,8 +170,7 @@ NSString* const kBatchRequestJsonBody = @"body";
     NSString* signedRequestStr = [signedRequestData base64EncodedStringWithOptions:NSDataBase64Encoding64CharacterLineLength];
     
     // creating the HTTP request
-    NSString* baseURL = [BitcasaAPI baseURL];
-    NSURL* tokenReqURL = [NSURL URLWithString:[NSString stringWithFormat:@"%@%@%@", baseURL, [BitcasaAPI apiVersion], kAPIEndpointToken]];
+    NSURL* tokenReqURL = [NSURL URLWithString:[NSString stringWithFormat:@"%@%@%@", baseCredentials.serverURL, [BitcasaAPI apiVersion], kAPIEndpointToken]];
     NSMutableURLRequest* tokenRequest = [NSMutableURLRequest requestWithURL:tokenReqURL];
     
     [tokenRequest setHTTPMethod:kHTTPMethodPOST];
@@ -182,7 +178,7 @@ NSString* const kBatchRequestJsonBody = @"body";
     // setting HTTP request headers
     [tokenRequest addValue:[BitcasaAPI authContentType] forHTTPHeaderField:kHeaderContentType];
     [tokenRequest addValue:dateStr forHTTPHeaderField:kHeaderDate];
-    NSString* authValue = [NSString stringWithFormat:@"BCS %@:%@", appId,  signedRequestStr];
+    NSString* authValue = [NSString stringWithFormat:@"BCS %@:%@", baseCredentials.appId,  signedRequestStr];
     [tokenRequest addValue:authValue forHTTPHeaderField:kHeaderAuth];
     
     // setting HTTP request parameters
@@ -329,7 +325,7 @@ NSString* const kBatchRequestJsonBody = @"body";
 }
 
 #pragma mark - Make new directory
-- (void)createFolderAtPath:(NSString*)path withName:(NSString*)name completion:(void (^)(NSURLResponse* response, NSData* data))completion
++ (void)createFolderAtPath:(NSString*)path withName:(NSString*)name completion:(void (^)(NSURLResponse* response, NSData* data))completion
 {
     NSString* createFolderEndpoint = [NSString stringWithFormat:@"%@%@", kAPIEndpointFolderAction, path];
     NSArray* createFolderQueryParams = @[@{kQueryParameterOperation : kQueryParameterOperationCreate}];
