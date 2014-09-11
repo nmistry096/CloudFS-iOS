@@ -50,6 +50,7 @@ NSString* const kHTTPMethodDELETE = @"DELETE";
 
 NSString* const kQueryParameterOperation = @"operation";
 NSString* const kQueryParameterOperationMove = @"move";
+NSString* const kQueryParameterOperationCopy = @"copy";
 NSString* const kQueryParameterOperationCreate = @"create";
 
 NSString* const kDeleteRequestParameterCommit = @"commit";
@@ -113,6 +114,23 @@ NSString* const kBatchRequestJsonBody = @"body";
 - (id)initWithMethod:(NSString*)httpMethod endpoint:(NSString *)endpoint
 {
     return [self initWithMethod:httpMethod endpoint:endpoint queryParameters:nil formParameters:nil];
+}
+
++ (id)requestForOperation:(NSString*)operation onItem:(Item*)item destinationItem:(id)destItem
+{
+    NSString* endpoint = [NSString stringWithFormat:@"%@%@", kAPIEndpointFileAction, item.url];
+    NSArray* queryParams = @[@{kQueryParameterOperation : operation}];
+    
+    NSString* toItemPath;
+    if ([destItem isKindOfClass:[Container class]])
+        toItemPath = ((Container*)destItem).url;
+    else
+        toItemPath = destItem;
+    
+    NSDictionary* moveFormParams = @{@"to": toItemPath, @"name": item.name};
+    
+    NSURLRequest* request = [[NSURLRequest alloc] initWithMethod:kHTTPMethodPOST endpoint:endpoint queryParameters:queryParams formParameters:moveFormParams];
+    return request;
 }
 
 @end
@@ -255,18 +273,7 @@ NSString* const kBatchRequestJsonBody = @"body";
 #pragma mark - Move item(s)
 + (void)moveItem:(Item*)itemToMove to:(id)destItem withSuccessIndex:(NSInteger)successIndex completion:(void (^)(BOOL success, NSInteger index))completion
 {
-    NSString* moveEndpoint = [NSString stringWithFormat:@"%@%@", kAPIEndpointFileAction, itemToMove.url];
-    NSArray* moveQueryParams = @[@{kQueryParameterOperation : kQueryParameterOperationMove}];
-    
-    NSString* toItemPath;
-    if ([destItem isKindOfClass:[Container class]])
-        toItemPath = ((Container*)destItem).url;
-    else
-        toItemPath = destItem;
-    
-    NSDictionary* moveFormParams = @{@"to": toItemPath, @"name": itemToMove.name};
-    
-    NSURLRequest* moveRequest = [[NSURLRequest alloc] initWithMethod:kHTTPMethodPOST endpoint:moveEndpoint queryParameters:moveQueryParams formParameters:moveFormParams];
+    NSURLRequest* moveRequest = [NSURLRequest requestForOperation:kQueryParameterOperationMove onItem:itemToMove destinationItem:destItem];
     
     [NSURLConnection sendAsynchronousRequest:moveRequest queue:[NSOperationQueue currentQueue] completionHandler:^(NSURLResponse *response, NSData *data, NSError *connectionError)
      {
@@ -343,6 +350,49 @@ NSString* const kBatchRequestJsonBody = @"body";
         {
             [successArray setObject:@(success) atIndexedSubscript:successArrayIndex];
         }];
+        indexOfSuccessArray++;
+    }
+    
+    completion(successArray);
+}
+
+#pragma mark - Copy item(s)
++ (void)copyItem:(Item*)itemToCopy to:(id)destItem withSuccessIndex:(NSInteger)successIndex completion:(void (^)(BOOL success, NSInteger successIndex))completion
+{
+    NSURLRequest* moveRequest = [NSURLRequest requestForOperation:kQueryParameterOperationCopy onItem:itemToCopy destinationItem:destItem];
+    
+    [NSURLConnection sendAsynchronousRequest:moveRequest queue:[NSOperationQueue currentQueue] completionHandler:^(NSURLResponse *response, NSData *data, NSError *connectionError)
+     {
+         if ( ((NSHTTPURLResponse*)response).statusCode == 200 )
+             completion(YES, successIndex);
+         else
+         {
+             [BitcasaAPI checkForAuthenticationFailure:response];
+             completion(NO, successIndex);
+         }
+     }];
+}
+
++ (void)copyItem:(Item*)itemToCopy to:(id)destItem completion:(void (^)(BOOL success))completion
+{
+    [BitcasaAPI copyItem:itemToCopy to:destItem withSuccessIndex:-1 completion:^(BOOL success, NSInteger successIndex)
+    {
+        completion(success);
+    }];
+}
+
++ (void)copyItems:(NSArray*)items to:(id)toItem completion:(void (^)(NSArray* success))completion
+{
+    __block NSInteger indexOfSuccessArray = 0;
+    __block NSMutableArray* successArray = [NSMutableArray arrayWithObjects:nil count:[items count]];
+    
+    for (Item* item in items)
+    {
+        [BitcasaAPI copyItem:item to:toItem withSuccessIndex:indexOfSuccessArray completion:^(BOOL success, NSInteger successIndex)
+        {
+            [successArray setObject:@(success) atIndexedSubscript:successIndex];
+        }];
+        
         indexOfSuccessArray++;
     }
     

@@ -27,6 +27,10 @@
 + (void)deleteItem:(Item*)itemToDelete completion:(void (^)(BOOL success))completion;
 + (void)deleteItems:(NSArray*)items completion:(void (^)(NSArray* results))completion;
 
+#pragma mark - Copy item(s)
++ (void)copyItem:(Item*)itemToCopy completion:(void (^)(BOOL success))completion;
++ (void)copyItems:(NSArray*)items to:(id)toItem completion:(void (^)(NSArray* success))completion;
+
 #pragma mark - Create new directory
 + (void)createFolderAtPath:(NSString*)path withName:(NSString*)name completion:(void (^)(NSDictionary* newFolderDict))completion;
 @end
