@@ -270,15 +270,25 @@ NSString* const kBatchRequestJsonBody = @"body";
      }];
 }
 
++ (void)getContentsOfContainer:(Container*)container completion:(void (^)(NSArray* response))completion
+{
+    [BitcasaAPI getContentsOfDirectory:container.url completion:completion];
+}
+
 #pragma mark - Move item(s)
-+ (void)moveItem:(Item*)itemToMove to:(id)destItem withSuccessIndex:(NSInteger)successIndex completion:(void (^)(BOOL success, NSInteger index))completion
++ (void)moveItem:(Item*)itemToMove to:(id)destItem withSuccessIndex:(NSInteger)successIndex completion:(void (^)(Item* movedItem, NSInteger index))completion
 {
     NSURLRequest* moveRequest = [NSURLRequest requestForOperation:kQueryParameterOperationMove onItem:itemToMove destinationItem:destItem];
     
     [NSURLConnection sendAsynchronousRequest:moveRequest queue:[NSOperationQueue currentQueue] completionHandler:^(NSURLResponse *response, NSData *data, NSError *connectionError)
      {
          if ( ((NSHTTPURLResponse*)response).statusCode == 200 )
-             completion(YES, successIndex);
+         {
+             NSError* err;
+             NSDictionary* responseDict = [NSJSONSerialization JSONObjectWithData:data options:NSJSONReadingAllowFragments error:&err];
+             Item* newItem = [[Item alloc] initWithDictionary:responseDict];
+             completion(newItem, successIndex);
+         }
          else
          {
              [BitcasaAPI checkForAuthenticationFailure:response];
@@ -287,11 +297,11 @@ NSString* const kBatchRequestJsonBody = @"body";
      }];
 }
 
-+ (void)moveItem:(Item *)itemToMove to:(id)toItem completion:(void (^)(BOOL))completion
++ (void)moveItem:(Item *)itemToMove to:(id)toItem completion:(void (^)(Item* movedItem))completion
 {
-    [BitcasaAPI moveItem:itemToMove to:toItem withSuccessIndex:-1 completion:^(BOOL success, NSInteger index)
+    [BitcasaAPI moveItem:itemToMove to:toItem withSuccessIndex:-1 completion:^(Item* movedItem, NSInteger index)
     {
-        completion(success);
+        completion(movedItem);
     }];
 }
 
@@ -301,9 +311,9 @@ NSString* const kBatchRequestJsonBody = @"body";
     __block NSMutableArray* successArray = [NSMutableArray arrayWithObjects:nil count:[itemsToMove count]];
     for (Item* item in itemsToMove)
     {
-        [BitcasaAPI moveItem:item to:toItem withSuccessIndex:indexOfSuccessArray completion:^(BOOL success, NSInteger index)
+        [BitcasaAPI moveItem:item to:toItem withSuccessIndex:indexOfSuccessArray completion:^(Item* movedItem, NSInteger index)
         {
-             [successArray setObject:@(success) atIndexedSubscript:index];
+             [successArray setObject:movedItem atIndexedSubscript:index];
         }];
         indexOfSuccessArray++;
     }
@@ -357,27 +367,32 @@ NSString* const kBatchRequestJsonBody = @"body";
 }
 
 #pragma mark - Copy item(s)
-+ (void)copyItem:(Item*)itemToCopy to:(id)destItem withSuccessIndex:(NSInteger)successIndex completion:(void (^)(BOOL success, NSInteger successIndex))completion
++ (void)copyItem:(Item*)itemToCopy to:(id)destItem withSuccessIndex:(NSInteger)successIndex completion:(void (^)(Item* newItem, NSInteger successIndex))completion
 {
     NSURLRequest* moveRequest = [NSURLRequest requestForOperation:kQueryParameterOperationCopy onItem:itemToCopy destinationItem:destItem];
     
     [NSURLConnection sendAsynchronousRequest:moveRequest queue:[NSOperationQueue currentQueue] completionHandler:^(NSURLResponse *response, NSData *data, NSError *connectionError)
      {
          if ( ((NSHTTPURLResponse*)response).statusCode == 200 )
-             completion(YES, successIndex);
+         {
+             NSError* err;
+             NSDictionary* responseDict = [NSJSONSerialization JSONObjectWithData:data options:NSJSONReadingAllowFragments error:&err];
+             Item* newItem = [[Item alloc] initWithDictionary:responseDict];
+             completion(newItem, successIndex);
+         }
          else
          {
              [BitcasaAPI checkForAuthenticationFailure:response];
-             completion(NO, successIndex);
+             completion(nil, successIndex);
          }
      }];
 }
 
-+ (void)copyItem:(Item*)itemToCopy to:(id)destItem completion:(void (^)(BOOL success))completion
++ (void)copyItem:(Item*)itemToCopy to:(id)destItem completion:(void (^)(Item* newItem))completion
 {
-    [BitcasaAPI copyItem:itemToCopy to:destItem withSuccessIndex:-1 completion:^(BOOL success, NSInteger successIndex)
+    [BitcasaAPI copyItem:itemToCopy to:destItem withSuccessIndex:-1 completion:^(Item* newItem, NSInteger successIndex)
     {
-        completion(success);
+        completion(newItem);
     }];
 }
 
@@ -388,9 +403,9 @@ NSString* const kBatchRequestJsonBody = @"body";
     
     for (Item* item in items)
     {
-        [BitcasaAPI copyItem:item to:toItem withSuccessIndex:indexOfSuccessArray completion:^(BOOL success, NSInteger successIndex)
+        [BitcasaAPI copyItem:item to:toItem withSuccessIndex:indexOfSuccessArray completion:^(Item* newItem, NSInteger successIndex)
         {
-            [successArray setObject:@(success) atIndexedSubscript:successIndex];
+            [successArray setObject:newItem atIndexedSubscript:successIndex];
         }];
         
         indexOfSuccessArray++;

@@ -18,17 +18,18 @@
 
 #pragma mark - List directory contents
 + (void)getContentsOfDirectory:(NSString*)directoryPath completion:(void (^)(NSArray* response))completion;
++ (void)getContentsOfContainer:(Container*)container completion:(void (^)(NSArray* response))completion;
 
 #pragma mark - Move item(s)
-+ (void)moveItem:(Item*)itemToMove to:(id)toItem completion:(void (^)(BOOL success))completion;
++ (void)moveItem:(Item*)itemToMove to:(id)toItem completion:(void (^)(Item* movedItem))completion;
 + (void)moveItems:(NSArray*)itemsToMove to:(id)toItem completion:(void (^)(NSArray* success))completion;
 
 #pragma mark - Delete item(s)
-+ (void)deleteItem:(Item*)itemToDelete completion:(void (^)(BOOL success))completion;
++ (void)deleteItem:(Container*)itemToDelete completion:(void (^)(BOOL success))completion;
 + (void)deleteItems:(NSArray*)items completion:(void (^)(NSArray* results))completion;
 
 #pragma mark - Copy item(s)
-+ (void)copyItem:(Item*)itemToCopy completion:(void (^)(BOOL success))completion;
++ (void)copyItem:(Item*)itemToCopy to:(id)destItem completion:(void (^)(Item* newItem))completion;
 + (void)copyItems:(NSArray*)items to:(id)toItem completion:(void (^)(NSArray* success))completion;
 
 #pragma mark - Create new directory

@@ -30,4 +30,36 @@
     return self;
 }
 
+#pragma mark - copy
+- (void)copyToDestinationPath:(NSString*)destPath completion:(void (^)(Item* newItem))completion
+{
+    [NSException raise:NSInternalInconsistencyException
+                format:@"You must override %@ in a subclass", NSStringFromSelector(_cmd)];
+}
+
+- (void)copyToDestinationContainer:(Container *)destContainer completion:(void (^)(Item* newItem))completion
+{
+    [NSException raise:NSInternalInconsistencyException
+                format:@"You must override %@ in a subclass", NSStringFromSelector(_cmd)];
+}
+
+#pragma mark - move
+- (void)moveToDestinationPath:(NSString*)destPath completion:(void (^)(Item* movedItem))completion
+{
+    [NSException raise:NSInternalInconsistencyException
+                format:@"You must override %@ in a subclass", NSStringFromSelector(_cmd)];
+}
+
+- (void)moveToDestinationContainer:(Container *)destContainer completion:(void (^)(Item * movedItem))completion
+{
+    [NSException raise:NSInternalInconsistencyException
+                format:@"You must override %@ in a subclass", NSStringFromSelector(_cmd)];
+}
+
+#pragma mark - delete
+- (void)deleteWithCompletion:(void (^)(BOOL success))completion
+{
+    [NSException raise:NSInternalInconsistencyException
+                format:@"You must override %@ in a subclass", NSStringFromSelector(_cmd)];
+}
 @end

@@ -16,21 +16,7 @@
 #pragma mark - list
 - (void)listItemsInContainer:(Container*)container completion:(void (^)(NSArray* items))completion
 {
-    [self listItemsAtPath:container.url completion:completion];
-}
-
-- (void)listItemsAtPath:(NSString*)path completion:(void (^)(NSArray* items))completion
-{
-    [BitcasaAPI getContentsOfDirectory:path completion:^(NSArray* response)
-     {
-         NSMutableArray* itemArray = [NSMutableArray array];
-         for (NSDictionary* itemDict in response)
-         {
-             Item* item = [[Item alloc] initWithDictionary:itemDict];
-             [itemArray addObject:item];
-         }
-         completion(itemArray);
-     }];
+    [container listItemsWithCompletion:completion];
 }
 
 #pragma mark - delete

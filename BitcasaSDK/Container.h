@@ -16,5 +16,5 @@
 @property (nonatomic) int64_t itemCount;
 
 - (void) createFolder:(NSString*)name completion:(void (^)(Container* newDir))completion;
-
+- (void) listItemsWithCompletion:(void (^)(NSArray* items))completion;
 @end

@@ -13,7 +13,6 @@
 
 #pragma mark - list
 - (void)listItemsInContainer:(Container*)container completion:(void (^)(NSArray* items))completion;
-- (void)listItemsAtPath:(NSString*)path completion:(void (^)(NSArray* items))completion;
 
 #pragma mark - delete
 - (void)deleteItems:(NSArray*)items completion:(void (^)(NSArray* successArray))completion;
