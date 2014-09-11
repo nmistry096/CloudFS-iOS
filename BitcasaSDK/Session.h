@@ -21,6 +21,8 @@
 
 @property (nonatomic, assign) id<DBSessionDelegate> delegate;
 
++ (Session*)sharedSession;
+
 - (id)initWithServerURL:(NSString*)url clientId:(NSString*)clientId clientSecret:(NSString*)secret;
 
 - (void)authenticateWithUsername:(NSString*)username andPassword:(NSString*)password;

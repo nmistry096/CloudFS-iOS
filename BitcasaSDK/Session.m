@@ -22,7 +22,7 @@ static Session* _sharedSession = nil;
 
 @implementation Session
 
-+ (id)sharedSession
++ (Session*)sharedSession
 {
     return _sharedSession;
 }

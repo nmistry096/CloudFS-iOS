@@ -28,5 +28,5 @@
 + (void)deleteItems:(NSArray*)items completion:(void (^)(NSArray* results))completion;
 
 #pragma mark - Create new directory
-+ (void)createFolderAtPath:(NSString*)path withName:(NSString*)name completion:(void (^)(NSURLResponse* response, NSData* data))completion;
++ (void)createFolderAtPath:(NSString*)path withName:(NSString*)name completion:(void (^)(NSDictionary* newFolderDict))completion;
 @end

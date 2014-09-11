@@ -15,9 +15,10 @@
 
 - (void) createFolder:(NSString*)name completion:(void (^)(Container* newDir))completion
 {
-    [BitcasaAPI createFolderAtPath:self.url withName:name completion:^(NSURLResponse *response, NSData *data)
+    [BitcasaAPI createFolderAtPath:self.url withName:name completion:^(NSDictionary* newContainerDict)
     {
-        
+        Container* newDir = [[Container alloc] initWithDictionary:newContainerDict];
+        completion(newDir);
     }];
 }
 

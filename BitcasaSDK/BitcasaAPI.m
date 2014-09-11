@@ -12,6 +12,7 @@
 #import "Credentials.h"
 #import "Item.h"
 #import "Container.h"
+#import "User.h"
 
 #import <CommonCrypto/CommonDigest.h>
 #import <CommonCrypto/CommonHMAC.h>
@@ -234,10 +235,17 @@ NSString* const kBatchRequestJsonBody = @"body";
     [NSURLConnection sendAsynchronousRequest:dirContentsRequest queue:[NSOperationQueue currentQueue] completionHandler:^(NSURLResponse *response, NSData *data, NSError *connectionError)
      {
          NSArray* responseArray;
-         if (data)
+         if ( ((NSHTTPURLResponse*)response).statusCode == 200 )
          {
-             NSError* err;
-             responseArray = [NSJSONSerialization JSONObjectWithData:data options:NSJSONReadingAllowFragments error:&err];
+             if (data)
+             {
+                 NSError* err;
+                 responseArray = [NSJSONSerialization JSONObjectWithData:data options:NSJSONReadingAllowFragments error:&err];
+             }
+         }
+         else
+         {
+             [BitcasaAPI checkForAuthenticationFailure:response];
          }
          
          completion(responseArray);
@@ -265,7 +273,10 @@ NSString* const kBatchRequestJsonBody = @"body";
          if ( ((NSHTTPURLResponse*)response).statusCode == 200 )
              completion(YES, successIndex);
          else
+         {
+             [BitcasaAPI checkForAuthenticationFailure:response];
              completion(NO, successIndex);
+         }
      }];
 }
 
@@ -306,7 +317,10 @@ NSString* const kBatchRequestJsonBody = @"body";
          if ( ((NSHTTPURLResponse*)response).statusCode == 200 )
              completion(YES, successIndex);
          else
+         {
+             [BitcasaAPI checkForAuthenticationFailure:response];
              completion(NO, successIndex);
+         }
      }];
 }
 
@@ -336,7 +350,7 @@ NSString* const kBatchRequestJsonBody = @"body";
 }
 
 #pragma mark - Create new directory
-+ (void)createFolderAtPath:(NSString*)path withName:(NSString*)name completion:(void (^)(NSURLResponse* response, NSData* data))completion
++ (void)createFolderAtPath:(NSString*)path withName:(NSString*)name completion:(void (^)(NSDictionary* newFolderDict))completion
 {
     NSString* createFolderEndpoint = [NSString stringWithFormat:@"%@%@", kAPIEndpointFolderAction, path];
     NSArray* createFolderQueryParams = @[@{kQueryParameterOperation : kQueryParameterOperationCreate}];
@@ -346,7 +360,30 @@ NSString* const kBatchRequestJsonBody = @"body";
     
     [NSURLConnection sendAsynchronousRequest:createFolderRequest queue:[NSOperationQueue currentQueue] completionHandler:^(NSURLResponse *response, NSData *data, NSError *connectionError)
      {
-         completion(response, data);
+         if ( ((NSHTTPURLResponse*)response).statusCode == 200 )
+         {
+             if (data)
+             {
+                 NSError* err;
+                 NSDictionary* newContainerDict = [NSJSONSerialization JSONObjectWithData:data options:NSJSONReadingAllowFragments error:&err];
+                 completion(newContainerDict);
+             }
+         }
+         else
+         {
+             [BitcasaAPI checkForAuthenticationFailure:response];
+             completion(nil);
+         }
      }];
+}
+
+
++ (void)checkForAuthenticationFailure:(NSURLResponse*)response
+{
+    if (((NSHTTPURLResponse*)response).statusCode == 401)
+    {
+        Session* currentSession = [Session sharedSession];
+        [currentSession.delegate sessionDidReceiveAuthorizationFailure:currentSession userId:currentSession.user.email];
+    }
 }
 @end
