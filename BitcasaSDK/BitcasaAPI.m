@@ -18,8 +18,8 @@
 #import <CommonCrypto/CommonHMAC.h>
 
 NSString* const kAPIEndpointToken = @"/oauth2/token";
-NSString* const kAPIEndpointFolderAction = @"/folders";
-NSString* const kAPIEndpointFileAction = @"/files";
+
+
 NSString* const kAPIEndpointMetafolders = @"/metafolders";
 NSString* const kAPIEndpointUser = @"/user";
 NSString* const kAPIEndpointProfile = @"/profile/";
@@ -118,7 +118,7 @@ NSString* const kBatchRequestJsonBody = @"body";
 
 + (id)requestForOperation:(NSString*)operation onItem:(Item*)item destinationItem:(id)destItem
 {
-    NSString* endpoint = [NSString stringWithFormat:@"%@%@", kAPIEndpointFileAction, item.url];
+    NSString* endpointPath = [item endpointPath];
     NSArray* queryParams = @[@{kQueryParameterOperation : operation}];
     
     NSString* toItemPath;
@@ -129,7 +129,7 @@ NSString* const kBatchRequestJsonBody = @"body";
     
     NSDictionary* moveFormParams = @{@"to": toItemPath, @"name": item.name};
     
-    NSURLRequest* request = [[NSURLRequest alloc] initWithMethod:kHTTPMethodPOST endpoint:endpoint queryParameters:queryParams formParameters:moveFormParams];
+    NSURLRequest* request = [[NSURLRequest alloc] initWithMethod:kHTTPMethodPOST endpoint:endpointPath queryParameters:queryParams formParameters:moveFormParams];
     return request;
 }
 
@@ -243,11 +243,9 @@ NSString* const kBatchRequestJsonBody = @"body";
 }
 
 #pragma mark - List directory contents
-+ (void)getContentsOfDirectory:(NSString*)directoryPath completion:(void (^)(NSArray* response))completion
++ (void)getContentsOfContainer:(Container*)container completion:(void (^)(NSArray* response))completion
 {
-    // Expect directoryPath in form /folderID/subFolderID to any depth or nil for root
-    // Ex. "/d2fe48a238844cf28750241b41516e50/8f41560133ad4a1c8a9ca005eede9730"
-    NSString* dirReqEndpoint = [NSString stringWithFormat:@"%@%@", kAPIEndpointFolderAction, directoryPath];
+    NSString* dirReqEndpoint = [container endpointPath];
     NSURLRequest* dirContentsRequest = [[NSURLRequest alloc] initWithMethod:kHTTPMethodGET endpoint:dirReqEndpoint];
     
     [NSURLConnection sendAsynchronousRequest:dirContentsRequest queue:[NSOperationQueue currentQueue] completionHandler:^(NSURLResponse *response, NSData *data, NSError *connectionError)
@@ -268,11 +266,6 @@ NSString* const kBatchRequestJsonBody = @"body";
          
          completion(responseArray);
      }];
-}
-
-+ (void)getContentsOfContainer:(Container*)container completion:(void (^)(NSArray* response))completion
-{
-    [BitcasaAPI getContentsOfDirectory:container.url completion:completion];
 }
 
 #pragma mark - Move item(s)
@@ -324,7 +317,7 @@ NSString* const kBatchRequestJsonBody = @"body";
 #pragma mark - Delete item(s)
 + (void)deleteItem:(Item*)itemToDelete withSuccessIndex:(NSInteger)successIndex completion:(void (^)(BOOL success, NSInteger successArrayIndex))completion
 {
-    NSString* deleteEndpoint = [NSString stringWithFormat:@"%@%@", kAPIEndpointFileAction,itemToDelete.url];
+    NSString* deleteEndpoint = [itemToDelete endpointPath];
     NSArray* deleteQueryParams = @[@{kDeleteRequestParameterCommit:kRequestParameterFalse}];//, @{kDeleteRequestParameterForce:kRequestParameterTrue}];
     
     NSURLRequest* deleteRequest = [[NSURLRequest alloc] initWithMethod:kHTTPMethodDELETE endpoint:deleteEndpoint queryParameters:deleteQueryParams formParameters:nil];
@@ -415,9 +408,9 @@ NSString* const kBatchRequestJsonBody = @"body";
 }
 
 #pragma mark - Create new directory
-+ (void)createFolderAtPath:(NSString*)path withName:(NSString*)name completion:(void (^)(NSDictionary* newFolderDict))completion
++ (void)createFolderInContainer:(Container*)container withName:(NSString*)name completion:(void (^)(NSDictionary* newFolderDict))completion
 {
-    NSString* createFolderEndpoint = [NSString stringWithFormat:@"%@%@", kAPIEndpointFolderAction, path];
+    NSString* createFolderEndpoint = [container endpointPath];
     NSArray* createFolderQueryParams = @[@{kQueryParameterOperation : kQueryParameterOperationCreate}];
     NSMutableArray* createFolderFormParams = [NSMutableArray arrayWithObjects:@{@"name": name}, @{@"exists":@"rename"}, nil];
     

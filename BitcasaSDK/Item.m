@@ -7,7 +7,8 @@
 //
 
 #import "Item.h"
-
+#import "BitcasaAPI.h"
+#import "Container.h"
 
 @implementation Item
 
@@ -31,35 +32,38 @@
 }
 
 #pragma mark - copy
-- (void)copyToDestinationPath:(NSString*)destPath completion:(void (^)(Item* newItem))completion
+- (void)copyToDestinationContainer:(Container *)destContainer completion:(void (^)(Item *))completion
 {
-    [NSException raise:NSInternalInconsistencyException
-                format:@"You must override %@ in a subclass", NSStringFromSelector(_cmd)];
+    [self copyToDestinationPath:destContainer.url completion:completion];
 }
 
-- (void)copyToDestinationContainer:(Container *)destContainer completion:(void (^)(Item* newItem))completion
+- (void)copyToDestinationPath:(NSString *)destPath completion:(void (^)(Item *))completion
 {
-    [NSException raise:NSInternalInconsistencyException
-                format:@"You must override %@ in a subclass", NSStringFromSelector(_cmd)];
+    [BitcasaAPI copyItem:self to:destPath completion:completion];
 }
 
 #pragma mark - move
-- (void)moveToDestinationPath:(NSString*)destPath completion:(void (^)(Item* movedItem))completion
-{
-    [NSException raise:NSInternalInconsistencyException
-                format:@"You must override %@ in a subclass", NSStringFromSelector(_cmd)];
-}
-
 - (void)moveToDestinationContainer:(Container *)destContainer completion:(void (^)(Item * movedItem))completion
 {
-    [NSException raise:NSInternalInconsistencyException
-                format:@"You must override %@ in a subclass", NSStringFromSelector(_cmd)];
+    [self moveToDestinationPath:destContainer.url completion:completion];
+}
+
+- (void)moveToDestinationPath:(NSString*)destPath completion:(void (^)(Item* movedItem))completion
+{
+    [BitcasaAPI moveItem:self to:destPath completion:completion];
 }
 
 #pragma mark - delete
-- (void)deleteWithCompletion:(void (^)(BOOL success))completion
+- (void)deleteWithCompletion:(void (^)(BOOL))completion
 {
-    [NSException raise:NSInternalInconsistencyException
-                format:@"You must override %@ in a subclass", NSStringFromSelector(_cmd)];
+    [BitcasaAPI deleteItem:self completion:completion];
+}
+
+
+- (NSString*)endpointPath
+{
+    @throw [NSException exceptionWithName:NSInternalInconsistencyException
+                                   reason:[NSString stringWithFormat:@"You must override %@ in a subclass", NSStringFromSelector(_cmd)]
+                                 userInfo:nil];
 }
 @end

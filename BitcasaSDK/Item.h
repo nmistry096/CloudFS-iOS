@@ -31,4 +31,6 @@
 #pragma mark - delete
 - (void)deleteWithCompletion:(void (^)(BOOL success))completion;
 
+- (NSString*)endpointPath;
+
 @end

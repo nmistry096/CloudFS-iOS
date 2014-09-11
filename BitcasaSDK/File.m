@@ -8,11 +8,17 @@
 
 #import "File.h"
 
+NSString* const kAPIEndpointFileAction = @"/files";
 
 @implementation File
 
 @dynamic mime;
 @dynamic extension;
 @dynamic size;
+
+- (NSString*)endpointPath
+{
+    return [NSString stringWithFormat:@"%@%@", kAPIEndpointFileAction, self.url];
+}
 
 @end
