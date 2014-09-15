@@ -254,7 +254,13 @@ NSString* const kBatchRequestJsonBody = @"body";
 
 + (void)getContentsOfContainer:(Container*)container completion:(void (^)(NSArray* items))completion
 {
+    if (container == nil)
+    {
+        container = [[Container alloc] initRootContainer];
+    }
+    
     NSString* dirReqEndpoint = [container endpointPath];
+    
     NSURLRequest* dirContentsRequest = [[NSURLRequest alloc] initWithMethod:kHTTPMethodGET endpoint:dirReqEndpoint];
     
     [NSURLConnection sendAsynchronousRequest:dirContentsRequest queue:[NSOperationQueue currentQueue] completionHandler:^(NSURLResponse *response, NSData *data, NSError *connectionError)
@@ -276,16 +282,15 @@ NSString* const kBatchRequestJsonBody = @"body";
 
 + (NSArray*)parseListResponse:(NSURLResponse *)response data:(NSData *)data error:(NSError *)connectionError
 {
-    
-    NSArray* responseArray;
     if ( ((NSHTTPURLResponse*)response).statusCode == 200 )
     {
         if (data)
         {
             NSError* err;
-            responseArray = [NSJSONSerialization JSONObjectWithData:data options:NSJSONReadingAllowFragments error:&err];
+            NSDictionary* responseDict = [NSJSONSerialization JSONObjectWithData:data options:NSJSONReadingAllowFragments error:&err];
+            NSArray* itemsDictArray = responseDict[@"result"][@"items"];
             NSMutableArray* itemArray = [NSMutableArray array];
-            for (NSDictionary* itemDict in responseArray)
+            for (NSDictionary* itemDict in itemsDictArray)
             {
                 Item* item = [[Item alloc] initWithDictionary:itemDict];
                 [itemArray addObject:item];

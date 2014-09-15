@@ -37,6 +37,7 @@
 		77BEB39019A6CA2C00D4BE80 /* NSString+API.m in Sources */ = {isa = PBXBuildFile; fileRef = 77BEB38F19A6CA2C00D4BE80 /* NSString+API.m */; };
 		77FA748219C28CFA00E84C23 /* TransferManager.m in Sources */ = {isa = PBXBuildFile; fileRef = 77FA748119C28CFA00E84C23 /* TransferManager.m */; };
 		77FA748519C3B1D600E84C23 /* BCInputStream.m in Sources */ = {isa = PBXBuildFile; fileRef = 77FA748419C3B1D600E84C23 /* BCInputStream.m */; };
+		77FA748619C764DD00E84C23 /* BCInputStream.m in Sources */ = {isa = PBXBuildFile; fileRef = 77FA748419C3B1D600E84C23 /* BCInputStream.m */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -347,6 +348,7 @@
 			files = (
 				776A387119A7E0A700E64737 /* NSString+API.m in Sources */,
 				77BEB35119A68F5C00D4BE80 /* BitcasaSDKTests.m in Sources */,
+				77FA748619C764DD00E84C23 /* BCInputStream.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

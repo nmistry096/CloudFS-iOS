@@ -64,6 +64,16 @@
 
 - (void)testGetListOfItems
 {
+    __block BOOL terminateRunLoop = NO;
+    [BitcasaAPI getContentsOfContainer:nil completion:^(NSArray *items)
+    {
+        terminateRunLoop = YES;
+        
+        XCTAssertNotNil(items);
+        XCTAssert(items.count == 4);
+    }];
     
+    // Run until 'terminateRunLoop' is flagged
+    while (CFRunLoopRunInMode(kCFRunLoopDefaultMode, 0, true) && !terminateRunLoop){};
 }
 @end

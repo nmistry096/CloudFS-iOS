@@ -12,11 +12,11 @@
 
 @implementation Item
 
-@dynamic url;
-@dynamic version;
-@dynamic name;
-@dynamic dateContentLastModified;
-@dynamic dateCreated;
+@synthesize url;
+@synthesize version;
+@synthesize name;
+@synthesize dateContentLastModified;
+@synthesize dateCreated;
 
 - (id)initWithDictionary:(NSDictionary*)dict
 {
@@ -70,5 +70,10 @@
     @throw [NSException exceptionWithName:NSInternalInconsistencyException
                                    reason:[NSString stringWithFormat:@"You must override %@ in a subclass", NSStringFromSelector(_cmd)]
                                  userInfo:nil];
+}
+
+- (NSString*)description
+{
+    return [NSString stringWithFormat:@"Item class: %@; name = %@; url = %@; version = %qi", [self class], self.name, self.url, self.version];
 }
 @end

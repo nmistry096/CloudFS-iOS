@@ -12,8 +12,17 @@
 NSString* const kAPIEndpointFolderAction = @"/folders";
 
 @implementation Container
-
 @dynamic itemCount;
+
+- (id)initRootContainer
+{
+    self = [super init];
+    if (self)
+    {
+        [self setUrl:@"/"];
+    }
+    return self;
+}
 
 #pragma mark - create folder
 - (void) createFolder:(NSString*)name completion:(void (^)(Container* newDir))completion

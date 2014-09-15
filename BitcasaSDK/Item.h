@@ -10,7 +10,7 @@
 #import <CoreData/CoreData.h>
 
 @class Container;
-@interface Item : NSManagedObject
+@interface Item : NSObject
 
 @property (nonatomic, retain) NSString * url;
 @property (nonatomic) int64_t version;
