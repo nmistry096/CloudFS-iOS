@@ -6,25 +6,25 @@
 //  Copyright (c) 2014 Bitcasa. All rights reserved.
 //
 
-#import "SessionManager.h"
+#import "TransferManager.h"
 #import "BitcasaAPI.h"
 
-static SessionManager* _sharedManager;
+static TransferManager* _sharedManager;
 NSString * const kBackgroundSessionIdentifier = @"com.Bitcasa.backgroundSession";
 
-@interface SessionManager ()
+@interface TransferManager ()
 
 @property (nonatomic, strong) NSOperationQueue *backgroundURLQueue;
 
 @end
 
-@implementation SessionManager
+@implementation TransferManager
 
 + (instancetype)sharedManager
 {
     dispatch_once_t onceToken;
     dispatch_once(&onceToken, ^{
-        _sharedManager = [[SessionManager alloc] init];
+        _sharedManager = [[TransferManager alloc] init];
     });
     
     return _sharedManager;

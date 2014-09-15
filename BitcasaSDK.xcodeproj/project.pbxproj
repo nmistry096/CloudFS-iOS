@@ -35,7 +35,7 @@
 		77BEB38919A6A8B600D4BE80 /* Filesystem.m in Sources */ = {isa = PBXBuildFile; fileRef = 77BEB38819A6A8B600D4BE80 /* Filesystem.m */; };
 		77BEB38D19A6C95100D4BE80 /* BitcasaAPI.m in Sources */ = {isa = PBXBuildFile; fileRef = 77BEB38C19A6C95100D4BE80 /* BitcasaAPI.m */; };
 		77BEB39019A6CA2C00D4BE80 /* NSString+API.m in Sources */ = {isa = PBXBuildFile; fileRef = 77BEB38F19A6CA2C00D4BE80 /* NSString+API.m */; };
-		77FA748219C28CFA00E84C23 /* SessionManager.m in Sources */ = {isa = PBXBuildFile; fileRef = 77FA748119C28CFA00E84C23 /* SessionManager.m */; };
+		77FA748219C28CFA00E84C23 /* TransferManager.m in Sources */ = {isa = PBXBuildFile; fileRef = 77FA748119C28CFA00E84C23 /* TransferManager.m */; };
 		77FA748519C3B1D600E84C23 /* BCInputStream.m in Sources */ = {isa = PBXBuildFile; fileRef = 77FA748419C3B1D600E84C23 /* BCInputStream.m */; };
 /* End PBXBuildFile section */
 
@@ -106,8 +106,8 @@
 		77BEB38C19A6C95100D4BE80 /* BitcasaAPI.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = BitcasaAPI.m; sourceTree = "<group>"; };
 		77BEB38E19A6CA2C00D4BE80 /* NSString+API.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "NSString+API.h"; sourceTree = "<group>"; };
 		77BEB38F19A6CA2C00D4BE80 /* NSString+API.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "NSString+API.m"; sourceTree = "<group>"; };
-		77FA748019C28CFA00E84C23 /* SessionManager.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SessionManager.h; sourceTree = "<group>"; };
-		77FA748119C28CFA00E84C23 /* SessionManager.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SessionManager.m; sourceTree = "<group>"; };
+		77FA748019C28CFA00E84C23 /* TransferManager.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TransferManager.h; sourceTree = "<group>"; };
+		77FA748119C28CFA00E84C23 /* TransferManager.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = TransferManager.m; sourceTree = "<group>"; };
 		77FA748319C3B1D600E84C23 /* BCInputStream.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = BCInputStream.h; sourceTree = "<group>"; };
 		77FA748419C3B1D600E84C23 /* BCInputStream.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = BCInputStream.m; sourceTree = "<group>"; };
 /* End PBXFileReference section */
@@ -200,8 +200,8 @@
 				77BEB38819A6A8B600D4BE80 /* Filesystem.m */,
 				77BEB38B19A6C95100D4BE80 /* BitcasaAPI.h */,
 				77BEB38C19A6C95100D4BE80 /* BitcasaAPI.m */,
-				77FA748019C28CFA00E84C23 /* SessionManager.h */,
-				77FA748119C28CFA00E84C23 /* SessionManager.m */,
+				77FA748019C28CFA00E84C23 /* TransferManager.h */,
+				77FA748119C28CFA00E84C23 /* TransferManager.m */,
 				77FA748319C3B1D600E84C23 /* BCInputStream.h */,
 				77FA748419C3B1D600E84C23 /* BCInputStream.m */,
 				77BEB38E19A6CA2C00D4BE80 /* NSString+API.h */,
@@ -332,7 +332,7 @@
 				776A387019A7A2F200E64737 /* Credentials.m in Sources */,
 				77BEB36819A69D2800D4BE80 /* Audio.m in Sources */,
 				77BEB38019A69E0200D4BE80 /* User.m in Sources */,
-				77FA748219C28CFA00E84C23 /* SessionManager.m in Sources */,
+				77FA748219C28CFA00E84C23 /* TransferManager.m in Sources */,
 				77BEB33C19A68F5C00D4BE80 /* BitcasaSDK.m in Sources */,
 				77BEB35F19A696ED00D4BE80 /* BitcasaDataModel.xcdatamodeld in Sources */,
 				77BEB38319A69F5300D4BE80 /* Account.m in Sources */,

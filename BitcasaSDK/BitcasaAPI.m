@@ -13,7 +13,7 @@
 #import "Item.h"
 #import "Container.h"
 #import "User.h"
-#import "SessionManager.h"
+#import "TransferManager.h"
 #import "BCInputStream.h"
 
 #import <AssetsLibrary/AssetsLibrary.h>
@@ -443,7 +443,7 @@ NSString* const kBatchRequestJsonBody = @"body";
 {
     NSURLRequest* downloadFileRequest = [[NSURLRequest alloc] initWithMethod:kHTTPMethodGET endpoint:[item endpointPath]];
     
-    SessionManager* transferManager = [SessionManager sharedManager];
+    TransferManager* transferManager = [TransferManager sharedManager];
     transferManager.delegate = delegate;
     NSURLSessionDownloadTask *task = [transferManager.backgroundSession downloadTaskWithRequest:downloadFileRequest];
     task.taskDescription = item.url;
@@ -477,7 +477,7 @@ NSString* const kBatchRequestJsonBody = @"body";
     
     [uploadFileRequest setHTTPBodyStream:formStream];
     
-    SessionManager* transferMngr = [SessionManager sharedManager];
+    TransferManager* transferMngr = [TransferManager sharedManager];
     NSURLConnection* connection = [[NSURLConnection alloc] initWithRequest:uploadFileRequest delegate:transferMngr startImmediately:NO];
     [connection scheduleInRunLoop:[NSRunLoop currentRunLoop] forMode:NSRunLoopCommonModes];
     [connection start];

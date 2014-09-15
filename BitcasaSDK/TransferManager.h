@@ -1,5 +1,5 @@
 //
-//  SessionManager.h
+//  TransferManager.h
 //  BitcasaSDK
 //
 //  Created by Olga on 9/11/14.
@@ -9,7 +9,7 @@
 #import <Foundation/Foundation.h>
 
 @protocol TransferDelegate;
-@interface SessionManager : NSObject <NSURLSessionDelegate, NSURLSessionTaskDelegate, NSURLSessionDataDelegate, NSURLSessionDownloadDelegate, NSURLConnectionDataDelegate>
+@interface TransferManager : NSObject <NSURLSessionDelegate, NSURLSessionTaskDelegate, NSURLSessionDataDelegate, NSURLSessionDownloadDelegate, NSURLConnectionDataDelegate>
 
 @property (nonatomic, strong) NSURLSession* backgroundSession;
 @property (nonatomic, strong) id <TransferDelegate> delegate;
