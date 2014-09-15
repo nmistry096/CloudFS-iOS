@@ -37,16 +37,16 @@
 + (void)restoreItem:(Item*)itemToRestore to:(Container*)toItem completion:(void (^)(BOOL success))completion;
 
 #pragma mark - Move item(s)
-+ (void)moveItem:(Item*)itemToMove to:(id)toItem completion:(void (^)(Item* movedItem))completion;
-+ (void)moveItems:(NSArray*)itemsToMove to:(id)toItem completion:(void (^)(NSArray* success))completion;
++ (void)moveItem:(Item*)itemToMove to:(Container*)toItem completion:(void (^)(Item* movedItem))completion;
++ (void)moveItems:(NSArray*)itemsToMove to:(Container*)toItem completion:(void (^)(NSArray* success))completion;
 
 #pragma mark - Delete item(s)
 + (void)deleteItem:(Item*)itemToDelete completion:(void (^)(BOOL success))completion;
 + (void)deleteItems:(NSArray*)items completion:(void (^)(NSArray* results))completion;
 
 #pragma mark - Copy item(s)
-+ (void)copyItem:(Item*)itemToCopy to:(id)destItem completion:(void (^)(Item* newItem))completion;
-+ (void)copyItems:(NSArray*)items to:(id)toItem completion:(void (^)(NSArray* success))completion;
++ (void)copyItem:(Item*)itemToCopy to:(Container*)destItem completion:(void (^)(Item* newItem))completion;
++ (void)copyItems:(NSArray*)items to:(Container*)toItem completion:(void (^)(NSArray* success))completion;
 
 #pragma mark - Create new directory
 + (void)createFolderInContainer:(Container*)container withName:(NSString*)name completion:(void (^)(NSDictionary* newFolderDict))completion;

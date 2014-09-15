@@ -22,10 +22,8 @@
 
 #pragma mark - move
 - (void)moveItems:(NSArray*)items toContainer:(Container*)destinationContainer completion:(void (^)(NSArray* successArray))completion;
-- (void)moveItems:(NSArray*)items toPath:(NSString*)destinationPath completion:(void (^)(NSArray* successArray))completion;
 
 #pragma mark - copy
 - (void)copyItems:(NSArray*)items toContainer:(Container*)destinationContainer completion:(void (^)(NSArray* successArray))completion;
-- (void)copyItems:(NSArray*)items toPath:(NSString*)destinationPath completion:(void (^)(NSArray* successArray))completion;
 
 @end

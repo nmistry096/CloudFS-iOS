@@ -37,19 +37,9 @@
     [BitcasaAPI moveItems:items to:destinationContainer completion:completion];
 }
 
-- (void)moveItems:(NSArray*)items toPath:(NSString*)destinationPath completion:(void (^)(NSArray* successArray))completion
-{
-    [BitcasaAPI moveItems:items to:destinationPath completion:completion];
-}
-
 #pragma mark - copy
 - (void)copyItems:(NSArray*)items toContainer:(Container*)destinationContainer completion:(void (^)(NSArray* successArray))completion
 {
     [BitcasaAPI copyItems:items to:destinationContainer completion:completion];
-}
-
-- (void)copyItems:(NSArray*)items toPath:(NSString*)destinationPath completion:(void (^)(NSArray* successArray))completion
-{
-    [BitcasaAPI copyItems:items to:destinationPath completion:completion];
 }
 @end

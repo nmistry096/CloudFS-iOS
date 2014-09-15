@@ -36,23 +36,13 @@
 #pragma mark - copy
 - (void)copyToDestinationContainer:(Container *)destContainer completion:(void (^)(Item *))completion
 {
-    [self copyToDestinationPath:destContainer.url completion:completion];
-}
-
-- (void)copyToDestinationPath:(NSString *)destPath completion:(void (^)(Item *))completion
-{
-    [BitcasaAPI copyItem:self to:destPath completion:completion];
+    [BitcasaAPI copyItem:self to:destContainer completion:completion];
 }
 
 #pragma mark - move
 - (void)moveToDestinationContainer:(Container *)destContainer completion:(void (^)(Item * movedItem))completion
 {
-    [self moveToDestinationPath:destContainer.url completion:completion];
-}
-
-- (void)moveToDestinationPath:(NSString*)destPath completion:(void (^)(Item* movedItem))completion
-{
-    [BitcasaAPI moveItem:self to:destPath completion:completion];
+    [BitcasaAPI moveItem:self to:destContainer completion:completion];
 }
 
 #pragma mark - delete

@@ -15,6 +15,8 @@
 #import "User.h"
 #import "TransferManager.h"
 #import "BCInputStream.h"
+#import "Folder.h"
+#import "File.h"
 
 #import <AssetsLibrary/AssetsLibrary.h>
 #import <CommonCrypto/CommonDigest.h>
@@ -123,17 +125,12 @@ NSString* const kBatchRequestJsonBody = @"body";
     return [self initWithMethod:httpMethod endpoint:endpoint queryParameters:nil formParameters:nil];
 }
 
-+ (id)requestForOperation:(NSString*)operation onItem:(Item*)item destinationItem:(id)destItem
++ (id)requestForOperation:(NSString*)operation onItem:(Item*)item destinationItem:(Container*)destItem
 {
     NSString* endpointPath = [item endpointPath];
     NSArray* queryParams = @[@{kQueryParameterOperation : operation}];
     
-    NSString* toItemPath;
-    if ([destItem isKindOfClass:[Container class]])
-        toItemPath = ((Container*)destItem).url;
-    else
-        toItemPath = destItem;
-    
+    NSString* toItemPath = destItem.url;
     NSDictionary* moveFormParams = @{@"to": toItemPath, @"name": item.name};
     
     NSURLRequest* request = [[NSURLRequest alloc] initWithMethod:kHTTPMethodPOST endpoint:endpointPath queryParameters:queryParams formParameters:moveFormParams];
@@ -301,16 +298,16 @@ NSString* const kBatchRequestJsonBody = @"body";
 }
 
 #pragma mark - Move item(s)
-+ (void)moveItem:(Item*)itemToMove to:(id)destItem withSuccessIndex:(NSInteger)successIndex completion:(void (^)(Item* movedItem, NSInteger index))completion
++ (void)moveItem:(Item*)itemToMove to:(Container*)dest withSuccessIndex:(NSInteger)successIndex completion:(void (^)(Item* movedItem, NSInteger index))completion
 {
-    NSURLRequest* moveRequest = [NSURLRequest requestForOperation:kQueryParameterOperationMove onItem:itemToMove destinationItem:destItem];
+    NSURLRequest* moveRequest = [NSURLRequest requestForOperation:kQueryParameterOperationMove onItem:itemToMove destinationItem:dest];
     
     [NSURLConnection sendAsynchronousRequest:moveRequest queue:[NSOperationQueue currentQueue] completionHandler:^(NSURLResponse *response, NSData *data, NSError *connectionError)
      {
          if ( ((NSHTTPURLResponse*)response).statusCode == 200 )
          {
              NSArray* responseItemDicts = [BitcasaAPI itemDictsFromResponseData:data];
-             Item* newItem = [[Item alloc] initWithDictionary:[responseItemDicts firstObject] andParentContainer:destItem];
+             Item* newItem = [[Item alloc] initWithDictionary:[responseItemDicts firstObject] andParentContainer:dest];
              completion(newItem, successIndex);
          }
          else
@@ -321,7 +318,7 @@ NSString* const kBatchRequestJsonBody = @"body";
      }];
 }
 
-+ (void)moveItem:(Item *)itemToMove to:(id)toItem completion:(void (^)(Item* movedItem))completion
++ (void)moveItem:(Item *)itemToMove to:(Container*)toItem completion:(void (^)(Item* movedItem))completion
 {
     [BitcasaAPI moveItem:itemToMove to:toItem withSuccessIndex:-1 completion:^(Item* movedItem, NSInteger index)
     {
@@ -329,7 +326,7 @@ NSString* const kBatchRequestJsonBody = @"body";
     }];
 }
 
-+ (void)moveItems:(NSArray*)itemsToMove to:(id)toItem completion:(void (^)(NSArray* success))completion
++ (void)moveItems:(NSArray*)itemsToMove to:(Container*)toItem completion:(void (^)(NSArray* success))completion
 {
     __block NSInteger indexOfSuccessArray = 0;
     __block NSMutableArray* successArray = [NSMutableArray arrayWithObjects:nil count:[itemsToMove count]];
@@ -349,7 +346,9 @@ NSString* const kBatchRequestJsonBody = @"body";
 + (void)deleteItem:(Item*)itemToDelete withSuccessIndex:(NSInteger)successIndex completion:(void (^)(BOOL success, NSInteger successArrayIndex))completion
 {
     NSString* deleteEndpoint = [itemToDelete endpointPath];
-    NSArray* deleteQueryParams = @[@{kDeleteRequestParameterCommit:kRequestParameterFalse}];//, @{kDeleteRequestParameterForce:kRequestParameterTrue}];
+    NSMutableArray* deleteQueryParams = [@[@{kDeleteRequestParameterCommit:kRequestParameterFalse}] mutableCopy];
+    if ([itemToDelete isKindOfClass:[Container class]])
+        [deleteQueryParams addObject:@{kDeleteRequestParameterForce:kRequestParameterTrue}];
     
     NSURLRequest* deleteRequest = [[NSURLRequest alloc] initWithMethod:kHTTPMethodDELETE endpoint:deleteEndpoint queryParameters:deleteQueryParams formParameters:nil];
     
@@ -391,7 +390,7 @@ NSString* const kBatchRequestJsonBody = @"body";
 }
 
 #pragma mark - Copy item(s)
-+ (void)copyItem:(Item*)itemToCopy to:(id)destItem withSuccessIndex:(NSInteger)successIndex completion:(void (^)(Item* newItem, NSInteger successIndex))completion
++ (void)copyItem:(Item*)itemToCopy to:(Container*)destItem withSuccessIndex:(NSInteger)successIndex completion:(void (^)(Item* newItem, NSInteger successIndex))completion
 {
     NSURLRequest* moveRequest = [NSURLRequest requestForOperation:kQueryParameterOperationCopy onItem:itemToCopy destinationItem:destItem];
     
@@ -399,8 +398,8 @@ NSString* const kBatchRequestJsonBody = @"body";
      {
          if ( ((NSHTTPURLResponse*)response).statusCode == 200 )
          {
-             NSArray* responseItemDicts = [BitcasaAPI itemDictsFromResponseData:data];
-             Item* newItem = [[Item alloc] initWithDictionary:[responseItemDicts firstObject] andParentContainer:destItem];
+             NSDictionary* metaDict = [BitcasaAPI metaDictFromResponseData:data];
+             Item* newItem = [[Item alloc] initWithDictionary:metaDict andParentContainer:destItem];
              completion(newItem, successIndex);
          }
          else
@@ -411,7 +410,7 @@ NSString* const kBatchRequestJsonBody = @"body";
      }];
 }
 
-+ (void)copyItem:(Item*)itemToCopy to:(id)destItem completion:(void (^)(Item* newItem))completion
++ (void)copyItem:(Item*)itemToCopy to:(Container*)destItem completion:(void (^)(Item* newItem))completion
 {
     [BitcasaAPI copyItem:itemToCopy to:destItem withSuccessIndex:-1 completion:^(Item* newItem, NSInteger successIndex)
     {
@@ -419,12 +418,12 @@ NSString* const kBatchRequestJsonBody = @"body";
     }];
 }
 
-+ (void)copyItems:(NSArray*)items to:(id)toItem completion:(void (^)(NSArray* success))completion
++ (void)copyItems:(NSArray*)items to:(Container*)toItem completion:(void (^)(NSArray* success))completion
 {
     __block NSInteger indexOfSuccessArray = 0;
     __block NSMutableArray* successArray = [NSMutableArray arrayWithObjects:nil count:[items count]];
     
-    for (Item* item in items)
+    for (id item in items)
     {
         [BitcasaAPI copyItem:item to:toItem withSuccessIndex:indexOfSuccessArray completion:^(Item* newItem, NSInteger successIndex)
         {
@@ -531,7 +530,12 @@ NSString* const kBatchRequestJsonBody = @"body";
             NSMutableArray* itemArray = [NSMutableArray array];
             for (NSDictionary* itemDict in itemsDictArray)
             {
-                Item* item = [[Item alloc] initWithDictionary:itemDict andParentContainer:parent];
+                id item;
+                if ([itemDict[@"type"] isEqualToString:@"folder"])
+                    item = [[Folder alloc] initWithDictionary:itemDict andParentContainer:parent];
+                else
+                    item = [[File alloc] initWithDictionary:itemDict andParentContainer:parent];
+
                 [itemArray addObject:item];
             }
             return itemArray;
@@ -543,11 +547,25 @@ NSString* const kBatchRequestJsonBody = @"body";
     return nil;
 };
 
-+ (NSArray*)itemDictsFromResponseData:(NSData*)data
++ (NSDictionary*)resultDictFromResponseData:(NSData*)data
 {
     NSError* err;
     NSDictionary* responseDict = [NSJSONSerialization JSONObjectWithData:data options:NSJSONReadingAllowFragments error:&err];
-    NSArray* itemsDictArray = responseDict[@"result"][@"items"];
+    NSDictionary* resultDict = responseDict[@"result"];
+    return resultDict;
+}
+
++ (NSArray*)itemDictsFromResponseData:(NSData*)data
+{
+    NSDictionary* resultDict = [BitcasaAPI resultDictFromResponseData:data];
+    NSArray* itemsDictArray = resultDict[@"items"];
     return itemsDictArray;
+}
+
++ (NSDictionary*)metaDictFromResponseData:(NSData*)data
+{
+    NSDictionary* resultDict = [BitcasaAPI resultDictFromResponseData:data];
+    NSDictionary* meta = resultDict[@"meta"];
+    return meta;
 }
 @end
