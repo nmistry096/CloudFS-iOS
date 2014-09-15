@@ -280,30 +280,6 @@ NSString* const kBatchRequestJsonBody = @"body";
     }];
 }
 
-+ (NSArray*)parseListAtContainter:(Container*)parent response:(NSURLResponse *)response data:(NSData *)data error:(NSError *)connectionError
-{
-    if ( ((NSHTTPURLResponse*)response).statusCode == 200 )
-    {
-        if (data)
-        {
-            NSError* err;
-            NSDictionary* responseDict = [NSJSONSerialization JSONObjectWithData:data options:NSJSONReadingAllowFragments error:&err];
-            NSArray* itemsDictArray = responseDict[@"result"][@"items"];
-            NSMutableArray* itemArray = [NSMutableArray array];
-            for (NSDictionary* itemDict in itemsDictArray)
-            {
-                Item* item = [[Item alloc] initWithDictionary:itemDict andParentContainer:parent];
-                [itemArray addObject:item];
-            }
-            return itemArray;
-        }
-    }
-    else
-        [BitcasaAPI checkForAuthenticationFailure:response];
-    
-    return nil;
-};
-
 #pragma mark - Restore item
 + (void)restoreItem:(Item*)itemToRestore to:(Container*)toItem completion:(void (^)(BOOL success))completion
 {
@@ -333,9 +309,8 @@ NSString* const kBatchRequestJsonBody = @"body";
      {
          if ( ((NSHTTPURLResponse*)response).statusCode == 200 )
          {
-             NSError* err;
-             NSDictionary* responseDict = [NSJSONSerialization JSONObjectWithData:data options:NSJSONReadingAllowFragments error:&err];
-             Item* newItem = [[Item alloc] initWithDictionary:responseDict andParentContainer:destItem];
+             NSArray* responseItemDicts = [BitcasaAPI itemDictsFromResponseData:data];
+             Item* newItem = [[Item alloc] initWithDictionary:[responseItemDicts firstObject] andParentContainer:destItem];
              completion(newItem, successIndex);
          }
          else
@@ -424,9 +399,8 @@ NSString* const kBatchRequestJsonBody = @"body";
      {
          if ( ((NSHTTPURLResponse*)response).statusCode == 200 )
          {
-             NSError* err;
-             NSDictionary* responseDict = [NSJSONSerialization JSONObjectWithData:data options:NSJSONReadingAllowFragments error:&err];
-             Item* newItem = [[Item alloc] initWithDictionary:responseDict andParentContainer:destItem];
+             NSArray* responseItemDicts = [BitcasaAPI itemDictsFromResponseData:data];
+             Item* newItem = [[Item alloc] initWithDictionary:[responseItemDicts firstObject] andParentContainer:destItem];
              completion(newItem, successIndex);
          }
          else
@@ -478,9 +452,8 @@ NSString* const kBatchRequestJsonBody = @"body";
          {
              if (data)
              {
-                 NSError* err;
-                 NSDictionary* newContainerDict = [NSJSONSerialization JSONObjectWithData:data options:NSJSONReadingAllowFragments error:&err];
-                 completion(newContainerDict);
+                 NSArray* itemDicts = [BitcasaAPI itemDictsFromResponseData:data];
+                 completion([itemDicts firstObject]);
              }
          }
          else
@@ -546,5 +519,35 @@ NSString* const kBatchRequestJsonBody = @"body";
         Session* currentSession = [Session sharedSession];
         [currentSession.delegate sessionDidReceiveAuthorizationFailure:currentSession userId:currentSession.user.email];
     }
+}
+
++ (NSArray*)parseListAtContainter:(Container*)parent response:(NSURLResponse *)response data:(NSData *)data error:(NSError *)connectionError
+{
+    if ( ((NSHTTPURLResponse*)response).statusCode == 200 )
+    {
+        if (data)
+        {
+            NSArray* itemsDictArray = [BitcasaAPI itemDictsFromResponseData:data];
+            NSMutableArray* itemArray = [NSMutableArray array];
+            for (NSDictionary* itemDict in itemsDictArray)
+            {
+                Item* item = [[Item alloc] initWithDictionary:itemDict andParentContainer:parent];
+                [itemArray addObject:item];
+            }
+            return itemArray;
+        }
+    }
+    else
+        [BitcasaAPI checkForAuthenticationFailure:response];
+    
+    return nil;
+};
+
++ (NSArray*)itemDictsFromResponseData:(NSData*)data
+{
+    NSError* err;
+    NSDictionary* responseDict = [NSJSONSerialization JSONObjectWithData:data options:NSJSONReadingAllowFragments error:&err];
+    NSArray* itemsDictArray = responseDict[@"result"][@"items"];
+    return itemsDictArray;
 }
 @end

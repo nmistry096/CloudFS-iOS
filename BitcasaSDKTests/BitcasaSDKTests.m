@@ -12,6 +12,7 @@
 #import "BitcasaAPI.h"
 #import "User.h"
 #import "Account.h"
+#import "Container.h"
 
 @interface BitcasaSDKTests : XCTestCase
 
@@ -70,9 +71,29 @@
         terminateRunLoop = YES;
         
         XCTAssertNotNil(items);
-        XCTAssert(items.count == 4);
+        XCTAssert(items.count == 8);
     }];
     
+    // Run until 'terminateRunLoop' is flagged
+    while (CFRunLoopRunInMode(kCFRunLoopDefaultMode, 0, true) && !terminateRunLoop){};
+}
+
+- (void)testCreateFolder
+{
+    __block BOOL terminateRunLoop = NO;
+    
+    Container* rootDir = [[Container alloc] initRootContainer];
+    [rootDir createFolder:@"bf_jeans" completion:^(Container *newDir)
+    {
+        XCTAssertNotNil(newDir);
+        
+        [newDir deleteWithCompletion:^(BOOL success)
+        {
+            terminateRunLoop = YES;
+            XCTAssert(success == YES);
+        }];
+    }];
+
     // Run until 'terminateRunLoop' is flagged
     while (CFRunLoopRunInMode(kCFRunLoopDefaultMode, 0, true) && !terminateRunLoop){};
 }

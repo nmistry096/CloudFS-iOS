@@ -29,6 +29,9 @@ NSString* const kAPIEndpointFolderAction = @"/folders";
 {
     [BitcasaAPI createFolderInContainer:self withName:name completion:^(NSDictionary* newContainerDict)
     {
+        if (newContainerDict == nil)
+            completion(nil);
+        
         Container* newDir = [[Container alloc] initWithDictionary:newContainerDict andParentContainer:self];
         completion(newDir);
     }];
