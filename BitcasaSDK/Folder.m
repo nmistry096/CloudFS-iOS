@@ -7,9 +7,13 @@
 //
 
 #import "Folder.h"
-
+#import "BitcasaAPI.h"
 
 @implementation Folder
 
+- (void)uploadContentsOfURL:(NSURL*)url delegate:(id <TransferDelegate>)delegate
+{
+    [BitcasaAPI uploadFile:url to:self delegate:delegate];
+}
 
 @end

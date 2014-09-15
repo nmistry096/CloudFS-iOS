@@ -9,7 +9,20 @@
 #import <Foundation/Foundation.h>
 
 @class Item;
+@protocol TransferDelegate <NSObject>
+@optional
+#pragma mark - download
+- (void)itemAtPath:(NSString*)itemPath didCompleteDownloadToURL:(NSURL*)locationURL error:(NSError*)err;
+- (void)itemAtPath:(NSString*)itemPath didDownload:(int64_t)totalBytesWritten outOfTotal:(int64_t)totalBytesExpectedToWrite;
+
+#pragma mark - upload
+- (void)fileAtPath:(NSString*)filePath didCompleteUploadWithError:(NSError*)err;
+- (void)fileAtPath:(NSString*)filePath didReceiveResponse:(NSURLResponse*)response;
+- (void)fileAtPath:(NSString*)filePath didUpload:(int64_t)totalBytesUploaded outOfTotal:(int64_t)totalBytesExpectedToWrite;
+@end
+
 @class Container;
+@class Folder;
 @interface BitcasaAPI : NSObject
 + (NSString *)accessTokenWithEmail:(NSString *)email password:(NSString *)password;
 
@@ -33,4 +46,10 @@
 
 #pragma mark - Create new directory
 + (void)createFolderInContainer:(Container*)container withName:(NSString*)name completion:(void (^)(NSDictionary* newFolderDict))completion;
+
+#pragma mark - Downloads
++ (void)downloadItem:(Item*)item delegate:(id <TransferDelegate>)delegate;
+
+#pragma mark - Uploads
++ (void)uploadFile:(NSURL*)sourceURL to:(Folder*)destContainer delegate:(id <TransferDelegate>)delegate;
 @end

@@ -10,11 +10,13 @@
 #import <CoreData/CoreData.h>
 #import "Item.h"
 
-
+@protocol TransferDelegate;
 @interface File : Item
 
 @property (nonatomic, retain) NSString * mime;
 @property (nonatomic, retain) NSString * extension;
 @property (nonatomic) int64_t size;
+
+- (void)downloadWithDelegate:(id <TransferDelegate>)delegate;
 
 @end

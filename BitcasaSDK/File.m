@@ -7,6 +7,7 @@
 //
 
 #import "File.h"
+#import "BitcasaAPI.h"
 
 NSString* const kAPIEndpointFileAction = @"/files";
 
@@ -21,4 +22,8 @@ NSString* const kAPIEndpointFileAction = @"/files";
     return [NSString stringWithFormat:@"%@%@", kAPIEndpointFileAction, self.url];
 }
 
+- (void)downloadWithDelegate:(id <TransferDelegate>)delegate
+{
+    [BitcasaAPI downloadItem:self delegate:delegate];
+}
 @end

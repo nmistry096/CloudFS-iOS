@@ -10,8 +10,9 @@
 #import <CoreData/CoreData.h>
 #import "Container.h"
 
-
+@protocol TransferDelegate;
 @interface Folder : Container
 
+- (void)uploadContentsOfURL:(NSURL*)url delegate:(id <TransferDelegate>)delegate;
 
 @end

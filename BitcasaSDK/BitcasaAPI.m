@@ -13,7 +13,10 @@
 #import "Item.h"
 #import "Container.h"
 #import "User.h"
+#import "SessionManager.h"
+#import "BCInputStream.h"
 
+#import <AssetsLibrary/AssetsLibrary.h>
 #import <CommonCrypto/CommonDigest.h>
 #import <CommonCrypto/CommonHMAC.h>
 
@@ -435,7 +438,54 @@ NSString* const kBatchRequestJsonBody = @"body";
      }];
 }
 
+#pragma mark - Downloads
++ (void)downloadItem:(Item*)item delegate:(id <TransferDelegate>)delegate
+{
+    NSURLRequest* downloadFileRequest = [[NSURLRequest alloc] initWithMethod:kHTTPMethodGET endpoint:[item endpointPath]];
+    
+    SessionManager* transferManager = [SessionManager sharedManager];
+    transferManager.delegate = delegate;
+    NSURLSessionDownloadTask *task = [transferManager.backgroundSession downloadTaskWithRequest:downloadFileRequest];
+    task.taskDescription = item.url;
+    [task resume];
+}
 
+#pragma mark - Uploads
++ (void)uploadFile:(NSURL*)sourceURL to:(Folder*)destContainer delegate:(id <TransferDelegate>)delegate
+{
+    NSInputStream *inputStream = [NSInputStream inputStreamWithURL:sourceURL];
+    NSDictionary *attributes = [[NSFileManager defaultManager] attributesOfItemAtPath:[sourceURL path] error:nil];
+    NSUInteger dataLength = 0;
+    if (attributes)
+        dataLength = [attributes[NSFileSize] unsignedIntegerValue];
+    
+    [BitcasaAPI uploadStream:inputStream toContainer:(Container*)destContainer];
+}
+
++ (void)uploadStream:(NSInputStream *)stream toContainer:(Container*)destContainer
+{
+    NSString* destPath = [destContainer endpointPath];
+    NSString* name = destContainer.name;
+    
+    NSURL* uploadFileURL = [NSURL URLWithString:[NSString stringWithFormat:@"%@%@%@", [Credentials sharedInstance].serverURL, [BitcasaAPI apiVersion], destPath]];
+    NSMutableURLRequest* uploadFileRequest = [NSMutableURLRequest requestWithURL:uploadFileURL];
+    [uploadFileRequest setHTTPMethod:kHTTPMethodPOST];
+    [uploadFileRequest setValue:[NSString stringWithFormat:@"multipart/form-data; boundary=%@", kBCMultipartFormDataBoundary] forHTTPHeaderField:kHeaderContentType];
+    [uploadFileRequest addValue:[NSString stringWithFormat:@"Bearer %@", [Credentials sharedInstance].accessToken] forHTTPHeaderField:kHeaderAuth];
+    
+    BCInputStream *formStream = [BCInputStream BCInputStreamWithFilename:name inputStream:stream];
+    
+    [uploadFileRequest setHTTPBodyStream:formStream];
+    
+    SessionManager* transferMngr = [SessionManager sharedManager];
+    NSURLConnection* connection = [[NSURLConnection alloc] initWithRequest:uploadFileRequest delegate:transferMngr startImmediately:NO];
+    [connection scheduleInRunLoop:[NSRunLoop currentRunLoop] forMode:NSRunLoopCommonModes];
+    [connection start];
+    
+    CFRunLoopRun();
+}
+
+#pragma mark - utilities
 + (void)checkForAuthenticationFailure:(NSURLResponse*)response
 {
     if (((NSHTTPURLResponse*)response).statusCode == 401)
