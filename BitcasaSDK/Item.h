@@ -18,7 +18,7 @@
 @property (nonatomic) NSDate* dateContentLastModified;
 @property (nonatomic) NSDate* dateCreated;
 
-- (id)initWithDictionary:(NSDictionary*)dict;
+- (id)initWithDictionary:(NSDictionary*)dict andParentContainer:(Container*)parent;
 
 #pragma mark - copy
 - (void)copyToDestinationPath:(NSString*)destPath completion:(void (^)(Item* newItem))completion;

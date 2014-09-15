@@ -265,7 +265,7 @@ NSString* const kBatchRequestJsonBody = @"body";
     
     [NSURLConnection sendAsynchronousRequest:dirContentsRequest queue:[NSOperationQueue currentQueue] completionHandler:^(NSURLResponse *response, NSData *data, NSError *connectionError)
      {
-         NSArray* itemArray = [BitcasaAPI parseListResponse:response data:data error:connectionError];
+         NSArray* itemArray = [BitcasaAPI parseListAtContainter:container response:response data:data error:connectionError];
          completion(itemArray);
      }];
 }
@@ -275,12 +275,12 @@ NSString* const kBatchRequestJsonBody = @"body";
     NSURLRequest* trashContentsRequest = [[NSURLRequest alloc] initWithMethod:kHTTPMethodGET endpoint:kAPIEndpointTrash];
     [NSURLConnection sendAsynchronousRequest:trashContentsRequest queue:[NSOperationQueue currentQueue] completionHandler:^(NSURLResponse *response, NSData *data, NSError *connectionError)
     {
-        NSArray* itemArray = [BitcasaAPI parseListResponse:response data:data error:connectionError];
+        NSArray* itemArray = [BitcasaAPI parseListAtContainter:nil response:response data:data error:connectionError];
         completion(itemArray);
     }];
 }
 
-+ (NSArray*)parseListResponse:(NSURLResponse *)response data:(NSData *)data error:(NSError *)connectionError
++ (NSArray*)parseListAtContainter:(Container*)parent response:(NSURLResponse *)response data:(NSData *)data error:(NSError *)connectionError
 {
     if ( ((NSHTTPURLResponse*)response).statusCode == 200 )
     {
@@ -292,7 +292,7 @@ NSString* const kBatchRequestJsonBody = @"body";
             NSMutableArray* itemArray = [NSMutableArray array];
             for (NSDictionary* itemDict in itemsDictArray)
             {
-                Item* item = [[Item alloc] initWithDictionary:itemDict];
+                Item* item = [[Item alloc] initWithDictionary:itemDict andParentContainer:parent];
                 [itemArray addObject:item];
             }
             return itemArray;
@@ -335,7 +335,7 @@ NSString* const kBatchRequestJsonBody = @"body";
          {
              NSError* err;
              NSDictionary* responseDict = [NSJSONSerialization JSONObjectWithData:data options:NSJSONReadingAllowFragments error:&err];
-             Item* newItem = [[Item alloc] initWithDictionary:responseDict];
+             Item* newItem = [[Item alloc] initWithDictionary:responseDict andParentContainer:destItem];
              completion(newItem, successIndex);
          }
          else
@@ -426,7 +426,7 @@ NSString* const kBatchRequestJsonBody = @"body";
          {
              NSError* err;
              NSDictionary* responseDict = [NSJSONSerialization JSONObjectWithData:data options:NSJSONReadingAllowFragments error:&err];
-             Item* newItem = [[Item alloc] initWithDictionary:responseDict];
+             Item* newItem = [[Item alloc] initWithDictionary:responseDict andParentContainer:destItem];
              completion(newItem, successIndex);
          }
          else

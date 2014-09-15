@@ -18,7 +18,7 @@
 @synthesize dateContentLastModified;
 @synthesize dateCreated;
 
-- (id)initWithDictionary:(NSDictionary*)dict
+- (id)initWithDictionary:(NSDictionary*)dict andParentContainer:(Container*)parent
 {
     self = [super init];
     if (self)
@@ -27,6 +27,8 @@
         self.dateContentLastModified = [NSDate dateWithTimeIntervalSince1970:[dict[@"date_content_last_modified"] doubleValue]];
         self.dateCreated = [NSDate dateWithTimeIntervalSince1970:[dict[@"date_created"] doubleValue]];
         self.version = [dict[@"version"] integerValue];
+        
+        self.url = [parent.url stringByAppendingPathComponent:dict[@"id"]];
     }
     return self;
 }
