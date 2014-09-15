@@ -71,7 +71,7 @@
         terminateRunLoop = YES;
         
         XCTAssertNotNil(items);
-        XCTAssert(items.count == 22);
+        XCTAssert(items.count == 18);
     }];
     
     // Run until 'terminateRunLoop' is flagged
@@ -98,7 +98,7 @@
     while (CFRunLoopRunInMode(kCFRunLoopDefaultMode, 0, true) && !terminateRunLoop){};
 }
 
-- (void)testMoveItems
+- (void)testCopyItems
 {
     __block BOOL terminateRunLoop = NO;
     
@@ -123,6 +123,42 @@
          }];
      }];
     
+    // Run until 'terminateRunLoop' is flagged
+    while (CFRunLoopRunInMode(kCFRunLoopDefaultMode, 0, true) && !terminateRunLoop){};
+}
+
+- (void)testMoveItems
+{
+    __block BOOL terminateRunLoop = NO;
+    
+    Container* rootDir = [[Container alloc] initRootContainer];
+    [rootDir createFolder:@"moved_items" completion:^(Container *newDir)
+     {
+         XCTAssertNotNil(newDir);
+         
+         [rootDir listItemsWithCompletion:^(NSArray *items)
+          {
+              XCTAssertNotNil(items);
+              NSInteger randomIndex = arc4random()%items.count;
+              id item = items[randomIndex];
+              [item moveToDestinationContainer:newDir completion:^(Item *movedItem)
+              {
+                  XCTAssertNotNil(movedItem);
+                  
+                  [movedItem moveToDestinationContainer:rootDir completion:^(Item *movedItem)
+                  {
+                      XCTAssertNotNil(movedItem);
+                      [newDir deleteWithCompletion:^(BOOL success)
+                       {
+                           terminateRunLoop = YES;
+                           XCTAssertTrue(success);
+                       }];
+                  }];
+
+              }];
+          }];
+     }];
+
     // Run until 'terminateRunLoop' is flagged
     while (CFRunLoopRunInMode(kCFRunLoopDefaultMode, 0, true) && !terminateRunLoop){};
 }

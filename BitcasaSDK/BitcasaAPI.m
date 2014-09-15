@@ -306,8 +306,13 @@ NSString* const kBatchRequestJsonBody = @"body";
      {
          if ( ((NSHTTPURLResponse*)response).statusCode == 200 )
          {
-             NSArray* responseItemDicts = [BitcasaAPI itemDictsFromResponseData:data];
-             Item* newItem = [[Item alloc] initWithDictionary:[responseItemDicts firstObject] andParentContainer:dest];
+             id newItem;
+             NSDictionary* responseMeta = [BitcasaAPI metaDictFromResponseData:data];
+             if ([itemToMove isKindOfClass:[Container class]])
+                 newItem = [[Container alloc] initWithDictionary:responseMeta andParentContainer:dest];
+             else
+                 newItem = [[File alloc] initWithDictionary:responseMeta andParentContainer:dest];
+             
              completion(newItem, successIndex);
          }
          else
