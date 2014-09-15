@@ -37,6 +37,7 @@ NSString* const kAPIEndpointTranscode = @"/transcode";
 NSString* const kAPIEndpointVideo = @"/video";
 NSString* const kAPIEndpointAudio = @"/audio";
 NSString* const kAPIEndpointBatch = @"/batch";
+NSString* const kAPIEndpointTrash = @"/trash";
 
 NSString* const kCameraBackupEntrypointID = @"015199f04c044c5fa95fc69556cf723e";
 
@@ -58,6 +59,9 @@ NSString* const kQueryParameterOperationCreate = @"create";
 
 NSString* const kDeleteRequestParameterCommit = @"commit";
 NSString* const kDeleteRequestParameterForce = @"force";
+
+NSString* const kTrashRequestParameterRestore = @"restore";
+NSString* const kTrashRequestParameterRescuePath = @"rescue-path";
 
 NSString* const kRequestParameterTrue = @"true";
 NSString* const kRequestParameterFalse = @"false";
@@ -246,28 +250,72 @@ NSString* const kBatchRequestJsonBody = @"body";
 }
 
 #pragma mark - List directory contents
-+ (void)getContentsOfContainer:(Container*)container completion:(void (^)(NSArray* response))completion
+
+
++ (void)getContentsOfContainer:(Container*)container completion:(void (^)(NSArray* items))completion
 {
     NSString* dirReqEndpoint = [container endpointPath];
     NSURLRequest* dirContentsRequest = [[NSURLRequest alloc] initWithMethod:kHTTPMethodGET endpoint:dirReqEndpoint];
     
     [NSURLConnection sendAsynchronousRequest:dirContentsRequest queue:[NSOperationQueue currentQueue] completionHandler:^(NSURLResponse *response, NSData *data, NSError *connectionError)
      {
-         NSArray* responseArray;
+         NSArray* itemArray = [BitcasaAPI parseListResponse:response data:data error:connectionError];
+         completion(itemArray);
+     }];
+}
+
++ (void)getContentsOfTrashWithCompletion:(void (^)(NSArray* items))completion
+{
+    NSURLRequest* trashContentsRequest = [[NSURLRequest alloc] initWithMethod:kHTTPMethodGET endpoint:kAPIEndpointTrash];
+    [NSURLConnection sendAsynchronousRequest:trashContentsRequest queue:[NSOperationQueue currentQueue] completionHandler:^(NSURLResponse *response, NSData *data, NSError *connectionError)
+    {
+        NSArray* itemArray = [BitcasaAPI parseListResponse:response data:data error:connectionError];
+        completion(itemArray);
+    }];
+}
+
++ (NSArray*)parseListResponse:(NSURLResponse *)response data:(NSData *)data error:(NSError *)connectionError
+{
+    
+    NSArray* responseArray;
+    if ( ((NSHTTPURLResponse*)response).statusCode == 200 )
+    {
+        if (data)
+        {
+            NSError* err;
+            responseArray = [NSJSONSerialization JSONObjectWithData:data options:NSJSONReadingAllowFragments error:&err];
+            NSMutableArray* itemArray = [NSMutableArray array];
+            for (NSDictionary* itemDict in responseArray)
+            {
+                Item* item = [[Item alloc] initWithDictionary:itemDict];
+                [itemArray addObject:item];
+            }
+            return itemArray;
+        }
+    }
+    else
+        [BitcasaAPI checkForAuthenticationFailure:response];
+    
+    return nil;
+};
+
+#pragma mark - Restore item
++ (void)restoreItem:(Item*)itemToRestore to:(Container*)toItem completion:(void (^)(BOOL success))completion
+{
+    NSString* itemPath = [itemToRestore endpointPath];
+    NSString* restoreEndpoint = [NSString stringWithFormat:@"%@%@", kAPIEndpointTrash, itemPath];
+    
+    NSDictionary* formParams = @{ kTrashRequestParameterRestore : @"rescue", kTrashRequestParameterRescuePath : toItem.url};
+    NSURLRequest* restoreRequest = [[NSURLRequest alloc] initWithMethod:kHTTPMethodPOST endpoint:restoreEndpoint queryParameters:nil formParameters:formParams];
+    [NSURLConnection sendAsynchronousRequest:restoreRequest queue:[NSOperationQueue currentQueue] completionHandler:^(NSURLResponse *response, NSData *data, NSError *connectionError)
+     {
          if ( ((NSHTTPURLResponse*)response).statusCode == 200 )
-         {
-             if (data)
-             {
-                 NSError* err;
-                 responseArray = [NSJSONSerialization JSONObjectWithData:data options:NSJSONReadingAllowFragments error:&err];
-             }
-         }
+             completion(YES);
          else
          {
              [BitcasaAPI checkForAuthenticationFailure:response];
+             completion(NO);
          }
-         
-         completion(responseArray);
      }];
 }
 

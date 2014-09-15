@@ -31,6 +31,9 @@
 #pragma mark - delete
 - (void)deleteWithCompletion:(void (^)(BOOL success))completion;
 
+#pragma mark - restore
+- (void)restoreToContainer:(Container*)container completion:(void (^)(BOOL))completion;
+
 - (NSString*)endpointPath;
 
 @end

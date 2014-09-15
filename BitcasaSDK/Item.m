@@ -59,6 +59,11 @@
     [BitcasaAPI deleteItem:self completion:completion];
 }
 
+#pragma mark - restore
+- (void)restoreToContainer:(Container*)container completion:(void (^)(BOOL))completion
+{
+    [BitcasaAPI restoreItem:self to:container completion:completion];
+}
 
 - (NSString*)endpointPath
 {

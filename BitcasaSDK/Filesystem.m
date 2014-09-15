@@ -19,6 +19,12 @@
     [container listItemsWithCompletion:completion];
 }
 
+#pragma mark - list trash
+- (void)listItemsInTrashWithCompletion:(void (^)(NSArray* items))completion
+{
+    [BitcasaAPI getContentsOfTrashWithCompletion:completion];
+}
+
 #pragma mark - delete
 - (void)deleteItems:(NSArray*)items completion:(void (^)(NSArray* successArray))completion
 {

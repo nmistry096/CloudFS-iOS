@@ -30,7 +30,11 @@
 + (void)getProfileWithCompletion:(void(^)(NSDictionary* response))completion;
 
 #pragma mark - List directory contents
-+ (void)getContentsOfContainer:(Container*)container completion:(void (^)(NSArray* response))completion;
++ (void)getContentsOfContainer:(Container*)container completion:(void (^)(NSArray* items))completion;
++ (void)getContentsOfTrashWithCompletion:(void (^)(NSArray* items))completion;
+
+#pragma mark - Restore item
++ (void)restoreItem:(Item*)itemToRestore to:(Container*)toItem completion:(void (^)(BOOL success))completion;
 
 #pragma mark - Move item(s)
 + (void)moveItem:(Item*)itemToMove to:(id)toItem completion:(void (^)(Item* movedItem))completion;
