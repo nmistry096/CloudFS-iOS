@@ -10,6 +10,8 @@
 #import <CoreData/CoreData.h>
 #import "Item.h"
 
+extern NSString* const kAPIEndpointFileAction;
+
 @protocol TransferDelegate;
 @interface File : Item
 

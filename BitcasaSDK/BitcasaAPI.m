@@ -494,7 +494,7 @@ NSString* const kBatchRequestJsonBody = @"body";
 
 + (void)uploadStream:(NSInputStream *)stream toContainer:(Container*)destContainer
 {
-    NSString* destPath = [destContainer endpointPath];
+    NSString* destPath = [NSString stringWithFormat:@"%@%@", kAPIEndpointFileAction, destContainer.url];
     NSString* name = destContainer.name;
     
     NSURL* uploadFileURL = [NSURL URLWithString:[NSString stringWithFormat:@"%@%@%@", [Credentials sharedInstance].serverURL, [BitcasaAPI apiVersion], destPath]];
@@ -511,8 +511,6 @@ NSString* const kBatchRequestJsonBody = @"body";
     NSURLConnection* connection = [[NSURLConnection alloc] initWithRequest:uploadFileRequest delegate:transferMngr startImmediately:NO];
     [connection scheduleInRunLoop:[NSRunLoop currentRunLoop] forMode:NSRunLoopCommonModes];
     [connection start];
-    
-    CFRunLoopRun();
 }
 
 #pragma mark - utilities

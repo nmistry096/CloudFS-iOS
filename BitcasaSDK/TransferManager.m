@@ -22,12 +22,13 @@ NSString * const kBackgroundSessionIdentifier = @"com.Bitcasa.backgroundSession"
 
 + (instancetype)sharedManager
 {
-    dispatch_once_t onceToken;
+    static TransferManager *sharedManager = nil;
+    dispatch_once_t onceToken = 0;
     dispatch_once(&onceToken, ^{
-        _sharedManager = [[TransferManager alloc] init];
+        sharedManager = [[TransferManager alloc] init];
     });
     
-    return _sharedManager;
+    return sharedManager;
 }
 
 - (id)init
@@ -36,7 +37,9 @@ NSString * const kBackgroundSessionIdentifier = @"com.Bitcasa.backgroundSession"
     if (self)
     {
         self.backgroundURLQueue = [[NSOperationQueue alloc] init];
-        [self setupBackgroundURLSessionWithIdentifier:kBackgroundSessionIdentifier];
+        //[self setupBackgroundURLSessionWithIdentifier:kBackgroundSessionIdentifier];
+        
+        _sharedManager = self;
     }
     return self;
 }
