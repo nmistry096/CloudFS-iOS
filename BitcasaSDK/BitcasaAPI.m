@@ -484,20 +484,19 @@ NSString* const kBatchRequestJsonBody = @"body";
 + (void)uploadFile:(NSString*)sourcePath to:(Folder*)destContainer delegate:(id <TransferDelegate>)transferDelegate
 {
     NSData *tempData = [NSData dataWithContentsOfFile:sourcePath];
-    //tempStream = [[NSInputStream alloc] initWithData:tempData];
     NSInputStream *inputStream = [[NSInputStream alloc] initWithData:tempData];
     NSDictionary *attributes = [[NSFileManager defaultManager] attributesOfItemAtPath:sourcePath error:nil];
     NSUInteger dataLength = 0;
     if (attributes)
         dataLength = [attributes[NSFileSize] unsignedIntegerValue];
     
-    [BitcasaAPI uploadStream:inputStream toContainer:(Container*)destContainer withDelegate:transferDelegate];
+    [BitcasaAPI uploadStream:inputStream withFileName:[sourcePath lastPathComponent] toContainer:(Container*)destContainer withDelegate:transferDelegate];
 }
 
-+ (void)uploadStream:(NSInputStream *)stream toContainer:(Container*)destContainer withDelegate:(id <TransferDelegate>)delegate
++ (void)uploadStream:(NSInputStream *)stream withFileName:(NSString*)fileName toContainer:(Container*)destContainer withDelegate:(id <TransferDelegate>)delegate
 {
     NSString* destPath = [NSString stringWithFormat:@"%@%@", kAPIEndpointFileAction, destContainer.url];
-    NSString* name = destContainer.name;
+    NSString* name = fileName;
     
     NSURL* uploadFileURL = [NSURL URLWithString:[NSString stringWithFormat:@"%@%@%@", [Credentials sharedInstance].serverURL, [BitcasaAPI apiVersion], destPath]];
     NSMutableURLRequest* uploadFileRequest = [NSMutableURLRequest requestWithURL:uploadFileURL];
