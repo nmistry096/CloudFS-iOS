@@ -11,9 +11,9 @@
 
 @implementation Folder
 
-- (void)uploadContentsOfURL:(NSURL*)url delegate:(id <TransferDelegate>)delegate
+- (void)uploadContentsOfFile:(NSString*)path delegate:(id <TransferDelegate>)delegate
 {
-    [BitcasaAPI uploadFile:url to:self delegate:delegate];
+    [BitcasaAPI uploadFile:path to:self delegate:delegate];
 }
 
 @end

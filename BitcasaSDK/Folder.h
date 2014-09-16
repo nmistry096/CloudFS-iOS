@@ -13,6 +13,6 @@
 @protocol TransferDelegate;
 @interface Folder : Container
 
-- (void)uploadContentsOfURL:(NSURL*)url delegate:(id <TransferDelegate>)delegate;
+- (void)uploadContentsOfFile:(NSString*)path delegate:(id <TransferDelegate>)delegate;
 
 @end

@@ -481,18 +481,20 @@ NSString* const kBatchRequestJsonBody = @"body";
 }
 
 #pragma mark - Uploads
-+ (void)uploadFile:(NSURL*)sourceURL to:(Folder*)destContainer delegate:(id <TransferDelegate>)delegate
++ (void)uploadFile:(NSString*)sourcePath to:(Folder*)destContainer delegate:(id <TransferDelegate>)transferDelegate
 {
-    NSInputStream *inputStream = [NSInputStream inputStreamWithURL:sourceURL];
-    NSDictionary *attributes = [[NSFileManager defaultManager] attributesOfItemAtPath:[sourceURL path] error:nil];
+    NSData *tempData = [NSData dataWithContentsOfFile:sourcePath];
+    //tempStream = [[NSInputStream alloc] initWithData:tempData];
+    NSInputStream *inputStream = [[NSInputStream alloc] initWithData:tempData];
+    NSDictionary *attributes = [[NSFileManager defaultManager] attributesOfItemAtPath:sourcePath error:nil];
     NSUInteger dataLength = 0;
     if (attributes)
         dataLength = [attributes[NSFileSize] unsignedIntegerValue];
     
-    [BitcasaAPI uploadStream:inputStream toContainer:(Container*)destContainer];
+    [BitcasaAPI uploadStream:inputStream toContainer:(Container*)destContainer withDelegate:transferDelegate];
 }
 
-+ (void)uploadStream:(NSInputStream *)stream toContainer:(Container*)destContainer
++ (void)uploadStream:(NSInputStream *)stream toContainer:(Container*)destContainer withDelegate:(id <TransferDelegate>)delegate
 {
     NSString* destPath = [NSString stringWithFormat:@"%@%@", kAPIEndpointFileAction, destContainer.url];
     NSString* name = destContainer.name;
@@ -508,6 +510,7 @@ NSString* const kBatchRequestJsonBody = @"body";
     [uploadFileRequest setHTTPBodyStream:formStream];
     
     TransferManager* transferMngr = [TransferManager sharedManager];
+    transferMngr.delegate = delegate;
     NSURLConnection* connection = [[NSURLConnection alloc] initWithRequest:uploadFileRequest delegate:transferMngr startImmediately:NO];
     [connection scheduleInRunLoop:[NSRunLoop currentRunLoop] forMode:NSRunLoopCommonModes];
     [connection start];

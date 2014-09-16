@@ -55,5 +55,5 @@
 + (void)downloadItem:(Item*)item delegate:(id <TransferDelegate>)delegate;
 
 #pragma mark - Uploads
-+ (void)uploadFile:(NSURL*)sourceURL to:(Folder*)destContainer delegate:(id <TransferDelegate>)delegate;
++ (void)uploadFile:(NSString*)sourcePath to:(Folder*)destContainer delegate:(id <TransferDelegate>)delegate;
 @end
