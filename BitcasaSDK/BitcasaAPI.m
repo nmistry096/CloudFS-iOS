@@ -484,6 +484,8 @@ NSString* const kBatchRequestJsonBody = @"body";
 + (void)uploadFile:(NSString*)sourcePath to:(Folder*)destContainer delegate:(id <TransferDelegate>)transferDelegate
 {
     NSData *tempData = [NSData dataWithContentsOfFile:sourcePath];
+    if (!tempData)
+        return;
     NSInputStream *inputStream = [[NSInputStream alloc] initWithData:tempData];
     NSDictionary *attributes = [[NSFileManager defaultManager] attributesOfItemAtPath:sourcePath error:nil];
     NSUInteger dataLength = 0;
@@ -495,6 +497,9 @@ NSString* const kBatchRequestJsonBody = @"body";
 
 + (void)uploadStream:(NSInputStream *)stream withFileName:(NSString*)fileName toContainer:(Container*)destContainer withDelegate:(id <TransferDelegate>)delegate
 {
+    TransferManager* transferMngr = [TransferManager sharedManager];
+    transferMngr.delegate = delegate;
+    
     NSString* destPath = [NSString stringWithFormat:@"%@%@", kAPIEndpointFileAction, destContainer.url];
     NSString* name = fileName;
     
@@ -505,11 +510,8 @@ NSString* const kBatchRequestJsonBody = @"body";
     [uploadFileRequest addValue:[NSString stringWithFormat:@"Bearer %@", [Credentials sharedInstance].accessToken] forHTTPHeaderField:kHeaderAuth];
     
     BCInputStream *formStream = [BCInputStream BCInputStreamWithFilename:name inputStream:stream];
-    
     [uploadFileRequest setHTTPBodyStream:formStream];
     
-    TransferManager* transferMngr = [TransferManager sharedManager];
-    transferMngr.delegate = delegate;
     NSURLConnection* connection = [[NSURLConnection alloc] initWithRequest:uploadFileRequest delegate:transferMngr startImmediately:NO];
     [connection scheduleInRunLoop:[NSRunLoop currentRunLoop] forMode:NSRunLoopCommonModes];
     [connection start];
