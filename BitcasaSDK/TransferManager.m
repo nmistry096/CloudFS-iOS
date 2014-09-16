@@ -22,6 +22,9 @@ NSString * const kBackgroundSessionIdentifier = @"com.Bitcasa.backgroundSession"
 
 + (instancetype)sharedManager
 {
+    if (_sharedManager)
+        return _sharedManager;
+    
     static TransferManager *sharedManager = nil;
     dispatch_once_t onceToken = 0;
     dispatch_once(&onceToken, ^{
@@ -37,7 +40,7 @@ NSString * const kBackgroundSessionIdentifier = @"com.Bitcasa.backgroundSession"
     if (self)
     {
         self.backgroundURLQueue = [[NSOperationQueue alloc] init];
-        //[self setupBackgroundURLSessionWithIdentifier:kBackgroundSessionIdentifier];
+        [self setupBackgroundURLSessionWithIdentifier:kBackgroundSessionIdentifier];
         
         _sharedManager = self;
     }
@@ -65,8 +68,22 @@ NSString * const kBackgroundSessionIdentifier = @"com.Bitcasa.backgroundSession"
 #pragma mark - NSURLSession delegate
 - (void) URLSession:(NSURLSession *)session downloadTask:(NSURLSessionDownloadTask *)downloadTask didFinishDownloadingToURL:(NSURL *)location
 {
+    NSFileManager *fileManager = [NSFileManager defaultManager];
+    NSArray *URLs = [fileManager URLsForDirectory:NSDocumentDirectory inDomains:NSUserDomainMask];
+    NSURL *documentsDirectory = [URLs objectAtIndex:0];
+    NSURL *originalURL = [[downloadTask originalRequest] URL];
+    if(!originalURL)
+        return;
+    
+    NSURL* destinationUrl = [documentsDirectory URLByAppendingPathComponent:[originalURL lastPathComponent]];
+    
+    NSError *errorCopy;
+    
+    [fileManager removeItemAtURL:destinationUrl error:NULL];
+    [fileManager copyItemAtURL:location toURL:destinationUrl error:&errorCopy];
+
     if ([_delegate respondsToSelector:@selector(itemAtPath:didCompleteDownloadToURL:error:)])
-        [_delegate itemAtPath:downloadTask.taskDescription didCompleteDownloadToURL:location error:nil];
+        [_delegate itemAtPath:downloadTask.taskDescription didCompleteDownloadToURL:destinationUrl error:nil];
 }
 
 - (void) URLSession:(NSURLSession *)session downloadTask:(NSURLSessionDownloadTask *)downloadTask didWriteData:(int64_t)bytesWritten totalBytesWritten:(int64_t)totalBytesWritten totalBytesExpectedToWrite:(int64_t)totalBytesExpectedToWrite
