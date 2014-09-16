@@ -44,14 +44,11 @@
 		77616EB619BFD001002C35E6 /* UIKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 77616EB519BFD001002C35E6 /* UIKit.framework */; };
 		776A387019A7A2F200E64737 /* Credentials.m in Sources */ = {isa = PBXBuildFile; fileRef = 776A386F19A7A2F200E64737 /* Credentials.m */; };
 		77BEB33519A68F5C00D4BE80 /* Foundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 77BEB33419A68F5C00D4BE80 /* Foundation.framework */; };
-		77BEB33A19A68F5C00D4BE80 /* BitcasaSDK.h in Copy Files */ = {isa = PBXBuildFile; fileRef = 77BEB33919A68F5C00D4BE80 /* BitcasaSDK.h */; };
-		77BEB33C19A68F5C00D4BE80 /* BitcasaSDK.m in Sources */ = {isa = PBXBuildFile; fileRef = 77BEB33B19A68F5C00D4BE80 /* BitcasaSDK.m */; };
 		77BEB34319A68F5C00D4BE80 /* XCTest.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 77BEB34219A68F5C00D4BE80 /* XCTest.framework */; };
 		77BEB34419A68F5C00D4BE80 /* Foundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 77BEB33419A68F5C00D4BE80 /* Foundation.framework */; };
 		77BEB34919A68F5C00D4BE80 /* libBitcasaSDK.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 77BEB33119A68F5C00D4BE80 /* libBitcasaSDK.a */; };
 		77BEB34F19A68F5C00D4BE80 /* InfoPlist.strings in Resources */ = {isa = PBXBuildFile; fileRef = 77BEB34D19A68F5C00D4BE80 /* InfoPlist.strings */; };
 		77BEB35119A68F5C00D4BE80 /* BitcasaSDKTests.m in Sources */ = {isa = PBXBuildFile; fileRef = 77BEB35019A68F5C00D4BE80 /* BitcasaSDKTests.m */; };
-		77BEB35F19A696ED00D4BE80 /* BitcasaDataModel.xcdatamodeld in Sources */ = {isa = PBXBuildFile; fileRef = 77BEB35D19A696ED00D4BE80 /* BitcasaDataModel.xcdatamodeld */; };
 		77BEB36819A69D2800D4BE80 /* Audio.m in Sources */ = {isa = PBXBuildFile; fileRef = 77BEB36719A69D2800D4BE80 /* Audio.m */; };
 		77BEB36B19A69D2800D4BE80 /* Document.m in Sources */ = {isa = PBXBuildFile; fileRef = 77BEB36A19A69D2800D4BE80 /* Document.m */; };
 		77BEB36E19A69D2800D4BE80 /* File.m in Sources */ = {isa = PBXBuildFile; fileRef = 77BEB36D19A69D2800D4BE80 /* File.m */; };
@@ -112,7 +109,6 @@
 				77354D0519C7E0E2006F750D /* Filesystem.h in Copy Files */,
 				77354D0619C7E0E2006F750D /* BitcasaAPI.h in Copy Files */,
 				77354D0719C7E0E2006F750D /* TransferManager.h in Copy Files */,
-				77BEB33A19A68F5C00D4BE80 /* BitcasaSDK.h in Copy Files */,
 			);
 			name = "Copy Files";
 			runOnlyForDeploymentPostprocessing = 0;
@@ -127,14 +123,11 @@
 		77BEB33119A68F5C00D4BE80 /* libBitcasaSDK.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = libBitcasaSDK.a; sourceTree = BUILT_PRODUCTS_DIR; };
 		77BEB33419A68F5C00D4BE80 /* Foundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Foundation.framework; path = System/Library/Frameworks/Foundation.framework; sourceTree = SDKROOT; };
 		77BEB33819A68F5C00D4BE80 /* BitcasaSDK-Prefix.pch */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "BitcasaSDK-Prefix.pch"; sourceTree = "<group>"; };
-		77BEB33919A68F5C00D4BE80 /* BitcasaSDK.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = BitcasaSDK.h; sourceTree = "<group>"; };
-		77BEB33B19A68F5C00D4BE80 /* BitcasaSDK.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = BitcasaSDK.m; sourceTree = "<group>"; };
 		77BEB34119A68F5C00D4BE80 /* BitcasaSDKTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = BitcasaSDKTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 		77BEB34219A68F5C00D4BE80 /* XCTest.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = XCTest.framework; path = Library/Frameworks/XCTest.framework; sourceTree = DEVELOPER_DIR; };
 		77BEB34C19A68F5C00D4BE80 /* BitcasaSDKTests-Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = "BitcasaSDKTests-Info.plist"; sourceTree = "<group>"; };
 		77BEB34E19A68F5C00D4BE80 /* en */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = en; path = en.lproj/InfoPlist.strings; sourceTree = "<group>"; };
 		77BEB35019A68F5C00D4BE80 /* BitcasaSDKTests.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = BitcasaSDKTests.m; sourceTree = "<group>"; };
-		77BEB35E19A696ED00D4BE80 /* BitcasaDataModel.xcdatamodel */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcdatamodel; path = BitcasaDataModel.xcdatamodel; sourceTree = "<group>"; };
 		77BEB36619A69D2800D4BE80 /* Audio.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Audio.h; sourceTree = "<group>"; };
 		77BEB36719A69D2800D4BE80 /* Audio.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = Audio.m; sourceTree = "<group>"; };
 		77BEB36919A69D2800D4BE80 /* Document.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Document.h; sourceTree = "<group>"; };
@@ -227,10 +220,7 @@
 		77BEB33619A68F5C00D4BE80 /* BitcasaSDK */ = {
 			isa = PBXGroup;
 			children = (
-				77BEB33919A68F5C00D4BE80 /* BitcasaSDK.h */,
-				77BEB33B19A68F5C00D4BE80 /* BitcasaSDK.m */,
 				77BEB33719A68F5C00D4BE80 /* Supporting Files */,
-				77BEB35D19A696ED00D4BE80 /* BitcasaDataModel.xcdatamodeld */,
 				77BEB37B19A69D2800D4BE80 /* Folder.h */,
 				77BEB37C19A69D2800D4BE80 /* Folder.m */,
 				77BEB37819A69D2800D4BE80 /* Video.h */,
@@ -423,8 +413,6 @@
 				77BEB36819A69D2800D4BE80 /* Audio.m in Sources */,
 				77BEB38019A69E0200D4BE80 /* User.m in Sources */,
 				77FA748219C28CFA00E84C23 /* TransferManager.m in Sources */,
-				77BEB33C19A68F5C00D4BE80 /* BitcasaSDK.m in Sources */,
-				77BEB35F19A696ED00D4BE80 /* BitcasaDataModel.xcdatamodeld in Sources */,
 				77BEB38319A69F5300D4BE80 /* Account.m in Sources */,
 				77BEB37419A69D2800D4BE80 /* Container.m in Sources */,
 				77BEB37D19A69D2800D4BE80 /* Folder.m in Sources */,
@@ -653,19 +641,6 @@
 			defaultConfigurationName = Release;
 		};
 /* End XCConfigurationList section */
-
-/* Begin XCVersionGroup section */
-		77BEB35D19A696ED00D4BE80 /* BitcasaDataModel.xcdatamodeld */ = {
-			isa = XCVersionGroup;
-			children = (
-				77BEB35E19A696ED00D4BE80 /* BitcasaDataModel.xcdatamodel */,
-			);
-			currentVersion = 77BEB35E19A696ED00D4BE80 /* BitcasaDataModel.xcdatamodel */;
-			path = BitcasaDataModel.xcdatamodeld;
-			sourceTree = "<group>";
-			versionGroupType = wrapper.xcdatamodel;
-		};
-/* End XCVersionGroup section */
 	};
 	rootObject = 77BEB32919A68F5B00D4BE80 /* Project object */;
 }
