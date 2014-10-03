@@ -24,7 +24,10 @@
 - (void)copyToDestinationContainer:(Container *)destContainer completion:(void (^)(Item* newItem))completion;
 
 #pragma mark - move
-- (void)moveToDestinationContainer:(Container *)destContainer completion:(void (^)(Item * movedItem))compeltion;
+- (void)moveToDestinationContainer:(Container *)destContainer completion:(void (^)(Item * movedItem))completion;
+
+#pragma mark - share
+- (void)shareWithCompletion:(void (^)(NSString* shareLink))completion;
 
 #pragma mark - delete
 - (void)deleteWithCompletion:(void (^)(BOOL success))completion;

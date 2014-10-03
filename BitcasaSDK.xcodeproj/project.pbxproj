@@ -22,6 +22,7 @@
 /* End PBXAggregateTarget section */
 
 /* Begin PBXBuildFile section */
+		77062E6B19DE3B2A00186334 /* NSString+API.m in Sources */ = {isa = PBXBuildFile; fileRef = 77BEB38F19A6CA2C00D4BE80 /* NSString+API.m */; };
 		77354CFA19C7E0E2006F750D /* Folder.h in Copy Files */ = {isa = PBXBuildFile; fileRef = 77BEB37B19A69D2800D4BE80 /* Folder.h */; };
 		77354CFB19C7E0E2006F750D /* Video.h in Copy Files */ = {isa = PBXBuildFile; fileRef = 77BEB37819A69D2800D4BE80 /* Video.h */; };
 		77354CFC19C7E0E2006F750D /* Item.h in Copy Files */ = {isa = PBXBuildFile; fileRef = 77BEB37519A69D2800D4BE80 /* Item.h */; };
@@ -424,6 +425,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				77BEB35119A68F5C00D4BE80 /* BitcasaSDKTests.m in Sources */,
+				77062E6B19DE3B2A00186334 /* NSString+API.m in Sources */,
 				77FA748619C764DD00E84C23 /* BCInputStream.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;

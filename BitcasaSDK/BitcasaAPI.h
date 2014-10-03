@@ -48,6 +48,9 @@
 + (void)copyItem:(Item*)itemToCopy to:(Container*)destItem completion:(void (^)(Item* newItem))completion;
 + (void)copyItems:(NSArray*)items to:(Container*)toItem completion:(void (^)(NSArray* success))completion;
 
+#pragma mark - Share item(s)
++ (void)shareItems:(NSArray*)itemsToShare completion:(void (^)(NSString* url))completion;
+
 #pragma mark - Create new directory
 + (void)createFolderInContainer:(Container*)container withName:(NSString*)name completion:(void (^)(NSDictionary* newFolderDict))completion;
 

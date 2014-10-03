@@ -12,6 +12,7 @@
 NSString const *kBCMultipartFormDataBoundary = @"AaB03x";
 
 @implementation BCInputStream
+@synthesize streamStatus;
 
 + (BCInputStream *)BCInputStreamWithFilename:(NSString *)filename inputStream:(NSInputStream *)inputStream
 {

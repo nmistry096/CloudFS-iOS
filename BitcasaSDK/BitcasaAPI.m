@@ -318,7 +318,7 @@ NSString* const kBatchRequestJsonBody = @"body";
          else
          {
              [BitcasaAPI checkForAuthenticationFailure:response];
-             completion(NO, successIndex);
+             completion(nil, successIndex);
          }
      }];
 }
@@ -439,6 +439,34 @@ NSString* const kBatchRequestJsonBody = @"body";
     }
     
     completion(successArray);
+}
+
+#pragma mark - Share item(s)
++ (void)shareItems:(NSArray*)itemsToShare completion:(void (^)(NSString* url))completion
+{
+    NSMutableArray* shareFormParams = [NSMutableArray array];
+    for (Item* item in itemsToShare)
+    {
+        NSString *itemPath = item.url;
+        [shareFormParams addObject:@{@"path" : itemPath}];
+    }
+    NSURLRequest* shareLinkRequest = [[NSURLRequest alloc] initWithMethod:kHTTPMethodPOST endpoint:kAPIEndpointShares queryParameters:nil formParameters:shareFormParams];
+    
+    [NSURLConnection sendAsynchronousRequest:shareLinkRequest queue:[NSOperationQueue currentQueue] completionHandler:^(NSURLResponse *response, NSData *data, NSError *connectionError)
+    {
+        NSString* shortURL = nil;
+        if ([(NSHTTPURLResponse*)response statusCode] == 200)
+        {
+            NSDictionary* resultsDict = [BitcasaAPI resultDictFromResponseData:data];
+            shortURL = resultsDict[@"short_url"];
+        }
+        else
+        {
+            [BitcasaAPI checkForAuthenticationFailure:response];
+            completion(nil);
+        }
+        completion(shortURL);
+    }];
 }
 
 #pragma mark - Create new directory

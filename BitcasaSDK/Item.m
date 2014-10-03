@@ -45,6 +45,12 @@
     [BitcasaAPI moveItem:self to:destContainer completion:completion];
 }
 
+#pragma mark - share
+- (void)shareWithCompletion:(void (^)(NSString* shareLink))completion
+{
+    [BitcasaAPI shareItems:@[self] completion:completion];
+}
+
 #pragma mark - delete
 - (void)deleteWithCompletion:(void (^)(BOOL))completion
 {
