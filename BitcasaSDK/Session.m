@@ -58,7 +58,7 @@ static Session* _sharedSession = nil;
 
 - (BOOL)isLinked
 {
-    return ![credentials.accessToken isEqualToString:@""];
+    return (credentials.accessToken && ![credentials.accessToken isEqualToString:@""]);
 }
 
 @end
