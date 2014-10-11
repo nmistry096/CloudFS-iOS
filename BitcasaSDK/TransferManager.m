@@ -7,6 +7,7 @@
 //
 
 #import "TransferManager.h"
+#import "File.h"
 #import "BitcasaAPI.h"
 
 static TransferManager* _sharedManager;
@@ -15,6 +16,8 @@ NSString * const kBackgroundSessionIdentifier = @"com.Bitcasa.backgroundSession"
 @interface TransferManager ()
 
 @property (nonatomic, strong) NSOperationQueue *backgroundURLQueue;
+@property (nonatomic, strong) NSData* lastReceivedData;
+@property (nonatomic, strong) NSURLResponse* lastReceivedResponse;
 
 @end
 
@@ -144,25 +147,24 @@ NSString * const kBackgroundSessionIdentifier = @"com.Bitcasa.backgroundSession"
 
 - (void)connection:(NSURLConnection *)connection didReceiveResponse:(NSURLResponse *)response
 {
-    if ([_delegate respondsToSelector:@selector(fileAtPath:didReceiveResponse:)])
-    {
-        NSString* requestURLString = [[connection originalRequest].URL absoluteString];
-        [_delegate fileAtPath:requestURLString didReceiveResponse:response];
-    }
-
+    _lastReceivedResponse = response;
 }
 
 - (void)connection:(NSURLConnection *)connection didReceiveData:(NSData *)data
 {
-
+    _lastReceivedData = data;
 }
 
 - (void)finalizeUploadConnection:(NSURLConnection *)connection withError:(NSError *)error
 {
-    if ([_delegate respondsToSelector:@selector(fileAtPath:didCompleteUploadWithError:)])
+    if ([_delegate respondsToSelector:@selector(file:didCompleteUploadWithError:)])
     {
-        NSString* requestURLString = [[connection originalRequest].URL absoluteString];
-        [_delegate fileAtPath:requestURLString didCompleteUploadWithError:error];
+        NSString* parentPath = [[connection originalRequest].URL absoluteString];
+        
+        NSDictionary* resultDict = [BitcasaAPI resultDictFromResponseData:_lastReceivedData];
+        File* uploadedFile = [[File alloc] initWithDictionary:resultDict andParentPath:parentPath];
+        
+        [_delegate file:uploadedFile didCompleteUploadWithError:error];
     }
 }
 

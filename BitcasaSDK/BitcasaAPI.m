@@ -15,6 +15,7 @@
 #import "User.h"
 #import "TransferManager.h"
 #import "BCInputStream.h"
+#import "BCAssetStream.h"
 #import "Folder.h"
 #import "File.h"
 
@@ -509,18 +510,38 @@ NSString* const kBatchRequestJsonBody = @"body";
 }
 
 #pragma mark - Uploads
-+ (void)uploadFile:(NSString*)sourcePath to:(Folder*)destContainer delegate:(id <TransferDelegate>)transferDelegate
++ (void)uploadFile:(NSURL*)sourceURL to:(Folder*)destContainer delegate:(id <TransferDelegate>)transferDelegate
 {
-    NSData *tempData = [NSData dataWithContentsOfFile:sourcePath];
-    if (!tempData)
-        return;
-    NSInputStream *inputStream = [[NSInputStream alloc] initWithData:tempData];
-    NSDictionary *attributes = [[NSFileManager defaultManager] attributesOfItemAtPath:sourcePath error:nil];
-    NSUInteger dataLength = 0;
-    if (attributes)
-        dataLength = [attributes[NSFileSize] unsignedIntegerValue];
+    if ([[[sourceURL scheme] lowercaseString] isEqualToString:@"assets-library"])
+    {
+        ALAssetsLibrary *library = [[ALAssetsLibrary alloc] init];
+        __weak ALAssetsLibrary *weakLibrary = library;
+        [library assetForURL:sourceURL resultBlock:^(ALAsset *asset)
+         {
+             ALAssetRepresentation *assetRep = [asset defaultRepresentation];
+             BCAssetStream *assetStream = [[BCAssetStream alloc] initWithAssetRep:assetRep fromAssetLibrary:weakLibrary];
+             [BitcasaAPI uploadStream:assetStream withFileName:sourceURL.lastPathComponent toContainer:(Container*)destContainer withDelegate:transferDelegate];
+         }
+        failureBlock:^(NSError *error)
+         {
+             NSLog(@"Error uploading file: %@", error);
+         }];
+
+    }
+    else
+    {
+        NSData *tempData = [NSData dataWithContentsOfFile:[sourceURL absoluteString]];
+        if (!tempData)
+            return;
+        NSInputStream *inputStream = [[NSInputStream alloc] initWithData:tempData];
     
-    [BitcasaAPI uploadStream:inputStream withFileName:[sourcePath lastPathComponent] toContainer:(Container*)destContainer withDelegate:transferDelegate];
+        NSDictionary *attributes = [[NSFileManager defaultManager] attributesOfItemAtPath:[sourceURL absoluteString] error:nil];
+        NSUInteger dataLength = 0;
+        if (attributes)
+            dataLength = [attributes[NSFileSize] unsignedIntegerValue];
+        
+        [BitcasaAPI uploadStream:inputStream withFileName:sourceURL.lastPathComponent toContainer:(Container*)destContainer withDelegate:transferDelegate];
+    }
 }
 
 + (void)uploadStream:(NSInputStream *)stream withFileName:(NSString*)fileName toContainer:(Container*)destContainer withDelegate:(id <TransferDelegate>)delegate

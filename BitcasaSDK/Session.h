@@ -25,7 +25,7 @@
 
 - (id)initWithServerURL:(NSString*)url clientId:(NSString*)clientId clientSecret:(NSString*)secret;
 
-- (void)authenticateWithUsername:(NSString*)username andPassword:(NSString*)password;
+- (void)authenticateWithUsername:(NSString*)username andPassword:(NSString*)password completion:(void (^)(BOOL success))completion;
 - (void)unlink;
 - (BOOL)isLinked;
 @end

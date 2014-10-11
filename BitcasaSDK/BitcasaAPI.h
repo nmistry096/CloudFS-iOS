@@ -9,6 +9,7 @@
 #import <Foundation/Foundation.h>
 
 @class Item;
+@class File;
 @protocol TransferDelegate <NSObject>
 @optional
 #pragma mark - download
@@ -16,8 +17,7 @@
 - (void)itemAtPath:(NSString*)itemPath didDownload:(int64_t)totalBytesWritten outOfTotal:(int64_t)totalBytesExpectedToWrite;
 
 #pragma mark - upload
-- (void)fileAtPath:(NSString*)filePath didCompleteUploadWithError:(NSError*)err;
-- (void)fileAtPath:(NSString*)filePath didReceiveResponse:(NSURLResponse*)response;
+- (void)file:(File*)file didCompleteUploadWithError:(NSError*)err;
 - (void)fileAtPath:(NSString*)filePath didUpload:(int64_t)totalBytesUploaded outOfTotal:(int64_t)totalBytesExpectedToWrite;
 @end
 
@@ -58,5 +58,8 @@
 + (void)downloadItem:(Item*)item delegate:(id <TransferDelegate>)delegate;
 
 #pragma mark - Uploads
-+ (void)uploadFile:(NSString*)sourcePath to:(Folder*)destContainer delegate:(id <TransferDelegate>)delegate;
++ (void)uploadFile:(NSURL*)sourceURL to:(Folder*)destContainer delegate:(id <TransferDelegate>)delegate;
+
+#pragma mark - Helpers
++ (NSDictionary*)resultDictFromResponseData:(NSData*)data;
 @end

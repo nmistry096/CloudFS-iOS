@@ -23,6 +23,7 @@
 
 /* Begin PBXBuildFile section */
 		77062E6B19DE3B2A00186334 /* NSString+API.m in Sources */ = {isa = PBXBuildFile; fileRef = 77BEB38F19A6CA2C00D4BE80 /* NSString+API.m */; };
+		77062ECF19E8CB6300186334 /* BCAssetStream.m in Sources */ = {isa = PBXBuildFile; fileRef = 77062ECE19E8CB6300186334 /* BCAssetStream.m */; };
 		77354CFA19C7E0E2006F750D /* Folder.h in Copy Files */ = {isa = PBXBuildFile; fileRef = 77BEB37B19A69D2800D4BE80 /* Folder.h */; };
 		77354CFB19C7E0E2006F750D /* Video.h in Copy Files */ = {isa = PBXBuildFile; fileRef = 77BEB37819A69D2800D4BE80 /* Video.h */; };
 		77354CFC19C7E0E2006F750D /* Item.h in Copy Files */ = {isa = PBXBuildFile; fileRef = 77BEB37519A69D2800D4BE80 /* Item.h */; };
@@ -117,6 +118,8 @@
 /* End PBXCopyFilesBuildPhase section */
 
 /* Begin PBXFileReference section */
+		77062ECD19E8CB6300186334 /* BCAssetStream.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = BCAssetStream.h; sourceTree = "<group>"; };
+		77062ECE19E8CB6300186334 /* BCAssetStream.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = BCAssetStream.m; sourceTree = "<group>"; };
 		77616EB119BFCF69002C35E6 /* CoreData.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreData.framework; path = System/Library/Frameworks/CoreData.framework; sourceTree = SDKROOT; };
 		77616EB519BFD001002C35E6 /* UIKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = UIKit.framework; path = System/Library/Frameworks/UIKit.framework; sourceTree = SDKROOT; };
 		776A386E19A7A2F200E64737 /* Credentials.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Credentials.h; sourceTree = "<group>"; };
@@ -248,6 +251,8 @@
 				77BEB38819A6A8B600D4BE80 /* Filesystem.m */,
 				77BEB38B19A6C95100D4BE80 /* BitcasaAPI.h */,
 				77BEB38C19A6C95100D4BE80 /* BitcasaAPI.m */,
+				77062ECD19E8CB6300186334 /* BCAssetStream.h */,
+				77062ECE19E8CB6300186334 /* BCAssetStream.m */,
 				77FA748019C28CFA00E84C23 /* TransferManager.h */,
 				77FA748119C28CFA00E84C23 /* TransferManager.m */,
 				77FA748319C3B1D600E84C23 /* BCInputStream.h */,
@@ -407,6 +412,7 @@
 				77BEB38619A6A01A00D4BE80 /* Session.m in Sources */,
 				77BEB37A19A69D2800D4BE80 /* Video.m in Sources */,
 				77BEB39019A6CA2C00D4BE80 /* NSString+API.m in Sources */,
+				77062ECF19E8CB6300186334 /* BCAssetStream.m in Sources */,
 				77FA748519C3B1D600E84C23 /* BCInputStream.m in Sources */,
 				77BEB38D19A6C95100D4BE80 /* BitcasaAPI.m in Sources */,
 				77BEB36B19A69D2800D4BE80 /* Document.m in Sources */,

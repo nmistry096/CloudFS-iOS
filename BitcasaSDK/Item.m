@@ -20,6 +20,11 @@
 
 - (id)initWithDictionary:(NSDictionary*)dict andParentContainer:(Container*)parent
 {
+    return [self initWithDictionary:dict andParentPath:parent.url];
+}
+
+- (id)initWithDictionary:(NSDictionary*)dict andParentPath:(NSString*)parentPath
+{
     self = [super init];
     if (self)
     {
@@ -28,7 +33,7 @@
         self.dateCreated = [NSDate dateWithTimeIntervalSince1970:[dict[@"date_created"] doubleValue]];
         self.version = [dict[@"version"] integerValue];
         
-        self.url = [parent.url stringByAppendingPathComponent:dict[@"id"]];
+        self.url = [parentPath stringByAppendingPathComponent:dict[@"id"]];
     }
     return self;
 }

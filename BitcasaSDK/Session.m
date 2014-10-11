@@ -39,7 +39,7 @@ static Session* _sharedSession = nil;
     return self;
 }
 
-- (void)authenticateWithUsername:(NSString*)username andPassword:(NSString*)password
+- (void)authenticateWithUsername:(NSString*)username andPassword:(NSString*)password completion:(void (^)(BOOL success))completion
 {
     NSString* token = [BitcasaAPI accessTokenWithEmail:username password:password];
     [credentials setAccessToken:token];
@@ -48,6 +48,11 @@ static Session* _sharedSession = nil;
      {
          self.user = [[User alloc] initWithDictionary:response];
          self.account = [[Account alloc] initWithDictionary:response];
+         
+         if (response)
+             completion(YES);
+         else
+             completion(NO);
      }];
 }
 
