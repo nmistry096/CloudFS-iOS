@@ -22,7 +22,6 @@
 /* End PBXAggregateTarget section */
 
 /* Begin PBXBuildFile section */
-		77062E6B19DE3B2A00186334 /* NSString+API.m in Sources */ = {isa = PBXBuildFile; fileRef = 77BEB38F19A6CA2C00D4BE80 /* NSString+API.m */; };
 		77062ECF19E8CB6300186334 /* BCAssetStream.m in Sources */ = {isa = PBXBuildFile; fileRef = 77062ECE19E8CB6300186334 /* BCAssetStream.m */; };
 		77354CFA19C7E0E2006F750D /* Folder.h in Copy Files */ = {isa = PBXBuildFile; fileRef = 77BEB37B19A69D2800D4BE80 /* Folder.h */; };
 		77354CFB19C7E0E2006F750D /* Video.h in Copy Files */ = {isa = PBXBuildFile; fileRef = 77BEB37819A69D2800D4BE80 /* Video.h */; };
@@ -42,15 +41,8 @@
 		77354D1019C7E837006F750D /* NSString+API.h in Copy Files */ = {isa = PBXBuildFile; fileRef = 77BEB38E19A6CA2C00D4BE80 /* NSString+API.h */; };
 		77354D1119C7E841006F750D /* Credentials.h in Copy Files */ = {isa = PBXBuildFile; fileRef = 776A386E19A7A2F200E64737 /* Credentials.h */; };
 		77616EB319BFCFD3002C35E6 /* CoreData.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 77616EB119BFCF69002C35E6 /* CoreData.framework */; };
-		77616EB419BFCFDE002C35E6 /* CoreData.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 77616EB119BFCF69002C35E6 /* CoreData.framework */; };
-		77616EB619BFD001002C35E6 /* UIKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 77616EB519BFD001002C35E6 /* UIKit.framework */; };
 		776A387019A7A2F200E64737 /* Credentials.m in Sources */ = {isa = PBXBuildFile; fileRef = 776A386F19A7A2F200E64737 /* Credentials.m */; };
 		77BEB33519A68F5C00D4BE80 /* Foundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 77BEB33419A68F5C00D4BE80 /* Foundation.framework */; };
-		77BEB34319A68F5C00D4BE80 /* XCTest.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 77BEB34219A68F5C00D4BE80 /* XCTest.framework */; };
-		77BEB34419A68F5C00D4BE80 /* Foundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 77BEB33419A68F5C00D4BE80 /* Foundation.framework */; };
-		77BEB34919A68F5C00D4BE80 /* libBitcasaSDK.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 77BEB33119A68F5C00D4BE80 /* libBitcasaSDK.a */; };
-		77BEB34F19A68F5C00D4BE80 /* InfoPlist.strings in Resources */ = {isa = PBXBuildFile; fileRef = 77BEB34D19A68F5C00D4BE80 /* InfoPlist.strings */; };
-		77BEB35119A68F5C00D4BE80 /* BitcasaSDKTests.m in Sources */ = {isa = PBXBuildFile; fileRef = 77BEB35019A68F5C00D4BE80 /* BitcasaSDKTests.m */; };
 		77BEB36819A69D2800D4BE80 /* Audio.m in Sources */ = {isa = PBXBuildFile; fileRef = 77BEB36719A69D2800D4BE80 /* Audio.m */; };
 		77BEB36B19A69D2800D4BE80 /* Document.m in Sources */ = {isa = PBXBuildFile; fileRef = 77BEB36A19A69D2800D4BE80 /* Document.m */; };
 		77BEB36E19A69D2800D4BE80 /* File.m in Sources */ = {isa = PBXBuildFile; fileRef = 77BEB36D19A69D2800D4BE80 /* File.m */; };
@@ -67,18 +59,11 @@
 		77BEB39019A6CA2C00D4BE80 /* NSString+API.m in Sources */ = {isa = PBXBuildFile; fileRef = 77BEB38F19A6CA2C00D4BE80 /* NSString+API.m */; };
 		77FA748219C28CFA00E84C23 /* TransferManager.m in Sources */ = {isa = PBXBuildFile; fileRef = 77FA748119C28CFA00E84C23 /* TransferManager.m */; };
 		77FA748519C3B1D600E84C23 /* BCInputStream.m in Sources */ = {isa = PBXBuildFile; fileRef = 77FA748419C3B1D600E84C23 /* BCInputStream.m */; };
-		77FA748619C764DD00E84C23 /* BCInputStream.m in Sources */ = {isa = PBXBuildFile; fileRef = 77FA748419C3B1D600E84C23 /* BCInputStream.m */; };
+		BDC562A119F03FB300D6481C /* Share.m in Sources */ = {isa = PBXBuildFile; fileRef = BDC562A019F03FB300D6481C /* Share.m */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
 		77354CF719C7DD9A006F750D /* PBXContainerItemProxy */ = {
-			isa = PBXContainerItemProxy;
-			containerPortal = 77BEB32919A68F5B00D4BE80 /* Project object */;
-			proxyType = 1;
-			remoteGlobalIDString = 77BEB33019A68F5C00D4BE80;
-			remoteInfo = BitcasaSDK;
-		};
-		77BEB34719A68F5C00D4BE80 /* PBXContainerItemProxy */ = {
 			isa = PBXContainerItemProxy;
 			containerPortal = 77BEB32919A68F5B00D4BE80 /* Project object */;
 			proxyType = 1;
@@ -127,11 +112,7 @@
 		77BEB33119A68F5C00D4BE80 /* libBitcasaSDK.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = libBitcasaSDK.a; sourceTree = BUILT_PRODUCTS_DIR; };
 		77BEB33419A68F5C00D4BE80 /* Foundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Foundation.framework; path = System/Library/Frameworks/Foundation.framework; sourceTree = SDKROOT; };
 		77BEB33819A68F5C00D4BE80 /* BitcasaSDK-Prefix.pch */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "BitcasaSDK-Prefix.pch"; sourceTree = "<group>"; };
-		77BEB34119A68F5C00D4BE80 /* BitcasaSDKTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = BitcasaSDKTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 		77BEB34219A68F5C00D4BE80 /* XCTest.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = XCTest.framework; path = Library/Frameworks/XCTest.framework; sourceTree = DEVELOPER_DIR; };
-		77BEB34C19A68F5C00D4BE80 /* BitcasaSDKTests-Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = "BitcasaSDKTests-Info.plist"; sourceTree = "<group>"; };
-		77BEB34E19A68F5C00D4BE80 /* en */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = en; path = en.lproj/InfoPlist.strings; sourceTree = "<group>"; };
-		77BEB35019A68F5C00D4BE80 /* BitcasaSDKTests.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = BitcasaSDKTests.m; sourceTree = "<group>"; };
 		77BEB36619A69D2800D4BE80 /* Audio.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Audio.h; sourceTree = "<group>"; };
 		77BEB36719A69D2800D4BE80 /* Audio.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = Audio.m; sourceTree = "<group>"; };
 		77BEB36919A69D2800D4BE80 /* Document.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Document.h; sourceTree = "<group>"; };
@@ -164,6 +145,8 @@
 		77FA748119C28CFA00E84C23 /* TransferManager.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = TransferManager.m; sourceTree = "<group>"; };
 		77FA748319C3B1D600E84C23 /* BCInputStream.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = BCInputStream.h; sourceTree = "<group>"; };
 		77FA748419C3B1D600E84C23 /* BCInputStream.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = BCInputStream.m; sourceTree = "<group>"; };
+		BDC5629F19F03FB300D6481C /* Share.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Share.h; sourceTree = "<group>"; };
+		BDC562A019F03FB300D6481C /* Share.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = Share.m; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -176,18 +159,6 @@
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
-		77BEB33E19A68F5C00D4BE80 /* Frameworks */ = {
-			isa = PBXFrameworksBuildPhase;
-			buildActionMask = 2147483647;
-			files = (
-				77616EB619BFD001002C35E6 /* UIKit.framework in Frameworks */,
-				77616EB419BFCFDE002C35E6 /* CoreData.framework in Frameworks */,
-				77BEB34319A68F5C00D4BE80 /* XCTest.framework in Frameworks */,
-				77BEB34919A68F5C00D4BE80 /* libBitcasaSDK.a in Frameworks */,
-				77BEB34419A68F5C00D4BE80 /* Foundation.framework in Frameworks */,
-			);
-			runOnlyForDeploymentPostprocessing = 0;
-		};
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
@@ -195,7 +166,6 @@
 			isa = PBXGroup;
 			children = (
 				77BEB33619A68F5C00D4BE80 /* BitcasaSDK */,
-				77BEB34A19A68F5C00D4BE80 /* BitcasaSDKTests */,
 				77BEB33319A68F5C00D4BE80 /* Frameworks */,
 				77BEB33219A68F5C00D4BE80 /* Products */,
 			);
@@ -205,7 +175,6 @@
 			isa = PBXGroup;
 			children = (
 				77BEB33119A68F5C00D4BE80 /* libBitcasaSDK.a */,
-				77BEB34119A68F5C00D4BE80 /* BitcasaSDKTests.xctest */,
 			);
 			name = Products;
 			sourceTree = "<group>";
@@ -261,6 +230,8 @@
 				77BEB38F19A6CA2C00D4BE80 /* NSString+API.m */,
 				776A386E19A7A2F200E64737 /* Credentials.h */,
 				776A386F19A7A2F200E64737 /* Credentials.m */,
+				BDC5629F19F03FB300D6481C /* Share.h */,
+				BDC562A019F03FB300D6481C /* Share.m */,
 			);
 			path = BitcasaSDK;
 			sourceTree = "<group>";
@@ -269,24 +240,6 @@
 			isa = PBXGroup;
 			children = (
 				77BEB33819A68F5C00D4BE80 /* BitcasaSDK-Prefix.pch */,
-			);
-			name = "Supporting Files";
-			sourceTree = "<group>";
-		};
-		77BEB34A19A68F5C00D4BE80 /* BitcasaSDKTests */ = {
-			isa = PBXGroup;
-			children = (
-				77BEB35019A68F5C00D4BE80 /* BitcasaSDKTests.m */,
-				77BEB34B19A68F5C00D4BE80 /* Supporting Files */,
-			);
-			path = BitcasaSDKTests;
-			sourceTree = "<group>";
-		};
-		77BEB34B19A68F5C00D4BE80 /* Supporting Files */ = {
-			isa = PBXGroup;
-			children = (
-				77BEB34C19A68F5C00D4BE80 /* BitcasaSDKTests-Info.plist */,
-				77BEB34D19A68F5C00D4BE80 /* InfoPlist.strings */,
 			);
 			name = "Supporting Files";
 			sourceTree = "<group>";
@@ -312,24 +265,6 @@
 			productReference = 77BEB33119A68F5C00D4BE80 /* libBitcasaSDK.a */;
 			productType = "com.apple.product-type.library.static";
 		};
-		77BEB34019A68F5C00D4BE80 /* BitcasaSDKTests */ = {
-			isa = PBXNativeTarget;
-			buildConfigurationList = 77BEB35719A68F5C00D4BE80 /* Build configuration list for PBXNativeTarget "BitcasaSDKTests" */;
-			buildPhases = (
-				77BEB33D19A68F5C00D4BE80 /* Sources */,
-				77BEB33E19A68F5C00D4BE80 /* Frameworks */,
-				77BEB33F19A68F5C00D4BE80 /* Resources */,
-			);
-			buildRules = (
-			);
-			dependencies = (
-				77BEB34819A68F5C00D4BE80 /* PBXTargetDependency */,
-			);
-			name = BitcasaSDKTests;
-			productName = BitcasaSDKTests;
-			productReference = 77BEB34119A68F5C00D4BE80 /* BitcasaSDKTests.xctest */;
-			productType = "com.apple.product-type.bundle.unit-test";
-		};
 /* End PBXNativeTarget section */
 
 /* Begin PBXProject section */
@@ -352,22 +287,10 @@
 			projectRoot = "";
 			targets = (
 				77BEB33019A68F5C00D4BE80 /* BitcasaSDK */,
-				77BEB34019A68F5C00D4BE80 /* BitcasaSDKTests */,
 				77354CF319C7DD8B006F750D /* Framework */,
 			);
 		};
 /* End PBXProject section */
-
-/* Begin PBXResourcesBuildPhase section */
-		77BEB33F19A68F5C00D4BE80 /* Resources */ = {
-			isa = PBXResourcesBuildPhase;
-			buildActionMask = 2147483647;
-			files = (
-				77BEB34F19A68F5C00D4BE80 /* InfoPlist.strings in Resources */,
-			);
-			runOnlyForDeploymentPostprocessing = 0;
-		};
-/* End PBXResourcesBuildPhase section */
 
 /* Begin PBXShellScriptBuildPhase section */
 		77354CF919C7DE84006F750D /* Build Framework */ = {
@@ -414,6 +337,7 @@
 				77BEB39019A6CA2C00D4BE80 /* NSString+API.m in Sources */,
 				77062ECF19E8CB6300186334 /* BCAssetStream.m in Sources */,
 				77FA748519C3B1D600E84C23 /* BCInputStream.m in Sources */,
+				BDC562A119F03FB300D6481C /* Share.m in Sources */,
 				77BEB38D19A6C95100D4BE80 /* BitcasaAPI.m in Sources */,
 				77BEB36B19A69D2800D4BE80 /* Document.m in Sources */,
 				776A387019A7A2F200E64737 /* Credentials.m in Sources */,
@@ -426,16 +350,6 @@
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
-		77BEB33D19A68F5C00D4BE80 /* Sources */ = {
-			isa = PBXSourcesBuildPhase;
-			buildActionMask = 2147483647;
-			files = (
-				77BEB35119A68F5C00D4BE80 /* BitcasaSDKTests.m in Sources */,
-				77062E6B19DE3B2A00186334 /* NSString+API.m in Sources */,
-				77FA748619C764DD00E84C23 /* BCInputStream.m in Sources */,
-			);
-			runOnlyForDeploymentPostprocessing = 0;
-		};
 /* End PBXSourcesBuildPhase section */
 
 /* Begin PBXTargetDependency section */
@@ -444,23 +358,7 @@
 			target = 77BEB33019A68F5C00D4BE80 /* BitcasaSDK */;
 			targetProxy = 77354CF719C7DD9A006F750D /* PBXContainerItemProxy */;
 		};
-		77BEB34819A68F5C00D4BE80 /* PBXTargetDependency */ = {
-			isa = PBXTargetDependency;
-			target = 77BEB33019A68F5C00D4BE80 /* BitcasaSDK */;
-			targetProxy = 77BEB34719A68F5C00D4BE80 /* PBXContainerItemProxy */;
-		};
 /* End PBXTargetDependency section */
-
-/* Begin PBXVariantGroup section */
-		77BEB34D19A68F5C00D4BE80 /* InfoPlist.strings */ = {
-			isa = PBXVariantGroup;
-			children = (
-				77BEB34E19A68F5C00D4BE80 /* en */,
-			);
-			name = InfoPlist.strings;
-			sourceTree = "<group>";
-		};
-/* End PBXVariantGroup section */
 
 /* Begin XCBuildConfiguration section */
 		77354CF419C7DD8B006F750D /* Debug */ = {
@@ -573,42 +471,6 @@
 			};
 			name = Release;
 		};
-		77BEB35819A68F5C00D4BE80 /* Debug */ = {
-			isa = XCBuildConfiguration;
-			buildSettings = {
-				FRAMEWORK_SEARCH_PATHS = (
-					"$(SDKROOT)/Developer/Library/Frameworks",
-					"$(inherited)",
-					"$(DEVELOPER_FRAMEWORKS_DIR)",
-				);
-				GCC_PRECOMPILE_PREFIX_HEADER = YES;
-				GCC_PREFIX_HEADER = "BitcasaSDK/BitcasaSDK-Prefix.pch";
-				GCC_PREPROCESSOR_DEFINITIONS = (
-					"DEBUG=1",
-					"$(inherited)",
-				);
-				INFOPLIST_FILE = "BitcasaSDKTests/BitcasaSDKTests-Info.plist";
-				PRODUCT_NAME = "$(TARGET_NAME)";
-				WRAPPER_EXTENSION = xctest;
-			};
-			name = Debug;
-		};
-		77BEB35919A68F5C00D4BE80 /* Release */ = {
-			isa = XCBuildConfiguration;
-			buildSettings = {
-				FRAMEWORK_SEARCH_PATHS = (
-					"$(SDKROOT)/Developer/Library/Frameworks",
-					"$(inherited)",
-					"$(DEVELOPER_FRAMEWORKS_DIR)",
-				);
-				GCC_PRECOMPILE_PREFIX_HEADER = YES;
-				GCC_PREFIX_HEADER = "BitcasaSDK/BitcasaSDK-Prefix.pch";
-				INFOPLIST_FILE = "BitcasaSDKTests/BitcasaSDKTests-Info.plist";
-				PRODUCT_NAME = "$(TARGET_NAME)";
-				WRAPPER_EXTENSION = xctest;
-			};
-			name = Release;
-		};
 /* End XCBuildConfiguration section */
 
 /* Begin XCConfigurationList section */
@@ -635,15 +497,6 @@
 			buildConfigurations = (
 				77BEB35519A68F5C00D4BE80 /* Debug */,
 				77BEB35619A68F5C00D4BE80 /* Release */,
-			);
-			defaultConfigurationIsVisible = 0;
-			defaultConfigurationName = Release;
-		};
-		77BEB35719A68F5C00D4BE80 /* Build configuration list for PBXNativeTarget "BitcasaSDKTests" */ = {
-			isa = XCConfigurationList;
-			buildConfigurations = (
-				77BEB35819A68F5C00D4BE80 /* Debug */,
-				77BEB35919A68F5C00D4BE80 /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Release;

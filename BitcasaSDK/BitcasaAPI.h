@@ -23,6 +23,7 @@
 
 @class Container;
 @class Folder;
+@class Share;
 @interface BitcasaAPI : NSObject
 + (NSString *)accessTokenWithEmail:(NSString *)email password:(NSString *)password;
 
@@ -49,7 +50,10 @@
 + (void)copyItems:(NSArray*)items to:(Container*)toItem completion:(void (^)(NSArray* success))completion;
 
 #pragma mark - Share item(s)
-+ (void)shareItems:(NSArray*)itemsToShare completion:(void (^)(NSString* url))completion;
++ (void)shareItems:(NSArray*)itemsToShare completion:(void (^)(Share* share))completion;
++ (void)listShares:(void (^)(NSArray* shares))completion;
++ (void)deleteShareWithKey:(NSString*) shareKey completion:(void (^)(bool success))completion;
++ (void)deleteShare:(Share*) share completion:(void (^)(bool success))completion;
 
 #pragma mark - Create new directory
 + (void)createFolderInContainer:(Container*)container withName:(NSString*)name completion:(void (^)(NSDictionary* newFolderDict))completion;

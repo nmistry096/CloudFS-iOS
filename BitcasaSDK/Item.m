@@ -51,7 +51,7 @@
 }
 
 #pragma mark - share
-- (void)shareWithCompletion:(void (^)(NSString* shareLink))completion
+- (void)shareWithCompletion:(void (^)(Share* share))completion
 {
     [BitcasaAPI shareItems:@[self] completion:completion];
 }

@@ -10,6 +10,7 @@
 #import <CoreData/CoreData.h>
 
 @class Container;
+@class Share;
 @interface Item : NSObject
 
 @property (nonatomic, retain) NSString * url;
@@ -28,7 +29,7 @@
 - (void)moveToDestinationContainer:(Container *)destContainer completion:(void (^)(Item * movedItem))completion;
 
 #pragma mark - share
-- (void)shareWithCompletion:(void (^)(NSString* shareLink))completion;
+- (void)shareWithCompletion:(void (^)(Share* share))completion;
 
 #pragma mark - delete
 - (void)deleteWithCompletion:(void (^)(BOOL success))completion;

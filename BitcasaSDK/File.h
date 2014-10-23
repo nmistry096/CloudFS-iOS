@@ -17,7 +17,7 @@ extern NSString* const kAPIEndpointFileAction;
 
 @property (nonatomic, retain) NSString * mime;
 @property (nonatomic, retain) NSString * extension;
-@property (nonatomic) int64_t size;
+@property (nonatomic) NSNumber* size;
 
 - (void)downloadWithDelegate:(id <TransferDelegate>)delegate;
 

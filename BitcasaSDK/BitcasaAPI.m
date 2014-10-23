@@ -18,6 +18,7 @@
 #import "BCAssetStream.h"
 #import "Folder.h"
 #import "File.h"
+#import "Share.h"
 
 #import <AssetsLibrary/AssetsLibrary.h>
 #import <CommonCrypto/CommonDigest.h>
@@ -30,19 +31,11 @@ NSString* const kAPIEndpointMetafolders = @"/metafolders";
 NSString* const kAPIEndpointUser = @"/user";
 NSString* const kAPIEndpointProfile = @"/profile/";
 NSString* const kAPIEndpointAccount = @"/account";
-NSString* const kAPIEndpointMsg = @"/msg/";
 NSString* const kAPIEndpointSessions = @"/sessions/";
 NSString* const kAPIEndpointCurrentSession = @"current/";
-NSString* const kAPIEndpointThumbnail = @"/thumbnail/";
 NSString* const kAPIEndpointShares = @"/shares/";
-NSString* const kAPIEndpointEntrypoint = @"/filesystem/entrypoints/";
-NSString* const kAPIEndpointTranscode = @"/transcode";
-NSString* const kAPIEndpointVideo = @"/video";
-NSString* const kAPIEndpointAudio = @"/audio";
-NSString* const kAPIEndpointBatch = @"/batch";
 NSString* const kAPIEndpointTrash = @"/trash";
-
-NSString* const kCameraBackupEntrypointID = @"015199f04c044c5fa95fc69556cf723e";
+NSString* const kAPIEndpointHistory = @"/history";
 
 NSString* const kHeaderContentType = @"Content-Type";
 NSString* const kHeaderAuth = @"Authorization";
@@ -59,6 +52,8 @@ NSString* const kQueryParameterOperation = @"operation";
 NSString* const kQueryParameterOperationMove = @"move";
 NSString* const kQueryParameterOperationCopy = @"copy";
 NSString* const kQueryParameterOperationCreate = @"create";
+NSString* const kQueryParameterHistoryStart = @"start";
+NSString* const kQueryParameterHistoryStop = @"stop";
 
 NSString* const kDeleteRequestParameterCommit = @"commit";
 NSString* const kDeleteRequestParameterForce = @"force";
@@ -73,6 +68,11 @@ NSString* const kBatchRequestJsonRequestsKey = @"requests";
 NSString* const kBatchRequestJsonRelativeURLKey = @"relative_url";
 NSString* const kBatchRequestJsonMethodKey = @"method";
 NSString* const kBatchRequestJsonBody = @"body";
+
+NSString* const kShareResponseResultShareKey = @"share_key";
+NSString* const kShareResponseResultUrl = @"url";
+NSString* const kShareResponseResultShortUrl = @"short_url";
+NSString* const kShareResponseResultDateCreated = @"date_created";
 
 @interface BitcasaAPI ()
 + (NSString*)apiVersion;
@@ -172,7 +172,10 @@ NSString* const kBatchRequestJsonBody = @"body";
     [requestString appendString:[NSString stringWithFormat:@"&%@:%@", kHeaderContentType, [[BitcasaAPI authContentType] encode]]];
     
     NSDateFormatter* df = [[NSDateFormatter alloc] init];
-    [df setDateFormat:@"EEE', 'd' 'MMM' 'yyyy' 'hh':'mm':'ss' 'z"];
+    NSLocale* locale = [[NSLocale alloc] initWithLocaleIdentifier:@"en_US_POSIX"];
+    [df setTimeZone:[NSTimeZone timeZoneWithName:@"GMT"]];
+    [df setDateFormat:@"EEE', 'd' 'MMM' 'yyyy' 'hh':'mm':'ss' 'zzz"];
+    [df setLocale:locale];
     NSString* dateStr = [df stringFromDate:[NSDate date]];
     [requestString appendString:[NSString stringWithFormat:@"&%@:%@", kHeaderDate, [dateStr encode]]];
     
@@ -443,7 +446,7 @@ NSString* const kBatchRequestJsonBody = @"body";
 }
 
 #pragma mark - Share item(s)
-+ (void)shareItems:(NSArray*)itemsToShare completion:(void (^)(NSString* url))completion
++ (void)shareItems:(NSArray*)itemsToShare completion:(void (^)(Share* share))completion
 {
     NSMutableArray* shareFormParams = [NSMutableArray array];
     for (Item* item in itemsToShare)
@@ -455,19 +458,53 @@ NSString* const kBatchRequestJsonBody = @"body";
     
     [NSURLConnection sendAsynchronousRequest:shareLinkRequest queue:[NSOperationQueue currentQueue] completionHandler:^(NSURLResponse *response, NSData *data, NSError *connectionError)
     {
-        NSString* shortURL = nil;
+        Share* share = nil;
         if ([(NSHTTPURLResponse*)response statusCode] == 200)
         {
             NSDictionary* resultsDict = [BitcasaAPI resultDictFromResponseData:data];
-            shortURL = resultsDict[@"short_url"];
+            share = [[Share alloc] initWithDictionary:resultsDict];
         }
         else
         {
             [BitcasaAPI checkForAuthenticationFailure:response];
             completion(nil);
         }
-        completion(shortURL);
+        completion(share);
     }];
+}
+
++ (void)listShares:(void (^)(NSArray* shares))completion
+{
+    NSURLRequest* listShares = [[NSURLRequest alloc] initWithMethod:kHTTPMethodGET endpoint:kAPIEndpointShares];
+    [NSURLConnection sendAsynchronousRequest:listShares queue:[NSOperationQueue currentQueue] completionHandler:^
+     (NSURLResponse *response, NSData *data, NSError *connectionError) {
+         NSArray* shares = [BitcasaAPI parseListOfSharesWithResponse:response data:data error:connectionError];
+         completion(shares);
+     }];
+}
+
++ (void)deleteShareWithKey:(NSString*) shareKey completion:(void (^)(bool success))completion
+{
+    NSString* deleteShareEndPoint = [NSString stringWithFormat:@"%@%@", kAPIEndpointShares, shareKey];
+    NSURLRequest* listShares = [[NSURLRequest alloc] initWithMethod:kHTTPMethodDELETE endpoint:deleteShareEndPoint];
+    [NSURLConnection sendAsynchronousRequest:listShares queue:[NSOperationQueue currentQueue] completionHandler:^
+     (NSURLResponse *response, NSData *data, NSError *connectionError) {
+         if ( ((NSHTTPURLResponse*)response).statusCode == 200)
+             completion(YES);
+         else
+             completion(NO);
+     }];
+}
+
++ (void)deleteShare:(Share*) share completion:(void (^)(bool success))completion
+{
+    [BitcasaAPI deleteShareWithKey:share.shareKey completion:completion];
+}
+
+#pragma mark - History
++ (void)getActionHistoryWithStartVersion:(int) startVersion andEndVersion:(int) endVersion completion:(void (^)(NSArray* history))completion
+{
+    
 }
 
 #pragma mark - Create new directory
@@ -603,12 +640,42 @@ NSString* const kBatchRequestJsonBody = @"body";
     return nil;
 };
 
++ (NSArray*)parseListOfSharesWithResponse:(NSURLResponse*)response data:(NSData*)data error:(NSError*)connectionError
+{
+    if (((NSHTTPURLResponse*)response).statusCode == 200)
+    {
+        if (data)
+        {
+            NSArray* sharesDictArray = [BitcasaAPI resultArrayFromResponseData:data];
+            NSMutableArray* sharesArray = [NSMutableArray array];
+            for (NSDictionary* shareDict in sharesDictArray)
+            {
+                Share* share = [[Share alloc] initWithDictionary:shareDict];
+                [sharesArray addObject: share];
+            }
+            return sharesArray;
+        }
+    }
+    else
+        [BitcasaAPI checkForAuthenticationFailure:response];
+    
+    return nil;
+}
+
 + (NSDictionary*)resultDictFromResponseData:(NSData*)data
 {
     NSError* err;
     NSDictionary* responseDict = [NSJSONSerialization JSONObjectWithData:data options:NSJSONReadingAllowFragments error:&err];
     NSDictionary* resultDict = responseDict[@"result"];
     return resultDict;
+}
+
++ (NSArray*)resultArrayFromResponseData:(NSData*)data
+{
+    NSError* err;
+    NSDictionary* responseDict = [NSJSONSerialization JSONObjectWithData:data options:NSJSONReadingAllowFragments error:&err];
+    NSArray* resultArray = responseDict[@"result"];
+    return resultArray;
 }
 
 + (NSArray*)itemDictsFromResponseData:(NSData*)data

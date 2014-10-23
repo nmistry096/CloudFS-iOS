@@ -18,6 +18,7 @@
 @property (nonatomic, strong) User* user;
 @property (nonatomic, strong) Account* account;
 @property (nonatomic, strong) Filesystem* fs;
+@property (nonatomic, strong) NSArray* shares;
 
 @property (nonatomic, assign) id<DBSessionDelegate> delegate;
 
@@ -28,6 +29,7 @@
 - (void)authenticateWithUsername:(NSString*)username andPassword:(NSString*)password completion:(void (^)(BOOL success))completion;
 - (void)unlink;
 - (BOOL)isLinked;
+
 @end
 
 @protocol DBSessionDelegate
