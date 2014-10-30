@@ -12,6 +12,10 @@
 #import <BitcasaSDK/File.h>
 #import <BitcasaSDK/Folder.h>
 #import <BitcasaSDK/Item.h>
+#import <BitcasaSDK/User.h>
+#import <BitcasaSDK/BitcasaAPI.h>
+#import <BitcasaSDK/Filesystem.h>
+#import <BitcasaSDK/Share.h>
 
 #import <AssetsLibrary/AssetsLibrary.h>
 #import <MobileCoreServices/MobileCoreServices.h>
@@ -181,7 +185,7 @@ typedef enum : NSUInteger {
     Item* item = (Item*)_items[indexPath.row];
     cell.textLabel.text = item.name;
     
-    if ([item isKindOfClass:[Folder class]])
+    if ([item isKindOfClass:[Folder class]] || [item isKindOfClass:[Container class]])
         cell.accessoryType = UITableViewCellAccessoryDisclosureIndicator;
     
     return cell;
@@ -190,7 +194,7 @@ typedef enum : NSUInteger {
 - (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath
 {
     id item = _items[indexPath.row];
-    if ([item isKindOfClass:[Folder class]])
+    if ([item isKindOfClass:[Folder class]] || [item isKindOfClass:[Container class]])
     {
         Folder* selectedDir = (Folder*)item;
         [selectedDir listItemsWithCompletion:^(NSArray *items)

@@ -13,9 +13,9 @@ NSString* const kAPIEndpointFileAction = @"/files";
 
 @implementation File
 
-@dynamic mime;
-@dynamic extension;
-@dynamic size;
+@synthesize mime;
+@synthesize extension;
+@synthesize size;
 
 - (NSString*)endpointPath
 {

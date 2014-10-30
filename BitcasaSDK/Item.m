@@ -13,6 +13,7 @@
 @implementation Item
 
 @synthesize url;
+@synthesize parentId;
 @synthesize version;
 @synthesize name;
 @synthesize dateContentLastModified;
@@ -32,8 +33,8 @@
         self.dateContentLastModified = [NSDate dateWithTimeIntervalSince1970:[dict[@"date_content_last_modified"] doubleValue]];
         self.dateCreated = [NSDate dateWithTimeIntervalSince1970:[dict[@"date_created"] doubleValue]];
         self.version = [dict[@"version"] integerValue];
-        
-        self.url = [parentPath stringByAppendingPathComponent:dict[@"id"]];
+        self.parentId = dict[@"parent_id"];
+        self.url = [parentPath stringByAppendingPathComponent:self.parentId];
     }
     return self;
 }

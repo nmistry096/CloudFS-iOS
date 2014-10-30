@@ -59,7 +59,9 @@
 		77BEB39019A6CA2C00D4BE80 /* NSString+API.m in Sources */ = {isa = PBXBuildFile; fileRef = 77BEB38F19A6CA2C00D4BE80 /* NSString+API.m */; };
 		77FA748219C28CFA00E84C23 /* TransferManager.m in Sources */ = {isa = PBXBuildFile; fileRef = 77FA748119C28CFA00E84C23 /* TransferManager.m */; };
 		77FA748519C3B1D600E84C23 /* BCInputStream.m in Sources */ = {isa = PBXBuildFile; fileRef = 77FA748419C3B1D600E84C23 /* BCInputStream.m */; };
+		BD987CB919FEF2C300BD1720 /* NSMutableDictionary+API.m in Sources */ = {isa = PBXBuildFile; fileRef = BD987CB819FEF2C300BD1720 /* NSMutableDictionary+API.m */; };
 		BDC562A119F03FB300D6481C /* Share.m in Sources */ = {isa = PBXBuildFile; fileRef = BDC562A019F03FB300D6481C /* Share.m */; };
+		BDFF80A31A01B7C700F4667E /* Share.h in Copy Files */ = {isa = PBXBuildFile; fileRef = BDC5629F19F03FB300D6481C /* Share.h */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -79,6 +81,7 @@
 			dstPath = "include/$(PRODUCT_NAME)";
 			dstSubfolderSpec = 16;
 			files = (
+				BDFF80A31A01B7C700F4667E /* Share.h in Copy Files */,
 				77354D1119C7E841006F750D /* Credentials.h in Copy Files */,
 				77354D1019C7E837006F750D /* NSString+API.h in Copy Files */,
 				77354D0B19C7E2AD006F750D /* BCInputStream.h in Copy Files */,
@@ -145,6 +148,8 @@
 		77FA748119C28CFA00E84C23 /* TransferManager.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = TransferManager.m; sourceTree = "<group>"; };
 		77FA748319C3B1D600E84C23 /* BCInputStream.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = BCInputStream.h; sourceTree = "<group>"; };
 		77FA748419C3B1D600E84C23 /* BCInputStream.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = BCInputStream.m; sourceTree = "<group>"; };
+		BD987CB719FEF2C300BD1720 /* NSMutableDictionary+API.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "NSMutableDictionary+API.h"; sourceTree = "<group>"; };
+		BD987CB819FEF2C300BD1720 /* NSMutableDictionary+API.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "NSMutableDictionary+API.m"; sourceTree = "<group>"; };
 		BDC5629F19F03FB300D6481C /* Share.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Share.h; sourceTree = "<group>"; };
 		BDC562A019F03FB300D6481C /* Share.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = Share.m; sourceTree = "<group>"; };
 /* End PBXFileReference section */
@@ -232,6 +237,8 @@
 				776A386F19A7A2F200E64737 /* Credentials.m */,
 				BDC5629F19F03FB300D6481C /* Share.h */,
 				BDC562A019F03FB300D6481C /* Share.m */,
+				BD987CB719FEF2C300BD1720 /* NSMutableDictionary+API.h */,
+				BD987CB819FEF2C300BD1720 /* NSMutableDictionary+API.m */,
 			);
 			path = BitcasaSDK;
 			sourceTree = "<group>";
@@ -338,6 +345,7 @@
 				77062ECF19E8CB6300186334 /* BCAssetStream.m in Sources */,
 				77FA748519C3B1D600E84C23 /* BCInputStream.m in Sources */,
 				BDC562A119F03FB300D6481C /* Share.m in Sources */,
+				BD987CB919FEF2C300BD1720 /* NSMutableDictionary+API.m in Sources */,
 				77BEB38D19A6C95100D4BE80 /* BitcasaAPI.m in Sources */,
 				77BEB36B19A69D2800D4BE80 /* Document.m in Sources */,
 				776A387019A7A2F200E64737 /* Credentials.m in Sources */,

@@ -12,7 +12,7 @@
 NSString* const kAPIEndpointFolderAction = @"/folders";
 
 @implementation Container
-@dynamic itemCount;
+@synthesize itemCount;
 
 - (id)initRootContainer
 {

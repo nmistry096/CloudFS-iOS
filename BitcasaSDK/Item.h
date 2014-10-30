@@ -13,9 +13,10 @@
 @class Share;
 @interface Item : NSObject
 
-@property (nonatomic, retain) NSString * url;
+@property (nonatomic, retain) NSString* url;
+@property (nonatomic, retain) NSString* parentId;
 @property (nonatomic) int64_t version;
-@property (nonatomic, retain) NSString * name;
+@property (nonatomic, retain) NSString* name;
 @property (nonatomic) NSDate* dateContentLastModified;
 @property (nonatomic) NSDate* dateCreated;
 

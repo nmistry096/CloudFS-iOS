@@ -24,7 +24,17 @@
 @class Container;
 @class Folder;
 @class Share;
+@class User;
+@class Account;
 @interface BitcasaAPI : NSObject
+
+typedef enum {
+    BCShareExistsFail,
+    BCShareExistsOverwrite,
+    BCShareExistsRename
+    
+} BCShareExistsOperation;
+
 + (NSString *)accessTokenWithEmail:(NSString *)email password:(NSString *)password;
 
 #pragma mark - Get profile
@@ -52,7 +62,8 @@
 #pragma mark - Share item(s)
 + (void)shareItems:(NSArray*)itemsToShare completion:(void (^)(Share* share))completion;
 + (void)listShares:(void (^)(NSArray* shares))completion;
-+ (void)deleteShareWithKey:(NSString*) shareKey completion:(void (^)(bool success))completion;
++ (void)browseShare:(Share*) share completion:(void (^)(NSArray* items))completion;
++ (void)addShare:(Share*) share toFolder:(Folder*) folder whenExists:(BCShareExistsOperation) operation completion:(void (^)(bool success))completion;
 + (void)deleteShare:(Share*) share completion:(void (^)(bool success))completion;
 
 #pragma mark - Create new directory

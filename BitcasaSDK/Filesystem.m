@@ -42,4 +42,10 @@
 {
     [BitcasaAPI copyItems:items to:destinationContainer completion:completion];
 }
+
+#pragma mark - shares
+- (void)listSharesWithCompletion:(void (^)(NSArray* shares))completion
+{
+    [BitcasaAPI listShares:completion];
+}
 @end

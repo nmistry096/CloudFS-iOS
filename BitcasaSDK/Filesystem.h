@@ -26,4 +26,7 @@
 #pragma mark - copy
 - (void)copyItems:(NSArray*)items toContainer:(Container*)destinationContainer completion:(void (^)(NSArray* successArray))completion;
 
+#pragma mark - share
+- (void)listSharesWithCompletion:(void (^)(NSArray* shares))completion;
+
 @end
