@@ -9,10 +9,12 @@
 #import <Foundation/Foundation.h>
 #import <CoreData/CoreData.h>
 #import "Container.h"
+#import "BitcasaAPI.h"
 
 @protocol TransferDelegate;
 @interface Folder : Container
 
 - (void)uploadContentsOfFile:(NSURL*)url delegate:(id <TransferDelegate>)delegate;
+- (void)addShare:(Share*) share whenExists:(BCShareExistsOperation) operation completion:(void (^)(bool success))completion;
 
 @end

@@ -16,4 +16,9 @@
     [BitcasaAPI uploadFile:url to:self delegate:delegate];
 }
 
+#pragma mark - add share
+- (void)addShare:(Share*) share whenExists:(BCShareExistsOperation) operation completion:(void (^)(bool success))completion
+{
+    [BitcasaAPI addShare:share toFolder:self whenExists:operation completion:completion];
+}
 @end
