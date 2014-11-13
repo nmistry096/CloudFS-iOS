@@ -181,6 +181,7 @@ NSString* const kShareResponseResultDateCreated = @"date_created";
     NSURL* tokenReqURL = [NSURL URLWithString:[NSString stringWithFormat:@"%@%@%@", baseCredentials.serverURL, [BitcasaAPI apiVersion], kAPIEndpointToken]];
     NSMutableURLRequest* tokenRequest = [NSMutableURLRequest requestWithURL:tokenReqURL];
     [tokenRequest setHTTPMethod:kHTTPMethodPOST];
+    [tokenRequest setHTTPShouldHandleCookies:FALSE];
     
     NSString* signedRequestStr = [BitcasaAPI generateSignedRequestString:requestString];
     
