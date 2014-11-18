@@ -34,7 +34,7 @@
         self.dateCreated = [NSDate dateWithTimeIntervalSince1970:[dict[@"date_created"] doubleValue]];
         self.version = [dict[@"version"] integerValue];
         self.parentId = dict[@"parent_id"];
-        self.url = [parentPath stringByAppendingPathComponent:self.parentId];
+        self.url = [parentPath stringByAppendingPathComponent:dict[@"id"]];
     }
     return self;
 }

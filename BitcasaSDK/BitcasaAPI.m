@@ -498,7 +498,7 @@ NSString* const kShareResponseResultDateCreated = @"date_created";
 
 + (void)addShare:(Share*) share toFolder:(Folder*) folder whenExists:(BCShareExistsOperation) operation completion:(void (^)(bool success))completion
 {
-    NSString* addShareEndPoint = [NSString stringWithFormat:@"%@%@", kAPIEndpointShares, share.shareKey];
+    NSString* addShareEndPoint = [NSString stringWithFormat:@"%@%@/", kAPIEndpointShares, share.shareKey];
     NSMutableArray* formParameters = [NSMutableArray arrayWithObjects:@{@"path": folder.url}, @{@"exists": [BitcasaAPI shareExistsOperationToString: operation]}, nil];
     NSURLRequest* addShare = [[NSURLRequest alloc] initWithMethod:kHTTPMethodPOST endpoint:addShareEndPoint queryParameters:nil formParameters:formParameters];
     [NSURLConnection sendAsynchronousRequest:addShare queue:[NSOperationQueue currentQueue] completionHandler:^(NSURLResponse *response, NSData *data, NSError *connectionError) {
