@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<plist version="1.0">
+    <dict>
+        <key>CFS_ADMIN_ID</key>
+        <string></string>
+        <key>CFS_API_SERVER_URL</key>
+        <string></string>
+        <key>CFS_CLIENT_ID</key>
+        <string></string>
+        <key>CFS_SECRET</key>
+        <string></string>
+        <key>CFS_USER_EMAIL</key>
+        <string></string>
+        <key>CFS_ADMIN_SECRET</key>
+        <string></string>
+        <key>CFS_USER_PASSWORD</key>
+        <string></string>
+    </dict>
+</plist>

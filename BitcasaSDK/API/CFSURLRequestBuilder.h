@@ -1,0 +1,147 @@
+//
+//  CFSURLRequestBuilder.h
+//  BitcasaSDK
+//
+//  Bitcasa iOS SDK
+//  Copyright (C) 2015 Bitcasa, Inc.
+//  215 Castro Street, 2nd Floor
+//  Mountain View, CA 94041
+//
+//  All rights reserved.
+//
+//  For support, please send email to support@bitcasa.com.
+//
+
+#import <Foundation/Foundation.h>
+
+@class CFSItem;
+@class CFSContainer;
+
+/*!
+ *  Helper class to build NSURLRequest for given parameters.
+ */
+@interface CFSURLRequestBuilder : NSObject
+
+extern NSString *const CFSRestHTTPMethodGET;
+extern NSString *const CFSRestHTTPMethodPOST;
+extern NSString *const CFSRestHTTPMethodDELETE;
+
+/*!
+ *  Initializes an NSURLRequest with given parameters.
+ *
+ *  @param httpMethod  The HTTP Method. Use defined CFSRestHTTPMethod constants.
+ *  @param serverUrl   The Server URL.
+ *  @param endpoint    The REST Endpoint which is appended to server url.
+ *  @param apiVersion  The version of the REST API to communicate with.
+ *  @param queryParams The query parameters to send along with the request.
+ *  @param formParams  The form parameters to add to the body. This has to be either an NSArray or NSDictionary.
+ *
+ *  @return Returns an initalized NSURLRequest.
+ */
++ (NSURLRequest *)urlRequestForHttpMethod:(NSString *)httpMethod
+                                serverUrl:(NSString *)serverUrl
+                               apiVersion:(NSString *)version
+                                 endpoint:(NSString *)endpoint
+                          queryParameters:(NSDictionary *)queryParams
+                           formParameters:(NSDictionary *)formParams;
+
+/*!
+ *  Initializes an NSURLRequest with given parameters.
+ *
+ *  @param httpMethod  The HTTP Method. Use defined CFSRestHTTPMethod constants.
+ *  @param serverUrl   The Server URL.
+ *  @param apiVersion  The version of the REST API to communicate with.
+ *  @param endpoint    The REST Endpoint which is appended to server url.
+ *  @param queryParams The query parameters to send along with the request.
+ *  @param formParams  The form parameters to add to the body. This has to be either an NSArray or NSDictionary.
+ *  @param accessToken The access token to add to the header.
+ *
+ *  @return Returns an initalized NSURLRequest.
+ */
++ (NSURLRequest *)urlRequestForHttpMethod:(NSString *)httpMethod
+                                serverUrl:(NSString *)serverUrl
+                               apiVersion:(NSString *)version
+                                 endpoint:(NSString *)endpoint
+                          queryParameters:(NSDictionary *)queryParams
+                           formParameters:(NSDictionary *)formParams
+                              accessToken:(NSString *)token;
+
+/*!
+ *  Initializes an NSURLRequest for a multi-part operation with given parameters.
+ *
+ *  @param httpMethod  The HTTP Method. Use defined CFSRestHTTPMethod constants. This can be either a 'POST' or 'PUT' in this case.
+ *  @param serverUrl   The Server URL.
+ *  @param apiVersion  The version of the REST API to communicate with.
+ *  @param endpoint    The REST Endpoint which is appended to server url.
+ *  @param queryParams The query parameters to send along with the request.
+ *  @param inputStream The input stream containing the data to be sent.
+ *  @param accessToken The access token to add to the header.
+ *
+ *  @return Returns an initalized NSURLRequest.
+ */
++ (NSURLRequest *)urlRequestWithMultipartForHttpMethod:(NSString *)httpMethod
+                                             serverUrl:(NSString *)serverUrl
+                                            apiVersion:(NSString *)version
+                                              endpoint:(NSString *)endpoint
+                                       queryParameters:(NSDictionary *)queryParams
+                                           inputStream:(NSInputStream *)inputStream
+                                           accessToken:(NSString *)token;
+
+/*!
+ *  Initializes an NSURLRequest with given parameters.
+ *
+ *  @param httpMethod  The HTTP Method. Use defined CFSRestHTTPMethod constants.
+ *  @param itemUrl     The direct URL to the item.
+ *  @param apiVersion  The version of the REST API to communicate with.
+ *  @param endpoint    The REST Endpoint which is appended to item url.
+ *  @param queryParams The query parameters to send along with the request.
+ *  @param formParams  The form parameters to add to the body. This has to be either an NSArray or NSDictionary.
+ *  @param accessToken The access token to add to the header.
+ *
+ *  @return Returns an initalized NSURLRequest.
+ */
++ (NSURLRequest *)urlRequestForHttpMethod:(NSString *)httpMethod
+                                  itemUrl:(NSString *)itemUrl
+                                 endpoint:(NSString *)endpoint
+                          queryParameters:(NSDictionary *)queryParams
+                           formParameters:(id)formParams
+                              accessToken:(NSString *)token;
+
+/*!
+ *  Initializes an NSURLRequest with given parameters.
+ *
+ *  @param httpMethod   The HTTP Method. Use defined CFSRestHTTPMethod constants.
+ *  @param serverUrl    The Server URL.
+ *  @param apiVersion   The version of the REST API to communicate with.
+ *  @param endpoint     The REST Endpoint which is appended to server url.
+ *  @param queryParams  The query parameters to send along with the request.
+ *  @param formParams   The form parameters to add to the body. This has to be either an NSArray or NSDictionary.
+ *  @param clientId     The Client ID.
+ *  @param clientSecret The Client Secret.
+ *
+ *  @return Returns an initalized NSURLRequest.
+ */
++ (NSURLRequest *)signedUrlRequestForHttpMethod:(NSString *)httpMethod
+                                      serverUrl:(NSString *)serverUrl
+                                     apiVersion:(NSString *)version
+                                       endpoint:(NSString *)endpoint
+                                queryParameters:(NSDictionary *)queryParams
+                                 formParameters:(NSDictionary *)formParams
+                                       clientId:(NSString *)clientId
+                                   clientSecret:(NSString *)clientSecret;
+
+/*!
+ *  Initializes an NSURLRequest with given parameters.
+ *
+ *  @param httpMethod   The HTTP Method. Use defined CFSRestHTTPMethod constants.
+ *  @param serverUrl    The Server URL.
+ *  @param apiVersion   The version of the REST API to communicate with.
+ *  @param endpoint     The REST Endpoint which is appended to server url.
+ *
+ *  @return Returns an initalized NSURLRequest.
+ */
++ (NSURLRequest *)urlRequestForHttpMethod:(NSString *)httpMethod
+                                serverUrl:(NSString *)serverUrl
+                               apiVersion:(NSString *)version
+                                 endpoint:(NSString *)endpoint;
+@end

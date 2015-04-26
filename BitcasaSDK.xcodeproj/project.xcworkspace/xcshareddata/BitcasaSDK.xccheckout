@@ -5,36 +5,36 @@
 	<key>IDESourceControlProjectFavoriteDictionaryKey</key>
 	<false/>
 	<key>IDESourceControlProjectIdentifier</key>
-	<string>A4EDEA5C-AF28-4BDB-BD27-F59203F950E2</string>
+	<string>78F720A0-35A2-43C0-A184-27C4887AEA3B</string>
 	<key>IDESourceControlProjectName</key>
 	<string>BitcasaSDK</string>
 	<key>IDESourceControlProjectOriginsDictionary</key>
 	<dict>
-		<key>98E819473AE87B7D5C66E1BBD907E51FC2C650E7</key>
-		<string>ssh://git.co.bitcasa.com/olga/bitcasasdk.git</string>
+		<key>406AA1A70086C595C8DFC45880767496B10313F5</key>
+		<string>git.calcey.net:bitcasa/sdk-ios.git</string>
 	</dict>
 	<key>IDESourceControlProjectPath</key>
-	<string>BitcasaSDK.xcodeproj/project.xcworkspace</string>
+	<string>BitcasaSDK.xcodeproj</string>
 	<key>IDESourceControlProjectRelativeInstallPathDictionary</key>
 	<dict>
-		<key>98E819473AE87B7D5C66E1BBD907E51FC2C650E7</key>
+		<key>406AA1A70086C595C8DFC45880767496B10313F5</key>
 		<string>../..</string>
 	</dict>
 	<key>IDESourceControlProjectURL</key>
-	<string>ssh://git.co.bitcasa.com/olga/bitcasasdk.git</string>
+	<string>git.calcey.net:bitcasa/sdk-ios.git</string>
 	<key>IDESourceControlProjectVersion</key>
 	<integer>111</integer>
 	<key>IDESourceControlProjectWCCIdentifier</key>
-	<string>98E819473AE87B7D5C66E1BBD907E51FC2C650E7</string>
+	<string>406AA1A70086C595C8DFC45880767496B10313F5</string>
 	<key>IDESourceControlProjectWCConfigurations</key>
 	<array>
 		<dict>
 			<key>IDESourceControlRepositoryExtensionIdentifierKey</key>
 			<string>public.vcs.git</string>
 			<key>IDESourceControlWCCIdentifierKey</key>
-			<string>98E819473AE87B7D5C66E1BBD907E51FC2C650E7</string>
+			<string>406AA1A70086C595C8DFC45880767496B10313F5</string>
 			<key>IDESourceControlWCCName</key>
-			<string>BitcasaSDK</string>
+			<string>sdk-ios</string>
 		</dict>
 	</array>
 </dict>

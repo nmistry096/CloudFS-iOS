@@ -1,31 +1,76 @@
-Bitcasa CloudFS iOS SDK
-=======================
+# Bitcasa SDK for iOS
+  
+The **Bitcasa SDK for iOS** enables iOS developers to easily work with [Bitcasa Cloud Storage Platform](https://www.bitcasa.com/) and build scalable solutions.
 
-This SDK is built on [CloudFS API].
+* [REST API Documentation](https://www.bitcasa.com/cloudfs-api-docs/)
+* [Blog](http://blog.bitcasa.com/) 
 
-How to use:
-----------------------
-1) Clone this repo.
+## Getting Started
 
-2) Add the BitcasaSDK project file to your Xcode project. To do that, drag the BitcasaSDK.xcodeproj file into your Project Navigator.
+If you have already [signed up](https://www.bitcasa.com/cloudfs/pricing) and obtained your credentials you can get started in minutes.
 
-3) Navigate to Build Phases settings of your target. Under Link Binary with Libraries, add libBitcasaSDK.a and MobileCoreServices.framework.
 
-4) Navigate to Build Settings, and add -ObjC to Other Linker Flags.
+Cloning the git repository
 
-5) Obtain a Bitcasa CloudFS App ID, secret, and API server URL. (https://www.bitcasa.com/cloudfs)
+  ```bash
+  $ git clone https://github.com/bitcasa/CloudFS-iOS.git
+  ```
 
-6) Add a test user account.
+## Using the SDK
 
-7) In your app, instantiate a session:
-```objc
-Session* session = [[Session alloc] initWithServerURL:SERVER_URL clientId:APP_ID clientSecret:APP_SECRET];
+Use the credentials you obtained from Bitcasa admin console to create a client session. This session can be used for all future requests to Bitcasa.
+
+```objective-c
+CFSSession *session = [[CFSSession alloc] initWithServerURL:serverUrl clientId:appId clientSecret:appSecret];
+[session  authenticateWithUsername:email andPassword:password completion:^(NSString token, BOOL success, CFSError error){ //YOUR CODE }];
 ```
-8) Authenticate a user:
-```objc
-[session authenticateWithUsername:@"username"
-andPassword:@"password"];
-```
-...and you're good to go!
 
-[CloudFS API]:http://www.bitcasa.com/cloudfs-api-docs/index.html
+Getting the root folder
+
+```objective-c
+[fileSystem rootWithCompletion:^(CFSFolder root, CFSError error) { //YOUR CODE }];
+```
+
+Getting the contents of a folder
+
+```objective-c
+[folder listWithCompletion:^(NSArray items, CFSError error) { //YOUR CODE }];
+```
+
+Creating a sub folder under root folder
+
+```objective-c
+[folder createFolder:folderName whenExists:CFSItemExistsRename completion:^(CFSFolder newDir, CFSError error) { //YOUR CODE }];
+```
+Uploading a file to a folder
+
+```objective-c
+[folder upload:localFilePath progress:^(NSInteger uploadId, NSString path, int64_t completedBytes, int64_t totalBytes) { } completion:^(NSInteger uploadId, NSString path, CFSFile cfsFile, CFSError error) { //your code }];
+```
+
+Downloading a file to a local destination
+
+```objective-c
+[file download:localPath progress:^(NSInteger transferId, NSString path, int64_t completedBytes, int64_t totalBytes) { //Your code } completion:^(NSInteger transferId, NSString path, CFSFile file, CFSError error) { //you code }];
+```
+
+Deleting a file
+
+```objective-c
+[file deleteWithCommit:YES force:NO completion:^(BOOL success, CFSError *error) { //YOUR CODE }];
+```
+
+Creating a user (for paid accounts only)
+
+```objective-c
+[session setAdminCredentialsWithAdminClientId:clientId adminClientSecret:adminSecret];
+[session createAccountWithUsername:[self getRandomEmail] password:@"test123" email:nil firstName:nil lastName:nil logInTocreatedUser:NO WithCompletion:^(CFSUser user, CFSError error) { //YOUR CODE }];
+```
+
+## Test Suite
+
+The tests that exist are functional tests designed to be used with a CloudFS test user. They use API credentials on your free CloudFS account. You should add the credentials to the file 'BitcasaSDK Tests\BitcasaConfig.plist' (Use BitcasaSDK Tests\BitcasaConfigTemplate.plist as a reference to create the config file.
+To run the tests, open XCode and choose target as 'BitcasaSDK Tests' and run 'Test'.
+
+
+

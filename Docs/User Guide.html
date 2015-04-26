@@ -1,0 +1,507 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<meta charset="utf-8">
+
+	<title>CloudFS iOS SDK User Guide</title>
+
+	<link rel="stylesheet" href="css/style.css">
+	<meta name="viewport" content="initial-scale=1, maximum-scale=1.4">
+	<meta name="generator" content="appledoc 2.2.1 (build 1333)">
+</head>
+<body class="appledoc">
+	<header>
+		<div class="container">			
+			<h1>CloudFS iOS SDK User Guide</h1>		
+		</div>
+	</header>
+	<aside>
+		<div class="container">
+			<nav>
+				<ul id="header-buttons" role="toolbar">
+					<li>
+						<a href="BitcasaSDKDocs/html/index.html" target="_blank">API Reference</a>
+					</li>
+				</ul>
+			</nav>
+		</div>
+	</aside>
+	<article>
+		<div id="overview_contents" class="container">
+			<div id="content">
+				<main role="main">
+					<h1 class="title">CloudFS iOS SDK User Guide</h1>
+					<div>
+						<h2 class="subtitle subtitle-apireference">Contents</h2>
+						<ul>
+							<li><a href="#api" id="id1">API Reference</a></li>
+							<li><a href="#getting" id="id2">Getting the SDK</a></li>
+							<li><a href="#using" id="id3">Using the SDK</a></li>
+							<li><a href="#admin" id="id4">Admin Operations</a></li>
+							<li><a href="#filesystem" id="id5">File System Operations</a></li>
+							<li><a href="#folder" id="id6">Folder Operations</a></li>
+							<li><a href="#file" id="id7">File Operations</a></li>
+							<li><a href="#share" id="id8">Share Operations</a></li>
+						</ul>
+					</div>
+					<div class="section section-api">
+						<a title="api" name="api"></a>
+						<h2 class="subtitle subtitle-api">API Reference</h2>
+						<p>Refer the documentation of <a href="BitcasaSDKDocs/html/index.html" target="_blank" title="BitcasaSDK">BitcasaSDK</a> to view class and method details.</p>
+					</div>
+					<div class="section section-getting">
+						<a title="Getting-the-SDK" name="getting"></a>
+						<h2 class="subtitle subtitle-getting">Getting the SDK</h2>
+						<p>You can get the SDK by building the project from source.</p>
+					</div>
+					<div class="section-method">
+						<h3 class="method-title">
+							<code><a>&nbsp;&nbsp;Build the project from source</a></code>
+						</h3>
+						<div class="method-info">
+							<div class="method-info-container">
+								<div class="method-subsection brief-description">
+									<p>You can download the project from our repository and build it. To checkout the latest source code:</p>
+								</div>
+								<div class="method-subsection declared-in-section">
+									<h4 class="method-subtitle">git clone https://github.com/bitcasa/CloudFS-iOS.git</h4>
+								</div>
+							</div>
+						</div>
+					</div>
+					<div class="section section-using">
+						<a title="Using-the-SDK" name="using"></a>
+						<h2 class="subtitle subtitle-using">Using the SDK</h2>
+						<p>If you don&#39;t have a CloudFS API account, <a href="https://www.bitcasa.com/" target="_blank" title="register">register</a> to gain access.</p>
+					</div>
+					<div class="section-method">
+						<h3 class="method-title">
+							<code><a>&nbsp;&nbsp;Creating and linking the CloudFS Sessions</a></code>
+						</h3>
+						<div class="method-info">
+							<div class="method-info-container">
+								<div class="method-subsection brief-description">
+									<p>Sessions represent connections to CloudFS. They use a set of credentials that consists of an end point URL, a client ID and a client secret. These credentials can be obtained via the Bitcasa admin console.</p>
+								</div>
+								<div class="method-subsection method-declaration"><code>session = [[CFSSession alloc] initWithServerURL:serverUrl clientId:appId clientSecret:appSecret];</code></div>
+								<div class="method-subsection brief-description">
+									<p>A user can be linked to the session by authenticating using a username and a password.</p>
+								</div>
+								<div class="method-subsection method-declaration"><code>[session  authenticateWithUsername:email andPassword:password completion:^(NSString token, BOOL success, CFSError error){ //YOUR CODE }];</code></div>
+								<div class="method-subsection brief-description">
+									<p>You can assert whether a user is linked to the session.</p>
+								</div>
+								<div class="method-subsection method-declaration"><code>[session isLinked];</code></div>
+								<div class="method-subsection brief-description">
+									<p>The currently linked user can be unlinked from the session.</p>
+								</div>
+								<div class="method-subsection method-declaration"><code>[session unlink];</code></div>						
+							</div>
+						</div>
+					</div>
+					<div class="section section-admin">
+						<a title="Admin-Operations" name="admin"></a>
+						<h2 class="subtitle subtitle-admin">Admin Operations</h2>
+						<p>You need to set the admin credentials in order to perform admin operations. You can create end users for an admin/paid account. If &#8216;logInToCreatedUser&#8217; is true, logs in to the user after creating it.</p>
+					</div>
+					<div class="section-method">
+						<h3 class="method-title">
+							<code><a target="_blank" href="BitcasaSDKDocs/html/Classes/CFSSession.html#//api/name/createAccountWithUsername:password:email:firstName:lastName:logInTocreatedUser:WithCompletion:">&nbsp;&nbsp;Create Account</a></code>
+						</h3>
+						<div class="method-info">
+							<div class="method-info-container">
+								<div class="method-subsection method-declaration">
+									<code>
+										<p>[session setAdminCredentialsWithAdminClientId:clientId adminClientSecret:adminSecret];</p>
+										<p>[session createAccountWithUsername:[self getRandomEmail] password:@"test123" email:nil firstName:nil lastName:nil logInTocreatedUser:NO WithCompletion:^(CFSUser user, CFSError error) { //YOUR CODE }];</p>
+									</code>
+								</div>
+							</div>
+						</div>
+					</div>
+					<div class="section section-filesystem">
+						<a title="File-System-Operations" name="filesystem"></a>
+						<h2 class="subtitle subtitle-filesystem">File System Operations</h2>
+						<p>You need to create a session in order to perform file system operations.</p>
+					</div>
+					<div class="section-method">
+						<h3 class="method-title">
+							<code><a target="_blank" href="BitcasaSDKDocs/html/Classes/CFSFilesystem.html#//api/name/rootWithCompletion:">&nbsp;&nbsp;Get Root Folder</a></code>
+						</h3>
+						<div class="method-info">
+							<div class="method-info-container">
+								<div class="method-subsection method-declaration">
+									<code>
+										<p>CFSFilesystem *fileSystem = [[CFSFilesystem alloc] initWithRestAdapter:restAdapter];</p>
+										<p>[fileSystem rootWithCompletion:^(CFSFolder root, CFSError error) { //YOUR CODE }];</p>
+									</code>
+								</div>
+							</div>
+						</div>
+					</div>
+					<div class="section-method">
+						<h3 class="method-title">
+							<code><a target="_blank" href="BitcasaSDKDocs/html/Classes/CFSFilesystem.html#//api/name/getItem:completion:">&nbsp;&nbsp;Get Specific Item</a></code>
+						</h3>
+						<div class="method-info">
+							<div class="method-info-container">
+								<div class="method-subsection method-declaration">
+									<code>[fileSystem getItem:path completion:^(CFSItem item, CFSError error) { //YOUR CODE }];</code>
+								</div>
+							</div>
+						</div>
+					</div>
+					<div class="section-method">
+						<h3 class="method-title">
+							<code><a target="_blank" href="BitcasaSDKDocs/html/Classes/CFSFilesystem.html#//api/name/listTrashWithCompletion:">&nbsp;&nbsp;List Trash Items</a></code>
+						</h3>
+						<div class="method-info">
+							<div class="method-info-container">
+								<div class="method-subsection brief-description">
+									<p>You can list down the contents of Trash folder. Below example shows how to retrieve contents of the trash folder.</p>
+								</div>
+								<div class="method-subsection method-declaration">
+									<code>[fileSystem listTrashWithCompletion:^(NSArray items, CFSError error) { //YOUR CODE }];</code>
+								</div>
+							</div>
+						</div>
+					</div>
+					<div class="section-method">
+						<h3 class="method-title">
+							<code><a target="_blank" href="BitcasaSDKDocs/html/Classes/CFSFilesystem.html#//api/name/listSharesWithCompletion:">&nbsp;&nbsp;Get Shares</a></code>
+						</h3>
+						<div class="method-info">
+							<div class="method-info-container">
+								<div class="method-subsection brief-description">
+									<p>You can list down available Shares. Below example shows how to retrieve the list of shares.</p>
+								</div>
+								<div class="method-subsection method-declaration">
+									<code>[fileSystem listSharesWithCompletion:^(NSArray items, CFSError error) {//YOUR CODE}];</code>
+								</div>
+							</div>
+						</div>
+					</div>
+					<div class="section-method">
+						<h3 class="method-title">
+							<code><a target="_blank" href="BitcasaSDKDocs/html/Classes/CFSFilesystem.html#//api/name/createShare:password:completion:">&nbsp;&nbsp;Create Share</a></code>
+						</h3>
+						<div class="method-info">
+							<div class="method-info-container">
+								<div class="method-subsection brief-description">
+									<p>You can create a share by providing the path as shown in below example. A passworded share cannot be used for anything if the password is not provided. It doesn&nbsp;t make sense to create a share unless the developer has the password.</p>
+								</div>
+								<div class="method-subsection method-declaration">
+									<code>[fileSystem createShare:file.path password:SHARE_PASSWORD completion:^(CFSShare share, CFSError error) { //YOUR CODE }];</code>
+								</div>
+							</div>
+						</div>
+					</div>
+					<div class="section-method">
+						<h3 class="method-title">
+							<code><a target="_blank" href="BitcasaSDKDocs/html/Classes/CFSFilesystem.html#//api/name/retrieveShare:password:completion:">&nbsp;&nbsp;Get Specific Share</a></code>
+						</h3>
+						<div class="method-info">
+							<div class="method-info-container">
+								<div class="method-subsection brief-description">
+									<p>You can get a share by providing the share key and the password (If available). A passworded share cannot be used for anything if the password is not provided.</p>
+								</div>
+								<div class="method-subsection method-declaration">
+									<code>[fileSystem retrieveShare:share.shareKey password:SHARE_PASSWORD completion:^(CFSShare share, CFSError error) { //YOUR CODE }];</code>
+								</div>
+							</div>
+						</div>
+					</div>
+					<div class="section section-folder">
+						<a title="Folder-Operations" name="folder"></a>
+						<h2 class="subtitle subtitle-folder">Folder Operations</h2>
+						<p>You need to create a session in order to perform folder operations.</p>
+					</div>
+					<div class="section-method">
+						<h3 class="method-title">
+							<code><a target="_blank" href="BitcasaSDKDocs/html/Classes/CFSContainer.html#//api/name/listWithCompletion:">&nbsp;&nbsp;List Folder Contents</a></code>
+						</h3>
+						<div class="method-info">
+							<div class="method-info-container">
+								<div class="method-subsection brief-description">
+									<p>You can list the contents of a folder. This will return a list of top level folders and items in the specified folder.</p>
+								</div>
+								<div class="method-subsection method-declaration">
+									<code>[folder listWithCompletion:^(NSArray items, CFSError error) { //YOUR CODE }];</code>
+								</div>
+							</div>
+						</div>
+					</div>
+					<div class="section-method">
+						<h3 class="method-title">
+							<code><a target="_blank" href="BitcasaSDKDocs/html/Classes/CFSItem.html#//api/name/changeAttributes:ifConflict:">&nbsp;&nbsp;Change Folder Attributes</a></code>
+						</h3>
+						<div class="method-info">
+							<div class="method-info-container">
+								<div class="method-subsection brief-description">
+									<p>You can change the attributes of a Folder by providing a hash map of field names and values. An example is given below.</p>
+								</div>
+								<div class="method-subsection method-declaration">
+									<code>[folder changeAttributes:newApplicationData ifConflict:VersionExistsIgnore];</code>
+								</div>
+							</div>
+						</div>
+					</div>
+					<div class="section-method">
+						<h3 class="method-title">
+							<code><a target="_blank" href="BitcasaSDKDocs/html/Classes/CFSItem.html#//api/name/copyToDestinationContainer:whenExists:completion:">&nbsp;&nbsp;Copy Folder</a></code>
+						</h3>
+						<div class="method-info">
+							<div class="method-info-container">
+								<div class="method-subsection brief-description">
+									<p>You can copy a folder to a new location in the file system. If the destination conflicts with the copying folder you can either RENAME, OVERWRITE or FAIL the operation.</p>
+								</div>
+								<div class="method-subsection method-declaration">
+									<code>[folder copyToDestinationContainer:destinationFolder whenExists:CFSExitsRename completion:^(CFSItem newItem, CFSError error) { //YOUR CODE }];</code>
+								</div>
+							</div>
+						</div>
+					</div>
+					<div class="section-method">
+						<h3 class="method-title">
+							<code><a target="_blank" href="BitcasaSDKDocs/html/Classes/CFSItem.html#//api/name/moveToDestinationContainer:whenExists:completion:">&nbsp;&nbsp;Move Folder</a></code>
+						</h3>
+						<div class="method-info">
+							<div class="method-info-container">
+								<div class="method-subsection brief-description">
+									<p>You can move a folder to a new location in the file system. If the destination conflicts with the moving folder you can either RENAME, OVERWRITE or FAIL the operation.</p>
+								</div>
+								<div class="method-subsection method-declaration">
+									<code>[folder moveToDestinationContainer:destinationFolder whenExists:CFSExitsRename completion:^(CFSItem movedItem, CFSError error) { //YOUR CODE }];</code>
+								</div>
+							</div>
+						</div>
+					</div>
+					<div class="section-method">
+						<h3 class="method-title">
+							<code><a target="_blank" href="BitcasaSDKDocs/html/Classes/CFSItem.html#//api/name/deleteWithCommit:force:completion:">&nbsp;&nbsp;Delete Folder</a></code>
+						</h3>
+						<div class="method-info">
+							<div class="method-info-container">
+								<div class="method-subsection brief-description">
+									<p>You can perform the delete operation on a folder. This will return the Success/fail status of the operation.</p>
+								</div>
+								<div class="method-subsection method-declaration">
+									<code>[folder deleteWithCommit:YES force:NO completion:^(BOOL success, CFSError *error) { //YOUR CODE }];</code>
+								</div>
+							</div>
+						</div>
+					</div>
+					<div class="section-method">
+						<h3 class="method-title">
+							<code><a target="_blank" href="BitcasaSDKDocs/html/Classes/CFSItem.html#//api/name/restoreToContainer:restoreMethod:restoreArgument:completion:">&nbsp;&nbsp;Restore Folder</a></code>
+						</h3>
+						<div class="method-info">
+							<div class="method-info-container">
+								<div class="method-subsection brief-description">
+									<p>You can restore a Folder from the trash. The restore method can be set to either FAIL, RESCUE or RECREATE. This will return the Success/failure status of the operation.</p>
+								</div>
+								<div class="method-subsection method-declaration">
+									<code>[folder restoreToContainer:destinationFolder restoreMethod:RestoreOptionsFail restoreArgument:path completion:^(BOOL success, CFSError *error) { //YOUR CODE }];</code>
+								</div>
+							</div>
+						</div>
+					</div>
+					<div class="section-method">
+						<h3 class="method-title">
+							<code><a target="_blank" href="BitcasaSDKDocs/html/Classes/CFSFolder.html#//api/name/createFolder:whenExists:completion:">&nbsp;&nbsp;Create Sub Folder</a></code>
+						</h3>
+						<div class="method-info">
+							<div class="method-info-container">
+								<div class="method-subsection brief-description">
+									<p>You can create a sub folder in a specific folder. If the folder already has a sub folder with the given name, the operation will fail.</p>
+								</div>
+								<div class="method-subsection method-declaration">
+									<code>[folder createFolder:folderName whenExists:CFSItemExistsRename completion:^(CFSFolder newDir, CFSError error) { //YOUR CODE }];</code>
+								</div>
+							</div>
+						</div>
+					</div>
+					<div class="section-method">
+						<h3 class="method-title">
+							<code><a target="_blank" href="BitcasaSDKDocs/html/Classes/CFSFolder.html#//api/name/upload:progress:completion:whenExists:">&nbsp;&nbsp;Upload File</a></code>
+						</h3>
+						<div class="method-info">
+							<div class="method-info-container">
+								<div class="method-subsection brief-description">
+									<p>You can upload a file from your local file system into a specific folder. If the destination conflicts, you can either RENAME, OVERWRITE or FAIL the operation.</p>
+								</div>
+								<div class="method-subsection method-declaration">
+									<code>[folder upload:localFilePath progress:^(NSInteger uploadId, NSString path, int64_t completedBytes, int64_t totalBytes) { } completion:^(NSInteger uploadId, NSString path, CFSFile cfsFile, CFSError error) { //your code }];</code>
+								</div>
+							</div>
+						</div>
+					</div>
+					<div class="section section-file">
+						<a title="File Operations" name="file"></a>
+						<h2 class="subtitle subtitle-file">File Operations</h2>
+						<p>You need to create a session in order to perform file operations.</p>
+					</div>
+					<div class="section-method">
+						<h3 class="method-title">
+							<code><a target="_blank" href="BitcasaSDKDocs/html/Classes/CFSItem.html#//api/name/changeAttributes:ifConflict:">&nbsp;&nbsp;Change File Attributes</a></code>
+						</h3>
+						<div class="method-info">
+							<div class="method-info-container">
+								<div class="method-subsection brief-description">
+									<p>You can change the attributes of a File by providing a hash map of field names and values. An example is given below.</p>
+								</div>
+								<div class="method-subsection method-declaration">
+									<code>[file changeAttributes:newApplicationData ifConflict:VersionExistsIgnore];</code>
+								</div>
+							</div>
+						</div>
+					</div>
+					<div class="section-method">
+						<h3 class="method-title">
+							<code><a target="_blank" href="BitcasaSDKDocs/html/Classes/CFSItem.html#//api/name/copyToDestinationContainer:whenExists:completion:">&nbsp;&nbsp;Copy File</a></code>
+						</h3>
+						<div class="method-info">
+							<div class="method-info-container">
+								<div class="method-subsection brief-description">
+									<p>You can copy a file to a new location in the file system. If the destination conflicts with the copying file you can either RENAME, OVERWRITE or FAIL the operation.</p>
+								</div>
+								<div class="method-subsection method-declaration">
+									<code>[file copyToDestinationContainer:destinationFolder whenExists:CFSExitsRename completion:^(CFSItem newItem, CFSError error) { //YOUR CODE }];</code>
+								</div>
+							</div>
+						</div>
+					</div>
+					<div class="section-method">
+						<h3 class="method-title">
+							<code><a target="_blank" href="BitcasaSDKDocs/html/Classes/CFSItem.html#//api/name/moveToDestinationContainer:whenExists:completion:">&nbsp;&nbsp;Move File</a></code>
+						</h3>
+						<div class="method-info">
+							<div class="method-info-container">
+								<div class="method-subsection brief-description">
+									<p>You can move a file to a new location in the file system. If the destination conflicts with the moving file you can either RENAME, OVERWRITE or FAIL the operation.</p>
+								</div>
+								<div class="method-subsection method-declaration">
+									<code>[file moveToDestinationContainer:destinationFolder whenExists:CFSExitsRename completion:^(CFSItem movedItem, CFSError error) { //YOUR CODE }];</code>
+								</div>
+							</div>
+						</div>
+					</div>
+					<div class="section-method">
+						<h3 class="method-title">
+							<code><a target="_blank" href="BitcasaSDKDocs/html/Classes/CFSItem.html#//api/name/deleteWithCommit:force:completion:">&nbsp;&nbsp;Delete File</a></code>
+						</h3>
+						<div class="method-info">
+							<div class="method-info-container">
+								<div class="method-subsection brief-description">
+									<p>You can perform the delete operation on a file. This will return the Success/fail status of the operation.</p>
+								</div>
+								<div class="method-subsection method-declaration">
+									<code>[file deleteWithCommit:YES force:NO completion:^(BOOL success, CFSError *error) { //YOUR CODE }];</code>
+								</div>
+							</div>
+						</div>
+					</div>
+					<div class="section-method">
+						<h3 class="method-title">
+							<code><a target="_blank" href="BitcasaSDKDocs/html/Classes/CFSItem.html#//api/name/restoreToContainer:restoreMethod:restoreArgument:completion:">&nbsp;&nbsp;Restore File</a></code>
+						</h3>
+						<div class="method-info">
+							<div class="method-info-container">
+								<div class="method-subsection brief-description">
+									<p>You can restore files from the trash. The restore method can be set to either FAIL, RESCUE or RECREATE. This will return the Success/failure status of the operation.</p>
+								</div>
+								<div class="method-subsection method-declaration">
+									<code>[file restoreToContainer:destinationFolder restoreMethod:RestoreOptionsFail restoreArgument:path completion:^(BOOL success, CFSError *error) { //YOUR CODE }];</code>
+								</div>
+							</div>
+						</div>
+					</div>
+					<div class="section-method">
+						<h3 class="method-title">
+							<code><a target="_blank" href="BitcasaSDKDocs/html/Classes/CFSFile.html#//api/name/downloadWithDelegate:">&nbsp;&nbsp;Download File</a></code>
+						</h3>
+						<div class="method-info">
+							<div class="method-info-container">
+								<div class="method-subsection brief-description">
+									<p>You can download a file to your local file system.</p>
+								</div>
+								<div class="method-subsection method-declaration">
+									<code>[file download:localPath progress:^(NSInteger transferId, NSString path, int64_t completedBytes, int64_t totalBytes) { //Your code } completion:^(NSInteger transferId, NSString path, CFSFile file, CFSError error) { //you code }];</code>
+								</div>
+							</div>
+						</div>
+					</div>
+					<div class="section section-share">
+						<a title="Share Operations" name="share"></a>
+						<h2 class="subtitle subtitle-using">Share Operations</h2>
+						<p>You need to create a session in order to perform share operations.</p>
+					</div>
+					<div class="section-method">
+						<h3 class="method-title">
+							<code><a target="_blank" href="BitcasaSDKDocs/html/Classes/CFSShare.html#//api/name/changeAttributes:password:completion:">&nbsp;&nbsp;Change Share Attributes</a></code>
+						</h3>
+						<div class="method-info">
+							<div class="method-info-container">
+								<div class="method-subsection brief-description">
+									<p>You can change the attributes of a Share by providing a hash map of field names and values. An example is given below.</p>
+								</div>
+								<div class="method-subsection method-declaration">
+									<code>[share changeAttributes:newAttributes password:sharePassword completion:^(BOOL success, CFSError *error) { //Your code }];</code>
+								</div>
+							</div>
+						</div>
+					</div>
+					<div class="section-method">
+						<h3 class="method-title">
+							<code><a target="_blank" href="BitcasaSDKDocs/html/Classes/CFSShare.html#//api/name/receiveShare:whenExists:completion:">&nbsp;&nbsp;Receive Share</a></code>
+						</h3>
+						<div class="method-info">
+							<div class="method-info-container">
+								<div class="method-subsection brief-description">
+									<p>Receives all share files to the given path.</p>
+								</div>
+								<div class="method-subsection method-declaration">
+									<code>[share receiveShare:path whenExists:CFSExitsRename completion:^(NSArray items, CFSError error) { //your code };</code>
+								</div>
+							</div>
+						</div>
+					</div>
+					<div class="section-method">
+						<h3 class="method-title">
+							<code><a target="_blank" href="BitcasaSDKDocs/html/Classes/CFSShare.html#//api/name/deleteWithcompletion:">&nbsp;&nbsp;Delete Share</a></code>
+						</h3>
+						<div class="method-info">
+							<div class="method-info-container">
+								<div class="method-subsection method-declaration">
+									<code>[share deleteWithcompletion:^(BOOL success, CFSError *error) { //Your code };</code>
+								</div>
+							</div>
+						</div>
+					</div>
+					<div class="section-method">
+						<h3 class="method-title">
+							<code><a target="_blank" href="BitcasaSDKDocs/html/Classes/CFSShare.html#//api/name/setPasswordTo:from:completion:">&nbsp;&nbsp;Set Share Password</a></code>
+						</h3>
+						<div class="method-info">
+							<div class="method-info-container">
+								<div class="method-subsection brief-description">
+									<p>Sets the share password. Old password is only needed if one exists.</p>
+								</div>
+								<div class="method-subsection method-declaration">
+									<code>[share setPasswordTo:newPassword from:@oldPassword completion:^(BOOL success, CFSError *error) { //your code} ];</code>
+								</div>
+							</div>
+						</div>
+					</div>
+				</main>
+				<footer>
+					<div class="footer-copyright">
+						<p class="copyright">Copyright &copy; 2015 Bitcasa. All rights reserved. Updated: 2015-04-24</p>
+						<p class="generator">Generated by <a href="http://appledoc.gentlebytes.com">appledoc 2.2.1 (build 1333)</a>.</p>
+					</div>
+				</footer>
+			</div>
+		</div>
+	</article>
+</body>
+</html>
