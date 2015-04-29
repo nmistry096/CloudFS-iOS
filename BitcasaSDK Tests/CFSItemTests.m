@@ -112,7 +112,7 @@ XCTestExpectation *_restoreItemExpectation;
         [completion items];
         [listTrashExpectation fulfill];
     }];
-    [self waitForExpectationsWithTimeout:20 handler:^(NSError *error) {}];
+    [self waitForExpectationsWithTimeout:120 handler:^(NSError *error) {}];
 }
 
 /*!
@@ -126,7 +126,7 @@ XCTestExpectation *_restoreItemExpectation;
     [self setUpPrerequisitesWithCompletion:^(CFSFile *file, CFSError *error, int uploadedFileSize) {
         [weakSelf setNameTestFile:file];
     }];
-    [self waitForExpectationsWithTimeout:200 handler:nil];
+    [self waitForExpectationsWithTimeout:120 handler:nil];
 }
 
 /*!
@@ -140,7 +140,7 @@ XCTestExpectation *_restoreItemExpectation;
     [self setUpPrerequisitesWithCompletion:^(CFSFile *file, CFSError *error, int uploadedFileSize) {
         [weakSelf setApplicationDataTestFile:file];
     }];
-    [self waitForExpectationsWithTimeout:200 handler:nil];
+    [self waitForExpectationsWithTimeout:120 handler:nil];
 }
 
 /*!
@@ -154,7 +154,7 @@ XCTestExpectation *_restoreItemExpectation;
     [self setUpPrerequisitesWithCompletion:^(CFSFile *file, CFSError *error, int uploadedFileSize) {
         [weakSelf changeAttributesTestFile:file];
     }];
-    [self waitForExpectationsWithTimeout:200 handler:nil];
+    [self waitForExpectationsWithTimeout:120 handler:nil];
 }
 
 /*!
@@ -168,7 +168,7 @@ XCTestExpectation *_restoreItemExpectation;
     [self setUpPrerequisitesWithCompletion:^(CFSFile *file, CFSError *error, int uploadedFileSize) {
         [weakSelf copyItemToDestinationTestFile:file];
     }];
-    [self waitForExpectationsWithTimeout:200 handler:nil];
+    [self waitForExpectationsWithTimeout:120 handler:nil];
 }
 
 /*!
@@ -182,7 +182,7 @@ XCTestExpectation *_restoreItemExpectation;
     [self setUpPrerequisitesWithCompletion:^(CFSFile *file, CFSError *error, int uploadedFileSize) {
         [weakSelf moveItemToDestinationTestFile:file];
     }];
-    [self waitForExpectationsWithTimeout:200 handler:nil];
+    [self waitForExpectationsWithTimeout:120 handler:nil];
 }
 
 /*!
@@ -196,7 +196,7 @@ XCTestExpectation *_restoreItemExpectation;
     [self setUpPrerequisitesWithCompletion:^(CFSFile *file, CFSError *error, int uploadedFileSize) {
         [weakSelf deleteItemTestFile:file];
     }];
-    [self waitForExpectationsWithTimeout:500 handler:nil];
+    [self waitForExpectationsWithTimeout:120 handler:nil];
 }
 
 /*!
@@ -210,7 +210,7 @@ XCTestExpectation *_restoreItemExpectation;
     [self setUpPrerequisitesWithCompletion:^(CFSFile *file, CFSError *error, int uploadedFileSize) {
         [weakSelf restoreItemTestFileWithPath:file];
     }];
-    [self waitForExpectationsWithTimeout:200 handler:nil];
+    [self waitForExpectationsWithTimeout:120 handler:nil];
 }
 
 

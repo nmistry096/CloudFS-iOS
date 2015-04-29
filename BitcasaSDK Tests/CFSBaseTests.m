@@ -57,14 +57,12 @@ int WAIT_TIME = 30;
 }
 
 - (void)tearDown {
-    // Put teardown code here. This method is called after the invocation of each test method in the class.
     [super tearDown];
 }
 
 - (void)setUpInitalValues
 {
-    //CFSPlistReader *plistReader = [[CFSPlistReader alloc] initWithFileName:@"BitcasaConfig"];
-    CFSPlistReader *plistReader = [[CFSPlistReader alloc] initWithFileName:@"BitcasaConfigForAdmin"];
+    CFSPlistReader *plistReader = [[CFSPlistReader alloc] initWithFileName:@"BitcasaConfig"];
     NSString *serverUrl = [plistReader appConfigValueForKey:@"CFS_API_SERVER_URL"];
     NSString *appId = [plistReader appConfigValueForKey:@"CFS_CLIENT_ID"];
     NSString *appSecret = [plistReader appConfigValueForKey:@"CFS_SECRET"];
@@ -74,8 +72,7 @@ int WAIT_TIME = 30;
 
 - (void)authenticate
 {
-    //CFSPlistReader *plistReader = [[CFSPlistReader alloc] initWithFileName:@"BitcasaConfig"];
-    CFSPlistReader *plistReader = [[CFSPlistReader alloc] initWithFileName:@"BitcasaConfigForAdmin"];
+    CFSPlistReader *plistReader = [[CFSPlistReader alloc] initWithFileName:@"BitcasaConfig"];
     
     NSString *email = [plistReader appConfigValueForKey:@"CFS_USER_EMAIL"];
     NSString *password = [plistReader appConfigValueForKey:@"CFS_USER_PASSWORD"];

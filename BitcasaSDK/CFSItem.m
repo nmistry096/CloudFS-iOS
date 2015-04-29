@@ -132,7 +132,7 @@ NSString *const CFSResponseVersionKey = @"version";
     CFSError *error;
     NSDictionary *newMeta = [_restAdapter alterMetaDataSyncWithPath:self.path meta:meta type:self.type error:&error];
     if(!error){
-        _name = newMeta[CFSResponseNameKey];
+        [self setItemAttributes:newMeta];
         return [_name isEqualToString:newName];
     }
     return false;
@@ -149,7 +149,7 @@ NSString *const CFSResponseVersionKey = @"version";
     CFSError *error;
     NSDictionary *newMeta = [_restAdapter alterMetaDataSyncWithPath:self.path meta:meta type:self.type error:&error];
     if(!error && newMeta.count > 0){
-        _applicationData = newMeta[CFSResponseApplicationDataKey];
+        [self setItemAttributes:newMeta];
         return YES;
     }
     return NO;
