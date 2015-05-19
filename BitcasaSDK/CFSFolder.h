@@ -4,18 +4,16 @@
 //
 //  Bitcasa iOS SDK
 //  Copyright (C) 2015 Bitcasa, Inc.
-//  215 Castro Street, 2nd Floor
-//  Mountain View, CA 94041
+//  1200 Park Place, Suite 350
+//  San Mateo, CA 94403
 //
 //  All rights reserved.
 //
-//  For support, please send email to support@bitcasa.com.
+//  For support, please send email to sdks@bitcasa.com.
 //
 
 #import <Foundation/Foundation.h>
-#import <CoreData/CoreData.h>
 #import "CFSContainer.h"
-#import "CFSRestAdapter.h"
 
 @class CFSError;
 

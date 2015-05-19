@@ -4,16 +4,17 @@
 //
 //  Bitcasa iOS SDK
 //  Copyright (C) 2015 Bitcasa, Inc.
-//  215 Castro Street, 2nd Floor
-//  Mountain View, CA 94041
+//  1200 Park Place, Suite 350
+//  San Mateo, CA 94403
 //
 //  All rights reserved.
 //
-//  For support, please send email to support@bitcasa.com.
+//  For support, please send email to sdks@bitcasa.com.
 //
 
 #import "CFSFolder.h"
 #import "CFSRestAdapter.h"
+#import "CFSErrorUtil.h"
 
 @class CFSError;
 
@@ -28,8 +29,8 @@
 @property (nonatomic, retain, readwrite) NSDate *dateMetaLastModified;
 @property (nonatomic, retain, readwrite) NSDate *dateCreated;
 @property (nonatomic, readwrite) BOOL isMirrored;
-@property (nonatomic, readwrite, getter=getAppdata, setter=setAppdata:) NSString *applicationData;
-@property (nonatomic, readwrite, setter=setItemName:) NSString *name;
+@property (nonatomic, readwrite, getter = getAppdata, setter=setAppdata:) NSString *applicationData;
+@property (nonatomic, readwrite, setter = setItemName:) NSString *name;
 
 @end
 
@@ -53,6 +54,10 @@
           whenExists:(CFSItemExistsOperation)exists
           completion:(void (^)(CFSFolder *newDir, CFSError *error))completion
 {
+    if (![self validateOperation:CFSOperationCreateFolder]) {
+        completion(nil ,[CFSErrorUtil errorWithMessage:CFSOperationNotAllowedError]);
+    }
+    
     [_restAdapter createFolderInContainer:self.path
                                whenExists:exists
                                  withName:name
@@ -73,6 +78,10 @@
     completion:(CFSFileTransferCompletion)completion
     whenExists:(CFSExistsOperation)exists
 {
+    if (![self validateOperation:CFSOperationUpload]) {
+        completion(0 ,nil ,nil ,[CFSErrorUtil errorWithMessage:CFSOperationNotAllowedError]);
+    }
+    
     [_restAdapter uploadFile:fileSystemPath to:self progress:progress completion:completion whenExists:CFSExistsOverwrite];
 }
 
@@ -99,6 +108,9 @@
     self.version = [values[CFSResponseVersionKey] integerValue];
     self.applicationData = values[CFSResponseApplicationDataKey];
     self.dateMetaLastModified = [NSDate dateWithTimeIntervalSince1970:[values[CFSResponseDateMetaLastModifiedKey] doubleValue]];
+    self.parentId = values[CFSResponseParentIdKey];
+    self.isMirrored = [values[CFSResponseIsMirroredKey] boolValue];
+    self.type = values[CFSResponseTypeKey];
 }
 
 @end

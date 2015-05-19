@@ -4,12 +4,12 @@
 //
 //  Bitcasa iOS SDK
 //  Copyright (C) 2015 Bitcasa, Inc.
-//  215 Castro Street, 2nd Floor
-//  Mountain View, CA 94041
+//  1200 Park Place, Suite 350
+//  San Mateo, CA 94403
 //
 //  All rights reserved.
 //
-//  For support, please send email to support@bitcasa.com.
+//  For support, please send email to sdks@bitcasa.com.
 //
 
 #import "CFSSession.h"
@@ -33,8 +33,7 @@ static CFSSession *_sharedSession = nil;
            clientSecret:(NSString *)clientSecret
 {
     self = [super init];
-    if (self)
-    {
+    if (self) {
         self.restAdapter = [[CFSRestAdapter alloc] initWithServerUrl:endPoint clientId:clientId clientSecret:clientSecret];
         
         _sharedSession = self;
@@ -48,13 +47,12 @@ static CFSSession *_sharedSession = nil;
                       completion:(void (^)(NSString *token, BOOL success , CFSError *error))completion
 {
     [self.restAdapter authenticateWithEmail:username password:password completionHandler:^(NSString *token, CFSError *error) {
-        if(error) {
+        if (error) {
             completion(nil, NO, error);
-        }
-        else {
+        } else {
             [_restAdapter  setAccessToken:token];
             [self.restAdapter getProfileWithCompletion:^(NSDictionary *dictionary){
-                if (dictionary)   {
+                if (dictionary) {
                     self.user = [[CFSUser alloc] initWithDictionary:dictionary];
                     self.account = [[CFSAccount alloc] initWithDictionary:dictionary];
                     self.fileSystem = [[CFSFilesystem alloc] initWithRestAdapter:self.restAdapter];
@@ -109,7 +107,7 @@ static CFSSession *_sharedSession = nil;
                       andStopVersion:(NSInteger)stopVersion
                       completion:(void (^)(NSDictionary *history, CFSError *error))completion
 {
-    if (startVersion == 0)  {
+    if (startVersion == 0) {
         startVersion = CFSActionHistoryDefaultStartVersion;
     }
     
@@ -143,18 +141,16 @@ static CFSSession *_sharedSession = nil;
                                      completion:^(NSDictionary *userDetails, CFSError *error) {
          
          CFSUser *user;
-         if(userDetails && !error){
+         if (userDetails && !error) {
              user = [[CFSUser alloc] initWithDictionary:userDetails];
-             if(logInTocreatedUser){
+             if (logInTocreatedUser) {
                  [self authenticateWithUsername:username andPassword:password completion:^(NSString* token, BOOL success, CFSError *error) {
                      completion(user, error);
                  }];
-             }
-             else {
+             } else {
                  completion(user, error);
              }
-         }
-         else{
+         } else {
              completion(user, error);
          }
     }];

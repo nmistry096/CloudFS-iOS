@@ -4,12 +4,12 @@
 //
 //  Bitcasa iOS SDK
 //  Copyright (C) 2015 Bitcasa, Inc.
-//  215 Castro Street, 2nd Floor
-//  Mountain View, CA 94041
+//  1200 Park Place, Suite 350
+//  San Mateo, CA 94403
 //
 //  All rights reserved.
 //
-//  For support, please send email to support@bitcasa.com.
+//  For support, please send email to sdks@bitcasa.com.
 //
 
 #import "CFSFilesystem.h"
@@ -17,6 +17,8 @@
 #import "CFSItem.h"
 #import "CFSRestAdapter.h"
 #import "CFSShare.h"
+#import "CFSFile.h"
+#import "CFSFolder.h"
 
 @implementation CFSFilesystem
 
@@ -46,21 +48,24 @@ CFSRestAdapter* _restAdapter;
     if ([path containsString:@"/"]) {
         NSMutableArray *subStrings =[NSMutableArray arrayWithArray:[path componentsSeparatedByString:@"/"]];
         [subStrings removeLastObject];
-        if(subStrings.count>1) {
+        if (subStrings.count>1) {
             parentPath = [[subStrings valueForKey:@"description"] componentsJoinedByString:@"/"];
-        }
-        else if (subStrings.count == 1) {
+        } else if (subStrings.count == 1) {
             parentPath = @"/";
-        }
-        else {
+        } else {
             parentPath = @"";
         }
-    }
-    else{
+    } else{
         parentPath =@"";
     }
+    
     [_restAdapter getMetaDataWithPath:path type:CFSItemTypeFileSystem completionHandler:^(NSDictionary *dict, CFSError *error) {
-        CFSItem *item = [[CFSItem alloc] initWithDictionary:dict andParentPath:parentPath andRestAdapter:_restAdapter];
+        id item;
+        if ([dict[@"type"] isEqualToString:CFSItemTypeFolder]) {
+            item = [[CFSFolder alloc] initWithDictionary:dict andParentPath:parentPath andRestAdapter:_restAdapter];
+        } else {
+            item = [[CFSFile alloc] initWithDictionary:dict andParentPath:parentPath andRestAdapter:_restAdapter];
+        }
         completion(item,error);
     }];
 }
@@ -68,7 +73,7 @@ CFSRestAdapter* _restAdapter;
 #pragma mark - list trash
 - (void)listTrashWithCompletion:(void (^)(NSArray *items, CFSError *error))completion
 {
-    [_restAdapter getContentsOfTrashWithCompletion:completion];
+    [_restAdapter getContentsOfTrashWithPath:nil completion:completion];
 }
 
 
@@ -78,22 +83,25 @@ CFSRestAdapter* _restAdapter;
     [_restAdapter listSharesWithCompletion:completion];
 }
 
-- (void)createShare:(NSString *)path
+- (void)createShare:(NSArray *)paths
            password:(NSString *)password
          completion:(void (^)(CFSShare *share, CFSError *error))completion
 {
-    [_restAdapter createShare:path password:password completion:completion];
+    [_restAdapter createShare:paths password:password completion:completion];
 }
 
 - (void)retrieveShare:(NSString *)shareKey
              password:(NSString *)password
            completion:(void (^)(CFSShare *share, CFSError *error))completion
 {
-    CFSShare *share = [[CFSShare alloc] initWithDictionary:@{CFSShareResponseResultShareKey:shareKey} andRestAdapter:_restAdapter];
-    
-    [share unlockShare:share.shareKey password:password completion:^(BOOL success, CFSError *error) {
-        completion(success ? share : nil, error);
-    }];
+    CFSShare *share = [[CFSShare alloc] initWithDictionary:@{CFSShareResponseResultShareKey:shareKey} andRestAdapter:_restAdapter];    
+    if (password) {
+        [share unlockShareWithPassword:password completion:^(BOOL success, CFSError *error) {
+            completion(success ? share : nil, error);
+        }];
+    } else {
+        completion(share, nil);
+    }
 }
 
 @end

@@ -4,12 +4,12 @@
 //
 //  Bitcasa iOS SDK
 //  Copyright (C) 2015 Bitcasa, Inc.
-//  215 Castro Street, 2nd Floor
-//  Mountain View, CA 94041
+//  1200 Park Place, Suite 350
+//  San Mateo, CA 94403
 //
 //  All rights reserved.
 //
-//  For support, please send email to support@bitcasa.com.
+//  For support, please send email to sdks@bitcasa.com.
 //
 
 #import "CFSRestAdapter.h"
@@ -143,6 +143,17 @@ NSString *const CFSOperationExistsRename = @"rename";
 NSString *const CFSOperationExistsOverwrite = @"overwrite";
 NSString *const CFSOperationExistsReuse = @"reuse";
 
+NSString *const CFSItemStateIsTrash = @"isTrash";
+NSString *const CFSItemStateIsOldVersion = @"isOldVersion";
+NSString *const CFSItemStateIsShare= @"isShare";
+NSString *const CFSItemShareKey= @"shareKey";
+
+NSString *const CFSResponseStorageKey= @"storage";
+NSString *const CFSResponseLimitKey= @"limit";
+NSString *const CFSResponseUsageKey= @"usage";
+NSString *const CFSResponseLimitHeaderKey= @"X-BCS-Account-Storage-Limit";
+NSString *const CFSResponseUsageHeaderKey= @"X-BCS-Account-Storage-Usage";
+
 @interface CFSRestAdapter ()
 
 @property (nonatomic, copy) NSString *serverUrl;
@@ -214,7 +225,7 @@ NSString *const CFSOperationExistsReuse = @"reuse";
        if ([self isResponeSucessful:response data:data]) {
            NSError *jsonError = nil;
            NSDictionary *jsonDictionary = [NSJSONSerialization JSONObjectWithData:data
-                                                                options:NSJSONReadingAllowFragments
+                                                                options:NSJSONReadingMutableContainers
                                                                   error:&jsonError];
            accessToken = jsonDictionary[CFSAuthenticateAccessToken];
        } else {
@@ -240,9 +251,45 @@ NSString *const CFSOperationExistsReuse = @"reuse";
          if ([self isResponeSucessful:response data:data]) {
              resultDictionary = [self resultDictionaryFromResponseData:data];
          }
-         
+        if ([response isKindOfClass:[NSHTTPURLResponse class]]) {
+            NSHTTPURLResponse *httpResponse = (NSHTTPURLResponse*)response;
+            if (httpResponse.allHeaderFields[CFSResponseLimitHeaderKey]) {
+                resultDictionary[CFSResponseStorageKey][CFSResponseLimitKey] = httpResponse.allHeaderFields[@"X-BCS-Account-Storage-Limit"];
+            }
+            if (httpResponse.allHeaderFields[CFSResponseUsageHeaderKey]) {
+                resultDictionary[CFSResponseStorageKey][CFSResponseUsageKey] = httpResponse.allHeaderFields[@"X-BCS-Account-Storage-Usage"];
+            }
+        }
          completion(resultDictionary);
      }];
+}
+
+- (void)listContentsOfPath:(NSString *)path
+                completion:(void (^)(NSArray *items, CFSError *error))completion
+{
+    [self getMetaDataWithPath:path type:CFSItemTypeFolder completionHandler:^(NSDictionary *dictionary, CFSError *error) {
+        CFSFolder *folder = [[CFSFolder alloc] initWithDictionary:dictionary andParentPath:[self getParentPathFromPath:path] andRestAdapter:self];
+        [self listContentsOfContainer:folder completion:completion];
+    }];
+}
+
+- (NSString *)getParentPathFromPath:(NSString *)path
+{
+    NSString * parentPath = nil;
+    if ([path containsString:@"/"]) {
+        NSMutableArray *subStrings =[NSMutableArray arrayWithArray:[path componentsSeparatedByString:@"/"]];
+        [subStrings removeLastObject];
+        if (subStrings.count>1) {
+            parentPath = [[subStrings valueForKey:@"description"] componentsJoinedByString:@"/"];
+        } else if (subStrings.count == 1) {
+            parentPath = @"/";
+        } else {
+            parentPath = @"";
+        }
+    } else {
+        parentPath =@"";
+    }
+    return parentPath;
 }
 
 #pragma mark - List directory contents
@@ -274,12 +321,21 @@ NSString *const CFSOperationExistsReuse = @"reuse";
      }];
 }
 
-- (void)getContentsOfTrashWithCompletion:(void (^)(NSArray *items, CFSError *error))completion
+- (void)getContentsOfTrashWithPath:(NSString *)path completion:(void (^)(NSArray* items, CFSError *error))completion;
 {
+    
+    NSString *trashEndPoint = nil;
+    if (path) {
+        trashEndPoint = [NSString stringWithFormat:@"%@%@", CFSAPIEndpointTrash, path];
+    } else {
+        trashEndPoint = CFSAPIEndpointTrash;
+    }
+    
+        
     NSURLRequest *trashContentsRequest = [CFSURLRequestBuilder urlRequestForHttpMethod:CFSRestHTTPMethodGET
                                                                                serverUrl:self.serverUrl
                                                                               apiVersion:CFSRestApiVersion
-                                                                                endpoint:CFSAPIEndpointTrash
+                                                                                endpoint:trashEndPoint
                                                                          queryParameters:nil
                                                                           formParameters:nil
                                                                              accessToken:self.accessToken];
@@ -288,7 +344,8 @@ NSString *const CFSOperationExistsReuse = @"reuse";
         CFSError *error = nil;
         NSArray *itemArray  =nil;
         if ([self isResponeSucessful:response data:data]) {
-            itemArray = [self parseListAtContainter:nil response:response data:data error:connectionError];
+            NSArray *itemsDictArray = [self itemDictsFromResponseData:data];
+            itemArray = [self getItemsArrayFrom:itemsDictArray withParentPath:path withState:CFSItemStateIsTrash];
         } else {
             error = [CFSErrorUtil createErrorFrom:data response:response error:connectionError];
         }
@@ -318,8 +375,7 @@ NSString *const CFSOperationExistsReuse = @"reuse";
     NSString *endpointPath;
     if ([itemToMove isKindOfClass:[CFSContainer class]] || [itemToMove isKindOfClass:[CFSFolder class]]) {
         endpointPath = [NSString stringWithFormat:@"%@%@", CFSRestApiEndpointFolders, itemToMove.path];
-    }
-    else if ([itemToMove isKindOfClass:[CFSFile class]]) {
+    } else if ([itemToMove isKindOfClass:[CFSFile class]]) {
         endpointPath = [NSString stringWithFormat:@"%@%@", CFSRestApiEndpointFiles, itemToMove.path];
     }
     
@@ -355,8 +411,9 @@ NSString *const CFSOperationExistsReuse = @"reuse";
 
 #pragma mark - Copy item(s)
 - (void)copyItem:(CFSItem*)itemToCopy
-              to:(CFSContainer*)destItem
+              to:(CFSContainer*)destination
       whenExists:(CFSExistsOperation)operation
+            name:(NSString *)name
       completion:(void (^)(CFSItem* newItem, CFSError *error))completion
 {
     NSString *exists = [self existsOperationToString:operation];
@@ -364,17 +421,21 @@ NSString *const CFSOperationExistsReuse = @"reuse";
         exists = CFSOperationExistsRename;
     }
     
+    if (!name || name.length == 0)
+    {
+        name = itemToCopy.name;
+    }
+    
     NSString *endpointPath;
     if ([itemToCopy isKindOfClass:[CFSContainer class]] || [itemToCopy isKindOfClass:[CFSFolder class]]) {
         endpointPath = [NSString stringWithFormat:@"%@%@", CFSRestApiEndpointFolders, itemToCopy.path];
-    }
-    else if ([itemToCopy isKindOfClass:[CFSFile class]]) {
+    } else if ([itemToCopy isKindOfClass:[CFSFile class]]) {
         endpointPath = [NSString stringWithFormat:@"%@%@", CFSRestApiEndpointFiles, itemToCopy.path];
     }
     
     NSDictionary *queryParams = @{CFSRestQueryParameterOperation : CFSQueryParameterOperationCopy};
-    NSString *toItemPath = destItem.path;
-    NSDictionary *copyFormParams = @{CFSFormParameterToKey: toItemPath, CFSFormParameterNameKey: itemToCopy.name, CFSFormParameterExistsKey: exists};
+    NSString *toItemPath = destination.path;
+    NSDictionary *copyFormParams = @{CFSFormParameterToKey: toItemPath, CFSFormParameterNameKey: name, CFSFormParameterExistsKey: exists};
     NSURLRequest *copyRequest = [CFSURLRequestBuilder urlRequestForHttpMethod:CFSRestHTTPMethodPOST
                                                                     serverUrl:self.serverUrl
                                                                    apiVersion:CFSRestApiVersion
@@ -386,7 +447,11 @@ NSString *const CFSOperationExistsReuse = @"reuse";
         CFSItem* newItem = nil;
         CFSError* error = nil;
         if ([self isResponeSucessful:response data:data]) {
-            newItem = [[CFSItem alloc] initWithDictionary:[self metaDictFromResponseData:data] andParentContainer:destItem andRestAdapter:self];
+            if ([itemToCopy isKindOfClass:[CFSContainer class]]) {
+                newItem = [[CFSContainer alloc] initWithDictionary:[self metaDictFromResponseData:data] andParentContainer:destination andRestAdapter:self];
+            } else {
+                newItem = [[CFSFile alloc] initWithDictionary:[self metaDictFromResponseData:data] andParentContainer:destination andRestAdapter:self];
+            }
         } else {
             error = [CFSErrorUtil createErrorFrom:data response:response error:connectionError];
         }
@@ -401,19 +466,24 @@ NSString *const CFSOperationExistsReuse = @"reuse";
         completion:(void (^)(BOOL success, CFSError *error))completion
 
 {
-    NSString *deleteEndpoint;
-    if ([itemToDelete isKindOfClass:[CFSContainer class]] || [itemToDelete isKindOfClass:[CFSFolder class]]) {
-        deleteEndpoint = [NSString stringWithFormat:@"%@%@", CFSRestApiEndpointFolders, itemToDelete.path];
-    } else if ([itemToDelete isKindOfClass:[CFSFile class]]) {
-        deleteEndpoint = [NSString stringWithFormat:@"%@%@", CFSRestApiEndpointFiles, itemToDelete.path];
-    }
     
-    NSString *commitValue = (commit) ? @"true" : @"false";
-    NSString *forceValue = (commit) ? @"true" : @"false";
     NSMutableDictionary* deleteQueryParams = [NSMutableDictionary dictionary];
-    [deleteQueryParams setValue:commitValue forKey:CFSDeleteRequestParameterCommit];
-    if ([itemToDelete isKindOfClass:[CFSContainer class]]){
-        [deleteQueryParams setValue:forceValue forKey:CFSDeleteRequestParameterForce];
+    NSString *deleteEndpoint;
+    if (itemToDelete.isTrash) {
+        deleteEndpoint = [NSString stringWithFormat:@"%@%@", CFSAPIEndpointTrash, itemToDelete.path];
+    } else {
+        if ([itemToDelete isKindOfClass:[CFSContainer class]] || [itemToDelete isKindOfClass:[CFSFolder class]]) {
+            deleteEndpoint = [NSString stringWithFormat:@"%@%@", CFSRestApiEndpointFolders, itemToDelete.path];
+        } else if ([itemToDelete isKindOfClass:[CFSFile class]]) {
+            deleteEndpoint = [NSString stringWithFormat:@"%@%@", CFSRestApiEndpointFiles, itemToDelete.path];
+        }
+        
+        NSString *commitValue = (commit) ? @"true" : @"false";
+        NSString *forceValue = (force) ? @"true" : @"false";
+        [deleteQueryParams setValue:commitValue forKey:CFSDeleteRequestParameterCommit];
+        if ([itemToDelete isKindOfClass:[CFSContainer class]]){
+            [deleteQueryParams setValue:forceValue forKey:CFSDeleteRequestParameterForce];
+        }
     }
     
     NSURLRequest* deleteRequest = [CFSURLRequestBuilder urlRequestForHttpMethod:CFSRestHTTPMethodDELETE
@@ -446,7 +516,12 @@ NSString *const CFSOperationExistsReuse = @"reuse";
     } else if (option == RestoreOptionsRecreate) {
         formParams = @{ CFSTrashRequestParameterRestore : CFSFormParameterRecreateKey, CFSTrashRecreateParameterRescuePath : restoreArgument};
     } else if (option == RestoreOptionsRescue) {
-        formParams = @{CFSTrashRequestParameterRestore : CFSFormParameterRescueKey, CFSTrashRequestParameterRescuePath : toItem.path};
+        NSString *path = nil;
+        if(!toItem.isTrash)
+        {
+            path = toItem.path;
+        }
+        formParams = @{CFSTrashRequestParameterRestore : CFSFormParameterRescueKey, CFSTrashRequestParameterRescuePath : path};
     }
     
     NSURLRequest *restoreRequest = [CFSURLRequestBuilder urlRequestForHttpMethod:CFSRestHTTPMethodPOST
@@ -523,7 +598,7 @@ NSString *const CFSOperationExistsReuse = @"reuse";
         NSArray *items = nil;
         CFSError *error = nil;
         if ([self isResponeSucessful:response data:data]) {
-            items = [self getItemsArrayFrom:(NSArray *)[self resultDictionaryFromResponseData:data] withPath:path];
+            items = [self getShareItemsArrayFrom:(NSArray *)[self resultDictionaryFromResponseData:data] withParentPath:path withShareKey:shareKey];
         } else {
             error = [CFSErrorUtil createErrorFrom:data response:response error:connectionError];
         }
@@ -559,7 +634,7 @@ NSString *const CFSOperationExistsReuse = @"reuse";
         CFSError *error = nil;
         if ([self isResponeSucessful:response data:data]) {
             NSDictionary *result = [self resultDictionaryFromResponseData:data];
-            items = [self getItemsArrayFrom:result[@"items"] withContainer:container];
+            items = [self getShareItemsArrayFrom:result[@"items"] withContainer:container withShareKey:shareKey];
         } else {
             error = [CFSErrorUtil createErrorFrom:data response:response error:connectionError];
         }
@@ -594,16 +669,20 @@ NSString *const CFSOperationExistsReuse = @"reuse";
     }];
 }
 
-- (void)createShare:(NSString *)path
+- (void)createShare:(NSArray *)paths
            password:(NSString *)password
          completion:(void (^)(CFSShare *share, CFSError *error))completion
 {
-    NSAssert(path.length != 0, CFSAssertPathZeroLengthMessage);
+    NSAssert(paths.count != 0, CFSAssertPathZeroLengthMessage);
     
-    NSMutableDictionary *createShareFormParams = [NSMutableDictionary dictionary];
-    [createShareFormParams setValue:path forKey:CFSFormParameterPathKey];
+    NSMutableArray *createShareFormParams = [NSMutableArray array];
+    
+    for (NSString *path in paths) {
+        [createShareFormParams addObject:@{CFSFormParameterPathKey : path}];
+    }
+    
     if (password) {
-        [createShareFormParams setValue:password forKey:CFSFormParameterPasswordKey];
+        [createShareFormParams addObject:@{CFSFormParameterPasswordKey : password}];
     }
     
     NSURLRequest *createShare = [CFSURLRequestBuilder urlRequestForHttpMethod:CFSRestHTTPMethodPOST
@@ -839,7 +918,7 @@ usingCurrentPassword:(NSString *)currentPassword
                                                                        formParameters:nil
                                                                           accessToken:self.accessToken];
     
-    NSURLSessionDownloadTask *downloadTask = [self.transferManager.backgroundURLSession downloadTaskWithRequest:downloadFileRequest];
+    NSURLSessionDownloadTask *downloadTask = [self.transferManager.foregroundURLSession downloadTaskWithRequest:downloadFileRequest];
 
     [self.transferManager addTransferForDownloadTask:downloadTask
                                                 path:fullPath
@@ -945,7 +1024,7 @@ usingCurrentPassword:(NSString *)currentPassword
                                                                                      accessToken:self.accessToken];
     
     NSURLSessionUploadTask *uploadTask = [self.transferManager.foregroundURLSession uploadTaskWithStreamedRequest:uploadFileRequest];
-    NSString *path = [NSString stringWithFormat:@"%@/%@", destPath, fileName];
+    NSString *path = [NSString stringWithFormat:@"%@%@", destPath, fileName];
     [self.transferManager addTransferForUploadTask:uploadTask
                                               path:path
                                               size:size destContainer:destContainer
@@ -959,7 +1038,7 @@ usingCurrentPassword:(NSString *)currentPassword
 {
     NSError *error;
     NSDictionary *responseDict = [NSJSONSerialization JSONObjectWithData:data
-                                                                 options:NSJSONReadingAllowFragments
+                                                                 options:NSJSONReadingMutableContainers
                                                                    error:&error];
     NSDictionary *resultDict = responseDict[@"result"];
     return resultDict;
@@ -1086,7 +1165,7 @@ usingCurrentPassword:(NSString *)currentPassword
                                NSArray *items = nil;
                                if ([self isResponeSucessful:response data:data]) {
                                    NSArray *versionsDictionary = (NSArray *)[self resultDictionaryFromResponseData:data];
-                                   items = [self getItemsArrayFrom:versionsDictionary withContainer:nil];
+                                   items = [self getItemsArrayFrom:versionsDictionary withContainer:nil withState:CFSItemStateIsOldVersion];
                                } else {
                                    error = [CFSErrorUtil createErrorFrom:data response:response error:connectionError];
                                }
@@ -1113,9 +1192,9 @@ usingCurrentPassword:(NSString *)currentPassword
     }
     
     if (path.length > 0) {
-        metaEndpoint = [NSString stringWithFormat:@"%@%@%@%@", endPointType, @"/", path, CFSAPIEndpointMeta];
+        metaEndpoint = [NSString stringWithFormat:@"%@%@%@", endPointType, path, CFSAPIEndpointMeta];
     } else {
-        metaEndpoint = [NSString stringWithFormat:@"%@%@%@", endPointType, @"/", CFSAPIEndpointMeta];
+        metaEndpoint = [NSString stringWithFormat:@"%@%@", endPointType, CFSAPIEndpointMeta];
     }
     
     NSURLRequest *request = [CFSURLRequestBuilder urlRequestForHttpMethod:CFSRestHTTPMethodGET
@@ -1221,9 +1300,9 @@ usingCurrentPassword:(NSString *)currentPassword
     }
     
     if (path.length>0) {
-        metaEndpoint = [NSString stringWithFormat:@"%@%@%@%@", endPointType, @"/", path, CFSAPIEndpointMeta];
+        metaEndpoint = [NSString stringWithFormat:@"%@%@%@", endPointType, path, CFSAPIEndpointMeta];
     } else {
-        metaEndpoint = [NSString stringWithFormat:@"%@%@%@", endPointType, @"/", CFSAPIEndpointMeta];
+        metaEndpoint = [NSString stringWithFormat:@"%@%@", endPointType, CFSAPIEndpointMeta];
     }
     
     return [CFSURLRequestBuilder urlRequestForHttpMethod:CFSRestHTTPMethodPOST
@@ -1307,18 +1386,26 @@ usingCurrentPassword:(NSString *)currentPassword
                              error:(NSError *)connectionError
 {
     NSArray *itemsDictArray = [self itemDictsFromResponseData:data];
-    return [self getItemsArrayFrom:itemsDictArray withContainer:parent];
+    return [self getItemsArrayFrom:itemsDictArray withContainer:parent withState:nil];
 };
 
-- (NSArray *)getItemsArrayFrom:(NSArray *)itemsDictArray withContainer:(CFSContainer *)parent
+- (NSArray *)getShareItemsArrayFrom:(NSArray *)itemsDictArray withContainer:(CFSContainer *)parent withShareKey:(NSString *)shareKey
+{
+    return [self getShareItemsArrayFrom:itemsDictArray withParentPath:parent.path withShareKey:shareKey];
+}
+
+- (NSArray *)getShareItemsArrayFrom:(NSArray *)itemsDictArray withParentPath:(NSString *)path withShareKey:(NSString *)shareKey
 {
     NSMutableArray *itemArray = [NSMutableArray array];
-    for (NSDictionary *itemDict in itemsDictArray) {
-        id item;
+    for (NSDictionary *itemDictionary in itemsDictArray) {
+        NSMutableDictionary *itemDict = [NSMutableDictionary dictionaryWithDictionary:itemDictionary];
+        itemDict[CFSItemStateIsShare] = @YES;
+        itemDict[CFSItemShareKey] = shareKey;
+        id item =nil;
         if ([itemDict[@"type"] isEqualToString:CFSItemTypeFolder]) {
-            item = [[CFSFolder alloc] initWithDictionary:itemDict andParentContainer:parent andRestAdapter:self];
+            item = [[CFSFolder alloc] initWithDictionary:itemDict andParentPath:path andRestAdapter:self];
         } else {
-            item = [[CFSFile alloc] initWithDictionary:itemDict andParentContainer:parent andRestAdapter:self];
+            item = [[CFSFile alloc] initWithDictionary:itemDict andParentPath:path andRestAdapter:self];
         }
         [itemArray addObject:item];
     }
@@ -1326,15 +1413,33 @@ usingCurrentPassword:(NSString *)currentPassword
     return itemArray;
 }
 
-- (NSArray *)getItemsArrayFrom:(NSArray *)itemsDictArray withPath:(NSString *)path
+- (NSArray *)getItemsArrayFrom:(NSArray *)itemsDictArray withContainer:(CFSContainer *)parent withState:(NSString *)state
+{
+    return [self getItemsArrayFrom:itemsDictArray withParentPath:parent.path withState:state];
+}
+                               
+- (NSArray *)getItemsArrayFrom:(NSArray *)itemsDictArray withParentPath:(NSString *)parentPath withState:(NSString *)state
 {
     NSMutableArray *itemArray = [NSMutableArray array];
-    for (NSDictionary *itemDict in itemsDictArray) {
-        id item;
+    for (NSDictionary *itemDictionary in itemsDictArray) {
+        NSMutableDictionary *itemDict = [NSMutableDictionary dictionaryWithDictionary:itemDictionary];
+        if ([state isEqual:CFSItemStateIsShare]) {
+            itemDict[CFSItemStateIsShare] = @YES;
+        }
+        
+        if ([state isEqual:CFSItemStateIsTrash]) {
+            itemDict[CFSItemStateIsTrash] = @YES;
+        }
+        
+        if ([state isEqual:CFSItemStateIsOldVersion]) {
+            itemDict[CFSItemStateIsOldVersion] = @YES;
+        }
+        
+        id item = nil;
         if ([itemDict[@"type"] isEqualToString:CFSItemTypeFolder]) {
-            item = [[CFSFolder alloc] initWithDictionary:itemDict andParentPath:path andRestAdapter:self];
+            item = [[CFSFolder alloc] initWithDictionary:itemDict andParentPath:parentPath andRestAdapter:self];
         } else {
-            item = [[CFSFile alloc] initWithDictionary:itemDict andParentPath:path andRestAdapter:self];
+            item = [[CFSFile alloc] initWithDictionary:itemDict andParentPath:parentPath andRestAdapter:self];
         }
         [itemArray addObject:item];
     }
@@ -1360,7 +1465,7 @@ usingCurrentPassword:(NSString *)currentPassword
 {
     NSError *error;
     NSDictionary *responseDict = [NSJSONSerialization JSONObjectWithData:data
-                                                                 options:NSJSONReadingAllowFragments
+                                                                 options:NSJSONReadingMutableContainers
                                                                    error:&error];
     NSArray *resultArray = responseDict[@"result"];
     return resultArray;

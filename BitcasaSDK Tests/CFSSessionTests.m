@@ -4,12 +4,12 @@
 //
 //  Bitcasa iOS SDK
 //  Copyright (C) 2015 Bitcasa, Inc.
-//  215 Castro Street, 2nd Floor
-//  Mountain View, CA 94041
+//  1200 Park Place, Suite 350
+//  San Mateo, CA 94403
 //
 //  All rights reserved.
 //
-//  For support, please send email to support@bitcasa.com.
+//  For support, please send email to sdks@bitcasa.com.
 //
 
 #import <UIKit/UIKit.h>
@@ -53,7 +53,7 @@
  */
 - (void)testCreateAccount
 {
-    CFSPlistReader *plistReader = [[CFSPlistReader alloc] initWithFileName:@"BitcasaConfigForAdmin"];
+    CFSPlistReader *plistReader = [[CFSPlistReader alloc] initWithFileName:@"BitcasaConfig"];
     
     [[CFSBaseTests getSession] setAdminCredentialsWithAdminClientId:[plistReader appConfigValueForKey:@"CFS_ADMIN_ID"]
                                                   adminClientSecret:[plistReader appConfigValueForKey:@"CFS_ADMIN_SECRET"]];
@@ -98,10 +98,9 @@
 - (void)testUser
 {
     CFSUser *user = [CFSBaseTests getSession].user;
-    if(![[CFSBaseTests getSession] isLinked]){
+    if (![[CFSBaseTests getSession] isLinked]) {
         XCTAssertNil(user, "user should be nil");
-    }
-    else{
+    } else {
         CFSUser *user = [CFSBaseTests getSession].user;
         XCTAssertNotNil(user, "user should not be nil");
     }
@@ -113,10 +112,9 @@
 - (void)testAccount
 {
     CFSAccount *account = [CFSBaseTests getSession].account;
-    if(![[CFSBaseTests getSession] isLinked]){
+    if (![[CFSBaseTests getSession] isLinked]) {
         XCTAssertNil(account, "account should be nil");
-    }
-    else{
+    } else {
         XCTAssertNotNil(account, "account should not be nil");
     }
 }
@@ -127,10 +125,9 @@
 - (void)testFileSystem
 {
     CFSFilesystem *filesystem = [CFSBaseTests getSession].fileSystem;
-    if(![[CFSBaseTests getSession] isLinked]){
+    if (![[CFSBaseTests getSession] isLinked]) {
         XCTAssertNil(filesystem, "filesystem should be nil");
-    }
-    else{
+    } else {
         XCTAssertNotNil(filesystem, "filesystem should not be nil");
     }
 }

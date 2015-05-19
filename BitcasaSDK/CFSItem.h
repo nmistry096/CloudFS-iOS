@@ -4,16 +4,15 @@
 //
 //  Bitcasa iOS SDK
 //  Copyright (C) 2015 Bitcasa, Inc.
-//  215 Castro Street, 2nd Floor
-//  Mountain View, CA 94041
+//  1200 Park Place, Suite 350
+//  San Mateo, CA 94403
 //
 //  All rights reserved.
 //
-//  For support, please send email to support@bitcasa.com.
+//  For support, please send email to sdks@bitcasa.com.
 //
 
 #import <Foundation/Foundation.h>
-#import <CoreData/CoreData.h>
 #import "CFSRestAdapter.h"
 #import "CFSError.h"
 
@@ -30,6 +29,19 @@ extern NSString *const CFSResponseDateMetaLastModifiedKey;
 extern NSString *const CFSResponseDateCreatedKey;
 extern NSString *const CFSResponseIsMirroredKey;
 extern NSString *const CFSResponseVersionKey;
+extern NSString *const CFSOperationCopy;
+extern NSString *const CFSOperationMove;
+extern NSString *const CFSOperationDelete;
+extern NSString *const CFSOperationRestore;
+extern NSString *const CFSOperationChangeAttribute;
+extern NSString *const CFSOperationCreateFolder;
+extern NSString *const CFSOperationDownload;
+extern NSString *const CFSOperationDownloadLink;
+extern NSString *const CFSOperationUpload;
+extern NSString *const CFSOperationRead;
+extern NSString *const CFSOperationList;
+extern NSString *const CFSOperationVersions;
+extern NSString *const CFSOperationNotAllowedError;
 
 /*!
  *  Represents an object managed by CloudFS. An item can be either a file or folder.
@@ -95,6 +107,30 @@ extern NSString *const CFSResponseVersionKey;
  */
 @property (nonatomic, readonly) BOOL isMirrored;
 
+/*!
+ *  Indicating whether the item is in trash.
+ */
+@property (nonatomic, readonly) BOOL isTrash;
+
+/*!
+ *  Indicating whether the item is shared.
+ */
+@property (nonatomic, readonly) BOOL isShare;
+
+/*!
+ *  Sharekey for items in shared state.
+ */
+@property (nonatomic, readonly) NSString *shareKey;
+
+/*!
+ *  Indicating whether the item is an old version.
+ */
+@property (nonatomic, readonly) BOOL isOldVersion;
+
+/*!
+ *  Indicating whether the item is an dead item.
+ */
+@property (nonatomic, readonly) BOOL isDead;
 
 #pragma mark - Initilization
 
@@ -136,12 +172,14 @@ extern NSString *const CFSResponseVersionKey;
 /*!
  *  Copy this item to destination.
  *
- *  @param destination Destination to copy item to, should be folder.
- *  @param exists     Action to take in case of a conflict with an existing item.
- *  @param completion    The completion handler to call afer completion of method.
+ *  @param destination  Destination to copy item to, should be folder.
+ *  @param exists       Action to take in case of a conflict with an existing item.
+ *  @param name         Name of the copied file.
+ *  @param completion   The completion handler to call afer completion of method.
  */
 - (void)copyToDestinationContainer:(CFSContainer *)destination
                         whenExists:(CFSExistsOperation)exists
+                              name:(NSString *)name
                         completion:(void (^)(CFSItem *newItem, CFSError *error))completion;
 
 #pragma mark - move
@@ -180,6 +218,7 @@ extern NSString *const CFSResponseVersionKey;
 - (void)restoreToContainer:(CFSContainer *)destination
              restoreMethod:(RestoreOptions)method
            restoreArgument:(NSString *)restoreArgument
+          maintainValidity:(BOOL)maintainValidity
                 completion:(void (^)(BOOL success, CFSError *error))completion;
 
 /*!
@@ -221,5 +260,14 @@ extern NSString *const CFSResponseVersionKey;
  *  @return true If change was successful.
  */
 - (BOOL)setName:(NSString *)newName;
+
+/*!
+ *  Check if given operation is valid.
+ *
+ *  @param operation Operation type.
+ *
+ *  @return true If operationg is valid.
+ */
+- (BOOL)validateOperation:(NSString *)operation;
 
 @end

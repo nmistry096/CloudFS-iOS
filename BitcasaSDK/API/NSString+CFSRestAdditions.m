@@ -4,12 +4,12 @@
 //
 //  Bitcasa iOS SDK
 //  Copyright (C) 2015 Bitcasa, Inc.
-//  215 Castro Street, 2nd Floor
-//  Mountain View, CA 94041
+//  1200 Park Place, Suite 350
+//  San Mateo, CA 94403
 //
 //  All rights reserved.
 //
-//  For support, please send email to support@bitcasa.com.
+//  For support, please send email to sdks@bitcasa.com.
 //
 
 #import "NSString+CFSRestAdditions.h"
@@ -50,7 +50,7 @@
     NSMutableString *allParams = [NSMutableString string];
     NSArray *sortedKeys = [[parameters allKeys] sortedArrayUsingSelector:@selector(localizedCaseInsensitiveCompare:)];
     [sortedKeys enumerateObjectsUsingBlock:^(id obj, NSUInteger idx, BOOL *stop) {
-        if([parameters[obj] isKindOfClass:[NSString class]]) {
+        if ([parameters[obj] isKindOfClass:[NSString class]]) {
             NSString *paramValue = parameters[obj];
             paramValue = [paramValue encode];
             [allParams appendString:[NSString stringWithFormat:@"%@=%@&", obj, paramValue]];

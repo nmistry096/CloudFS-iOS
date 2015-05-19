@@ -4,12 +4,12 @@
 //
 //  Bitcasa iOS SDK
 //  Copyright (C) 2015 Bitcasa, Inc.
-//  215 Castro Street, 2nd Floor
-//  Mountain View, CA 94041
+//  1200 Park Place, Suite 350
+//  San Mateo, CA 94403
 //
 //  All rights reserved.
 //
-//  For support, please send email to support@bitcasa.com.
+//  For support, please send email to sdks@bitcasa.com.
 //
 
 #import "CFSInputStream.h"
@@ -94,8 +94,7 @@ NSString const *CFSMultipartFormDataBoundary = @"AaB03x";
     NSMutableData *totalData = [NSMutableData dataWithCapacity:len];
     NSUInteger remainingLength = len;
     
-    if (_inputStreamState == CFSInputStreamStateStart)
-    {
+    if (_inputStreamState == CFSInputStreamStateStart) {
         NSData *data = [[self bodyInitialBoundary] dataUsingEncoding:NSUTF8StringEncoding];
         NSUInteger dataLength = MIN(([data length] - offset), remainingLength);
         data = [data subdataWithRange:NSMakeRange(offset, dataLength)];
@@ -104,15 +103,13 @@ NSString const *CFSMultipartFormDataBoundary = @"AaB03x";
         offset += [data length];
         remainingLength -= [data length];
         
-        if (offset >= [data length])
-        {
+        if (offset >= [data length]) {
             offset = 0;
             _inputStreamState = CFSInputStreamStateHeader;
         }
     }
     
-    if (_inputStreamState == CFSInputStreamStateHeader)
-    {
+    if (_inputStreamState == CFSInputStreamStateHeader) {
         NSData *data = [[self bodyFormData] dataUsingEncoding:NSUTF8StringEncoding];
         NSUInteger dataLength = MIN(([data length] - offset), remainingLength);
         data = [data subdataWithRange:NSMakeRange(offset, dataLength)];
@@ -121,15 +118,13 @@ NSString const *CFSMultipartFormDataBoundary = @"AaB03x";
         offset += [data length];
         remainingLength -= [data length];
         
-        if (offset >= [data length])
-        {
+        if (offset >= [data length]) {
             offset = 0;
             _inputStreamState = CFSInputStreamStateAvailable;
         }
     }
     
-    if (_inputStreamState == CFSInputStreamStateAvailable)
-    {
+    if (_inputStreamState == CFSInputStreamStateAvailable) {
         uint8_t databuf[remainingLength];
         NSUInteger dataLength = [self.inputStream read:databuf maxLength:remainingLength];
         
@@ -138,14 +133,12 @@ NSString const *CFSMultipartFormDataBoundary = @"AaB03x";
         
         [totalData appendData:data];
         
-        if (![self.inputStream hasBytesAvailable])
-        {
+        if (![self.inputStream hasBytesAvailable]) {
             _inputStreamState = CFSInputStreamStateClosing;
         }
     }
     
-    if (_inputStreamState == CFSInputStreamStateClosing)
-    {
+    if (_inputStreamState == CFSInputStreamStateClosing) {
         NSData *data = [[self bodyEndBoundary] dataUsingEncoding:NSUTF8StringEncoding];
         NSUInteger dataLength = MIN(([data length] - offset), remainingLength);
         data = [data subdataWithRange:NSMakeRange(offset, dataLength)];
@@ -153,10 +146,8 @@ NSString const *CFSMultipartFormDataBoundary = @"AaB03x";
         [totalData appendData:data];
         offset += [data length];
         
-        if (offset >= [data length])
-        {
+        if (offset >= [data length]) {
             _inputStreamState = CFSInputStreamStateEnd;
-            
             self.streamStatus = NSStreamStatusAtEnd;
         }
     }
@@ -168,8 +159,7 @@ NSString const *CFSMultipartFormDataBoundary = @"AaB03x";
 
 - (BOOL)hasBytesAvailable
 {
-    if (_inputStreamState == CFSInputStreamStateEnd)
-    {
+    if (_inputStreamState == CFSInputStreamStateEnd) {
         return NO;
     }
     return YES;

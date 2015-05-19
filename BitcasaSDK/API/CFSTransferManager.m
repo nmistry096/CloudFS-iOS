@@ -4,12 +4,12 @@
 //
 //  Bitcasa iOS SDK
 //  Copyright (C) 2015 Bitcasa, Inc.
-//  215 Castro Street, 2nd Floor
-//  Mountain View, CA 94041
+//  1200 Park Place, Suite 350
+//  San Mateo, CA 94403
 //
 //  All rights reserved.
 //
-//  For support, please send email to support@bitcasa.com.
+//  For support, please send email to sdks@bitcasa.com.
 //
 
 #import "CFSTransferManager.h"
@@ -18,7 +18,6 @@
 #import "CFSErrorUtil.h"
 
 static CFSTransferManager* _sharedManager;
-NSString * const CFSBackgroundSessionIdentifier = @"com.Bitcasa.backgroundSession";
 
 @implementation CFSTransfer
 
@@ -31,7 +30,6 @@ NSString * const CFSBackgroundSessionIdentifier = @"com.Bitcasa.backgroundSessio
 @property (nonatomic, weak) CFSRestAdapter *restAdapter;
 @property (nonatomic, strong) NSURLSessionConfiguration *sessionConfiguration;
 @property (nonatomic, strong) NSOperationQueue *foregroundURLQueue;
-@property (nonatomic, strong) NSOperationQueue *backgroundURLQueue;
 
 @end
 
@@ -40,42 +38,20 @@ NSString * const CFSBackgroundSessionIdentifier = @"com.Bitcasa.backgroundSessio
 - (instancetype)initWithRestAdapter:(CFSRestAdapter *)restAdapter
 {
     self = [super init];
-    if(self) {
+    if (self) {
         self.restAdapter =  restAdapter;
         
         self.sessionConfiguration = [NSURLSessionConfiguration defaultSessionConfiguration];
         self.foregroundURLQueue = [[NSOperationQueue alloc] init];
-        self.backgroundURLQueue = [[NSOperationQueue alloc] init];
         self.foregroundURLSession = [NSURLSession sessionWithConfiguration:self.sessionConfiguration
                                                                   delegate:self
                                                              delegateQueue:self.foregroundURLQueue];
-        
-        [self setupBackgroundURLSessionWithIdentifier:CFSBackgroundSessionIdentifier];
         
         _sharedManager = self;
         self.transfers = [NSMutableDictionary dictionary];
     }
     
     return self;
-}
-
-- (void)setupBackgroundURLSessionWithIdentifier:(NSString*)indentifier
-{
-    if (self.backgroundURLSession)
-    {
-        self.backgroundURLSession = [NSURLSession sessionWithConfiguration:self.backgroundURLSession.configuration
-                                                                  delegate:self
-                                                             delegateQueue:self.backgroundURLQueue];
-    } else {
-        NSURLSessionConfiguration *sessionConfiguration = [NSURLSessionConfiguration backgroundSessionConfiguration:indentifier];
-        sessionConfiguration.discretionary = NO;
-        sessionConfiguration.requestCachePolicy = NSURLRequestReloadIgnoringLocalAndRemoteCacheData;
-        sessionConfiguration.allowsCellularAccess = YES;
-        
-        self.backgroundURLSession = [NSURLSession sessionWithConfiguration:sessionConfiguration
-                                                                  delegate:self
-                                                             delegateQueue:self.backgroundURLQueue];
-    }
 }
 
 #pragma mark - NSURLSession delegates
@@ -106,15 +82,14 @@ didCompleteWithError:(NSError *)error
 {
     CFSTransfer *transfer = self.transfers[@(task.taskIdentifier)];
     
-    if ((transfer.statusCode < 200 &&
-         transfer.statusCode > 299 &&
+    if (((transfer.statusCode < 200 ||
+          transfer.statusCode > 299) &&
          transfer.statusCode != 0) ||
          error != nil) {
          transfer.error = [CFSErrorUtil createErrorFrom:transfer.data
                                              statusCode:transfer.statusCode
                                                   error:error];
-    }
-    else {
+    } else {
         if (transfer.data.length) {
             NSError* err;
             NSDictionary *responseDict = [NSJSONSerialization JSONObjectWithData:transfer.data
@@ -196,15 +171,6 @@ totalBytesExpectedToWrite:(int64_t)totalBytesExpectedToWrite
         if (transfer.progressHandler) {
             transfer.progressHandler(downloadTask.taskIdentifier, transfer.path, totalBytesWritten, transfer.size);
         }
-    }
-}
-
-- (void)URLSession:(NSURLSession *)session didBecomeInvalidWithError:(NSError *)error
-{
-    if (session == self.backgroundURLSession)
-    {
-        self.backgroundURLSession = nil;
-        [self setupBackgroundURLSessionWithIdentifier:CFSBackgroundSessionIdentifier];
     }
 }
 

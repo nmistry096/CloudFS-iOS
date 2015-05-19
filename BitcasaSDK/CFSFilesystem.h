@@ -4,18 +4,22 @@
 //
 //  Bitcasa iOS SDK
 //  Copyright (C) 2015 Bitcasa, Inc.
-//  215 Castro Street, 2nd Floor
-//  Mountain View, CA 94041
+//  1200 Park Place, Suite 350
+//  San Mateo, CA 94403
 //
 //  All rights reserved.
 //
-//  For support, please send email to support@bitcasa.com.
+//  For support, please send email to sdks@bitcasa.com.
 //
 
 #import <Foundation/Foundation.h>
-#import "CFSFolder.h"
 
-@class CFSContainer, CFSError, CFSShare, CFSRestAdapter;
+@class CFSContainer;
+@class CFSError;
+@class CFSShare;
+@class CFSRestAdapter;
+@class CFSFolder;
+@class CFSItem;
 
 /*!
  *  FileSystem class provides interface to maintain cloudfs user's filesystem
@@ -52,11 +56,11 @@
 /*!
  *  Create a new share
  *
- *  @param path       The path of the item
+ *  @param paths      The paths of the items
  *  @param password   Password for share if desired. If omitted, share will be freely accessable with the share key.
  *  @param completion The completion handler to call afer completion of method
  */
-- (void)createShare:(NSString *)path
+- (void)createShare:(NSArray *)paths
            password:(NSString *)password
          completion:(void (^)(CFSShare *share, CFSError *error))completion;
 

@@ -4,12 +4,12 @@
 //
 //  Bitcasa iOS SDK
 //  Copyright (C) 2015 Bitcasa, Inc.
-//  215 Castro Street, 2nd Floor
-//  Mountain View, CA 94041
+//  1200 Park Place, Suite 350
+//  San Mateo, CA 94403
 //
 //  All rights reserved.
 //
-//  For support, please send email to support@bitcasa.com.
+//  For support, please send email to sdks@bitcasa.com.
 //
 
 #import <UIKit/UIKit.h>
@@ -21,20 +21,22 @@
 #import "CFSFilesystem.h"
 #import "CFSBaseTests.h"
 #import "CFSRestAdapter.h"
+#import "CFSSession.h"
 
 @interface CFSItemTests : CFSBaseTests
 
 @end
 
 @implementation CFSItemTests
-XCTestExpectation *_uploadItemsExpectation;
-XCTestExpectation *_setNameExpectation;
-XCTestExpectation *_applicationDataExpectation;
-XCTestExpectation *_changeAttributeExpectation;
-XCTestExpectation *_copyToDestinationExpectation;
-XCTestExpectation *_moveToDestinationExpectation;
-XCTestExpectation *_deleteItemExpectation;
-XCTestExpectation *_restoreItemExpectation;
+__weak XCTestExpectation *_uploadItemsExpectation;
+__weak XCTestExpectation *_setNameExpectation;
+__weak XCTestExpectation *_applicationDataExpectation;
+__weak XCTestExpectation *_changeAttributeExpectation;
+__weak XCTestExpectation *_copyToDestinationExpectation;
+__weak XCTestExpectation *_moveToDestinationExpectation;
+__weak XCTestExpectation *_deleteItemExpectation;
+__weak XCTestExpectation *_restoreItemExpectation;
+__weak XCTestExpectation *_deleteTrashItemExpectation;
 
 - (void)setUp {
     [super setUp];
@@ -42,6 +44,7 @@ XCTestExpectation *_restoreItemExpectation;
 
 - (void)tearDown {
     [super tearDown];
+    [self deleteTestFolder];
 }
 
 /*!
@@ -71,6 +74,7 @@ XCTestExpectation *_restoreItemExpectation;
             if (error != nil) {
                 XCTFail(@"File Upload Fail: %@", error);
             }
+                      
             completion(file,newDir,error,uploadedFileSize);
         }];
     }];
@@ -93,6 +97,7 @@ XCTestExpectation *_restoreItemExpectation;
             if (error != nil) {
                 XCTFail(@"File Upload Fail: %@", error);
             }
+                      
             completion(file,error,uploadedFileSize);
         }];
     }];
@@ -107,8 +112,7 @@ XCTestExpectation *_restoreItemExpectation;
 -(void)getTrashItemListWithCompletion:(void (^)(NSArray* items))completion
 {
     __weak XCTestExpectation *listTrashExpectation = [self expectationWithDescription:@"listTrash"];
-    CFSFilesystem *fileSystem = [[CFSFilesystem alloc] initWithRestAdapter:[self retrieveRestAdaptor]];
-    [fileSystem listTrashWithCompletion:^(NSArray *items, CFSError *error) {
+    [((CFSSession *)[CFSBaseTests getSession]).fileSystem listTrashWithCompletion:^(NSArray *items, CFSError *error) {
         [completion items];
         [listTrashExpectation fulfill];
     }];
@@ -213,6 +217,49 @@ XCTestExpectation *_restoreItemExpectation;
     [self waitForExpectationsWithTimeout:120 handler:nil];
 }
 
+- (void)testRestoreMaintainValidityItem{
+    
+    [self createTestFolder];
+    _restoreItemExpectation = [self expectationWithDescription:@"restore"];
+    __weak CFSItemTests *weakSelf = self;
+    [self setUpPrerequisitesWithCompletion:^(CFSFile *file, CFSError *error, int uploadedFileSize) {
+        [weakSelf restoreItemTestWithValidationFail:file];
+    }];
+    [self waitForExpectationsWithTimeout:120 handler:nil];
+}
+
+- (void)testRestoreMaintainValidityItemReuse{
+    
+    [self createTestFolder];
+    _restoreItemExpectation = [self expectationWithDescription:@"restore"];
+    __weak CFSItemTests *weakSelf = self;
+    [self setUpPrerequisitesWithCompletion:^(CFSFile *file, CFSError *error, int uploadedFileSize) {
+        [weakSelf restoreItemTestWithValidationReuse:file];
+    }];
+    [self waitForExpectationsWithTimeout:120 handler:nil];
+}
+
+- (void)testRestoreMaintainValidityItemRecreate{
+    
+    [self createTestFolder];
+    _restoreItemExpectation = [self expectationWithDescription:@"restore"];
+    __weak CFSItemTests *weakSelf = self;
+    [self setUpPrerequisitesWithCompletion:^(CFSFile *file, CFSError *error, int uploadedFileSize) {
+        [weakSelf restoreItemTestWithValidationRecreate:file];
+    }];
+    [self waitForExpectationsWithTimeout:120 handler:nil];
+}
+
+- (void)testDeleteTrashItem{
+    
+    [self createTestFolder];
+    _deleteTrashItemExpectation = [self expectationWithDescription:@"deletetrash"];
+    __weak CFSItemTests *weakSelf = self;
+    [self setUpPrerequisitesWithCompletion:^(CFSFile *file, CFSError *error, int uploadedFileSize) {
+        [weakSelf deleteTrashItemTestFile:file];
+    }];
+    [self waitForExpectationsWithTimeout:120 handler:nil];
+}
 
 - (void)setApplicationDataTestFile:(CFSFile *)file  {
     NSMutableDictionary *dictionary  = [NSMutableDictionary dictionaryWithDictionary:file.applicationData];
@@ -240,7 +287,7 @@ XCTestExpectation *_restoreItemExpectation;
 
 - (void)copyItemToDestinationTestFile:(CFSFile *)file {
     CFSContainer *cfsContainer = [self getTestFolder];
-    [file copyToDestinationContainer:cfsContainer whenExists:CFSExitsRename completion:^(CFSItem *newItem, CFSError *error) {
+    [file copyToDestinationContainer:cfsContainer whenExists:CFSExitsRename name:@"newName" completion:^(CFSItem *newItem, CFSError *error) {
         XCTAssertNotNil(newItem, @"Item should not be nil");
         [_copyToDestinationExpectation fulfill];
     }];
@@ -275,12 +322,41 @@ XCTestExpectation *_restoreItemExpectation;
 - (void)restoreItemTestFile:(CFSFile *)file {
     CFSContainer *cfsContainer = [self getTestFolder];
     [file deleteWithCommit:YES force:NO completion:^(BOOL success, CFSError *error) {
-        CFSFilesystem *fileSystem = [[CFSFilesystem alloc] initWithRestAdapter:[self retrieveRestAdaptor]];
-        [fileSystem listTrashWithCompletion:^(NSArray *items, CFSError *error) {
+        [((CFSSession *)[CFSBaseTests getSession]).fileSystem listTrashWithCompletion:^(NSArray *items, CFSError *error) {
             CFSItem *item = (CFSItem *)items[items.count-1];
             [item restoreToContainer:cfsContainer
                        restoreMethod:RestoreOptionsFail
                      restoreArgument:item.path
+                    maintainValidity:NO
+                          completion:^(BOOL success, CFSError *error) {
+                              XCTAssertTrue(success, @"Response should be TRUE");
+                              [_restoreItemExpectation fulfill];
+                          }];
+        }];
+    }];
+}
+
+- (void)deleteTrashItemTestFile:(CFSFile *)file {
+    [file deleteWithCommit:NO force:NO completion:^(BOOL success, CFSError *error) {
+        [((CFSSession *)[CFSBaseTests getSession]).fileSystem listTrashWithCompletion:^(NSArray *items, CFSError *error) {
+            CFSItem *item = (CFSItem *)items[items.count-1];
+            [item deleteWithCommit:nil force:nil completion:^(BOOL success, CFSError *error) {
+                XCTAssertTrue(success, @"Response should be TRUE");
+                [_deleteTrashItemExpectation fulfill];
+            }];
+        }];
+   }];
+}
+
+- (void)restoreItemTestFileWithPath:(CFSFile *)file {
+    CFSContainer *cfsContainer = [self getTestFolder];
+    [file deleteWithCommit:NO force:NO completion:^(BOOL success, CFSError *error) {
+        [((CFSSession *)[CFSBaseTests getSession]).fileSystem listTrashWithCompletion:^(NSArray *items, CFSError *error) {
+            CFSItem *item = (CFSItem *)items[items.count-1];
+            [item restoreToContainer:cfsContainer
+                       restoreMethod:RestoreOptionsRescue
+                     restoreArgument:item.path
+                    maintainValidity:NO
                           completion:^(BOOL success, CFSError *error) {
                               XCTAssertTrue(success, @"Response should be TRUE");
                               [_restoreItemExpectation fulfill];
@@ -289,20 +365,46 @@ XCTestExpectation *_restoreItemExpectation;
     }];
 }
 
-- (void)restoreItemTestFileWithPath:(CFSFile *)file {
+- (void)restoreItemTestWithValidationFail:(CFSFile *)file {
     CFSContainer *cfsContainer = [self getTestFolder];
-    [file deleteWithCommit:YES force:NO completion:^(BOOL success, CFSError *error) {
-        CFSFilesystem *fileSystem = [[CFSFilesystem alloc] initWithRestAdapter:[self retrieveRestAdaptor]];
-        [fileSystem listTrashWithCompletion:^(NSArray *items, CFSError *error) {
-            CFSItem *item = (CFSItem *)items[items.count-1];
-            [item restoreToContainer:cfsContainer
-                       restoreMethod:RestoreOptionsRescue
-                     restoreArgument:item.path
-                          completion:^(BOOL success, CFSError *error) {
-                              XCTAssertTrue(success, @"Response should be TRUE");
-                              [_restoreItemExpectation fulfill];
-           }];
+    [file deleteWithCommit:NO force:NO completion:^(BOOL success, CFSError *error) {
+        [file restoreToContainer:cfsContainer
+                   restoreMethod:RestoreOptionsRescue
+                 restoreArgument:file.path
+                maintainValidity:YES
+                      completion:^(BOOL success, CFSError *error) {
+                          XCTAssertTrue(success, @"Response should be TRUE");
+                          [_restoreItemExpectation fulfill];
         }];
+    }];
+}
+
+
+- (void)restoreItemTestWithValidationReuse:(CFSFile *)file {
+    CFSContainer *cfsContainer = [self getTestFolder];
+    [file deleteWithCommit:NO force:NO completion:^(BOOL success, CFSError *error) {
+        [file restoreToContainer:cfsContainer
+                   restoreMethod:RestoreOptionsRescue
+                 restoreArgument:file.path
+                maintainValidity:YES
+                      completion:^(BOOL success, CFSError *error) {
+                          XCTAssertTrue(success, @"Response should be TRUE");
+                          [_restoreItemExpectation fulfill];
+                      }];
+    }];
+}
+
+- (void)restoreItemTestWithValidationRecreate:(CFSFile *)file {
+    CFSContainer *cfsContainer = [self getTestFolder];
+    [file deleteWithCommit:NO force:NO completion:^(BOOL success, CFSError *error) {
+        [file restoreToContainer:cfsContainer
+                   restoreMethod:RestoreOptionsRecreate
+                 restoreArgument:@"ppo/kk"
+                maintainValidity:YES
+                      completion:^(BOOL success, CFSError *error) {
+                          XCTAssertTrue(success, @"Response should be TRUE");
+                          [_restoreItemExpectation fulfill];
+                      }];
     }];
 }
 

@@ -4,12 +4,12 @@
 //
 //  Bitcasa iOS SDK
 //  Copyright (C) 2015 Bitcasa, Inc.
-//  215 Castro Street, 2nd Floor
-//  Mountain View, CA 94041
+//  1200 Park Place, Suite 350
+//  San Mateo, CA 94403
 //
 //  All rights reserved.
 //
-//  For support, please send email to support@bitcasa.com.
+//  For support, please send email to sdks@bitcasa.com.
 //
 
 #import "CFSErrorUtil.h"
@@ -37,6 +37,14 @@ const int CFSUnknownErrorCode = 9999;
         }
     }
     
+    return cfsError;
+}
+
++ (CFSError *)errorWithMessage:(NSString *)message
+{
+    CFSError *cfsError = [[CFSError alloc] init];
+    cfsError.message = message;
+
     return cfsError;
 }
 
@@ -81,6 +89,7 @@ const int CFSUnknownErrorCode = 9999;
                 int errorCode = [errorDictionary[CFSDataErrorCodeKey] intValue];
                 cfsError = [[CFSError alloc] initWithDomain:[self errorDomain] code:errorCode userInfo:nil];
                 cfsError.message = errorDictionary[CFSDataErrorMessageKey];
+                cfsError.errorCode = [errorDictionary[CFSDataErrorCodeKey] doubleValue];
             }
         }
         else if (error != nil) {

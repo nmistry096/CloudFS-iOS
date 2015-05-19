@@ -4,12 +4,12 @@
 //
 //  Bitcasa iOS SDK
 //  Copyright (C) 2015 Bitcasa, Inc.
-//  215 Castro Street, 2nd Floor
-//  Mountain View, CA 94041
+//  1200 Park Place, Suite 350
+//  San Mateo, CA 94403
 //
 //  All rights reserved.
 //
-//  For support, please send email to support@bitcasa.com.
+//  For support, please send email to sdks@bitcasa.com.
 //
 
 #import <UIKit/UIKit.h>
@@ -122,10 +122,9 @@ int WAIT_TIME = 30;
 
 - (void)createTestFolder
 {
-    XCTestExpectation *createFolderOverWriteExpectation = [self expectationWithDescription:@"createFolderOverWrite"];
-    CFSFilesystem *fileSystem = [[CFSFilesystem alloc] initWithRestAdapter:[CFSBaseTests getRestAdapter]];
+    __weak XCTestExpectation *createFolderOverWriteExpectation = [self expectationWithDescription:@"createFolderOverWrite"];
     
-    [fileSystem rootWithCompletion:^(CFSFolder *root, CFSError *error) {
+    [session.fileSystem rootWithCompletion:^(CFSFolder *root, CFSError *error) {
         
         [root createFolder:BITCASA_TEST_FOLDER whenExists:CFSItemExistsOverwrite completion:^(CFSFolder *newDir, CFSError *error) {
             _testFolder = newDir;
@@ -137,7 +136,7 @@ int WAIT_TIME = 30;
 
 - (void)deleteTestFolder
 {
-    XCTestExpectation *deleteRootFolder = [self expectationWithDescription:@"deleteRootFolder"];
+    __weak XCTestExpectation *deleteRootFolder = [self expectationWithDescription:@"deleteRootFolder"];
     CFSFolder *rootTestFolder = [self getTestFolder];
     
     [rootTestFolder deleteWithCommit:YES force:YES completion:^(BOOL success, CFSError *error) {

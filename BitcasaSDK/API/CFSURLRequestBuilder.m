@@ -4,12 +4,12 @@
 //
 //  Bitcasa iOS SDK
 //  Copyright (C) 2015 Bitcasa, Inc.
-//  215 Castro Street, 2nd Floor
-//  Mountain View, CA 94041
+//  1200 Park Place, Suite 350
+//  San Mateo, CA 94403
 //
 //  All rights reserved.
 //
-//  For support, please send email to support@bitcasa.com.
+//  For support, please send email to sdks@bitcasa.com.
 //
 
 #import <CommonCrypto/CommonHMAC.h>
@@ -38,7 +38,7 @@ NSString *const CFSRestHTTPMethodDELETE = @"DELETE";
                                apiVersion:(NSString *)version
                                  endpoint:(NSString *)endpoint
                           queryParameters:(NSDictionary *)queryParams
-                           formParameters:(NSDictionary *)formParams
+                           formParameters:(NSObject *)formParams
                               accessToken:(NSString *)token
 {
     NSMutableURLRequest *urlRequest = [CFSURLRequestBuilder mutableUrlRequestForHttpMethod:httpMethod
@@ -163,12 +163,13 @@ NSString *const CFSRestHTTPMethodDELETE = @"DELETE";
                                              apiVersion:(NSString *)version
                                                endpoint:(NSString *)endpoint
                                         queryParameters:(NSDictionary *)queryParams
-                                         formParameters:(NSDictionary *)formParams
+                                         formParameters:(NSObject *)formParams
 {
     NSMutableString *urlStr = [NSMutableString stringWithFormat:@"%@%@%@", serverUrl, version, endpoint];
     
-    if (queryParams && queryParams.count > 0) {
-        [urlStr appendFormat:@"?%@", [self parameterStringWithCollection:queryParams]];
+    NSString *queryParamStr = [self parameterStringWithCollection:queryParams];
+    if (queryParamStr.length > 0) {
+        [urlStr appendFormat:@"?%@", queryParamStr];
     }
     
     NSURL *requestURL = [NSURL URLWithString:urlStr];
@@ -178,8 +179,9 @@ NSString *const CFSRestHTTPMethodDELETE = @"DELETE";
     
     NSData *formParamJsonData;
     NSString *contentTypeStr = CFSRestHeaderContentTypeForm;
-    if (formParams && formParams.count > 0) {
-        NSString *jsonStr = [self parameterStringWithCollection:formParams];
+    
+    NSString *jsonStr = [self parameterStringWithCollection:formParams];
+    if (jsonStr.length > 0) {
         jsonStr = [jsonStr stringByReplacingOccurrencesOfString:@"\\/" withString:@"/"];
         formParamJsonData = [jsonStr dataUsingEncoding:NSUTF8StringEncoding];
     }
@@ -219,13 +221,13 @@ NSString *const CFSRestHTTPMethodDELETE = @"DELETE";
 
 + (NSString *)parameterStringWithCollection:(id)collection
 {
-    if ([collection isKindOfClass:[NSArray class]]) {
-        return [NSString parameterStringWithArray:collection];
+    NSString *params = @"";
+    if (collection && [collection isKindOfClass:[NSArray class]] && ((NSArray *)collection).count > 0) {
+        params = [NSString parameterStringWithArray:collection];
+    } else if (collection && [collection isKindOfClass:[NSDictionary class]] && ((NSDictionary *)collection).count > 0) {
+        params = [NSString sortedParameterStringWithDictionary:collection];
     }
-    else if([collection isKindOfClass:[NSDictionary class]]) {
-        return [NSString sortedParameterStringWithDictionary:collection];
-    }
-    return nil;
+    return params;
 }
 
 @end

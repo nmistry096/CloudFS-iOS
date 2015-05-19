@@ -4,12 +4,12 @@
 //
 //  Bitcasa iOS SDK
 //  Copyright (C) 2015 Bitcasa, Inc.
-//  215 Castro Street, 2nd Floor
-//  Mountain View, CA 94041
+//  1200 Park Place, Suite 350
+//  San Mateo, CA 94403
 //
 //  All rights reserved.
 //
-//  For support, please send email to support@bitcasa.com.
+//  For support, please send email to sdks@bitcasa.com.
 //
 
 #import <UIKit/UIKit.h>
@@ -20,6 +20,7 @@
 #import "CFSPlistReader.h"
 #import "CFSBaseTests.h"
 #import "CFSFilesystem.h"
+#import "CFSSession.h"
 
 @interface CFSFileTests : CFSBaseTests
 
@@ -38,6 +39,7 @@ CFSFolder *folder;
 
 - (void)tearDown {
     [super tearDown];
+    [self deleteTestFolder];
 }
 
 /*!
@@ -59,8 +61,8 @@ CFSFolder *folder;
         
         [file changeAttributes:meta ifConflict:VersionExistsIgnore];
         
-        [file versionsWIthStartVersion:@(file.version-1)
-                        endVersion:@(file.version + 2)
+        [file versionsWithStartVersion:@(file.version-1)
+                        endVersion:@(file.version)
                              limit:@(2)
                     withCompletion:^(NSArray *items, CFSError *error) {
             XCTAssert(items.count > 0, @"Items count should not be zero");
@@ -99,15 +101,6 @@ CFSFolder *folder;
     NSString *fileName = @"bitcasa-logo-test";
     NSString *type = @"png";
     
-    XCTestExpectation *getTestFolder = [self expectationWithDescription:@"getTestFolder"];
-    CFSFilesystem *fileSystem = [[CFSFilesystem alloc] initWithRestAdapter:[CFSBaseTests getRestAdapter]];
-    __block CFSFolder *testFolder = nil;
-    [fileSystem rootWithCompletion:^(CFSFolder *root, CFSError *error) {
-        testFolder = root;
-        [getTestFolder fulfill];
-    }];
-    [self waitForExpectationsWithTimeout:600 handler:^(NSError *error) {}];
-    
     __block CFSFile *uploadedFile = nil;
     
     XCTestExpectation *uploadFileExpectation = [self expectationWithDescription:@"uploadFileExpectation"];
@@ -115,17 +108,21 @@ CFSFolder *folder;
     NSString *path = [[NSBundle bundleForClass:[self class]] pathForResource:fileName ofType:type];
     unsigned long long localFileSize = [[NSFileManager defaultManager] attributesOfItemAtPath:path error:nil].fileSize;
     
-    [testFolder upload:path
+    __block CFSError *uploadError = nil;
+    [[self getTestFolder] upload:path
               progress:^(NSInteger uploadId, NSString *path, int64_t completedBytes, int64_t totalBytes) {
                   // Progress
               }
             completion:^(NSInteger uploadId, NSString *path, CFSFile *cfsFile, CFSError *error) {
                 uploadedFile = cfsFile;
+                uploadError = error;
                 [uploadFileExpectation fulfill];
             }
             whenExists:CFSExistsOverwrite];
     
-    [self waitForExpectationsWithTimeout:600 handler:^(NSError *error) {}];
+    [self waitForExpectationsWithTimeout:600 handler:^(NSError *error) {
+        NSAssert(uploadError == nil, uploadError.message);
+    }];
     
     
     XCTestExpectation *downloadFileExpectation = [self expectationWithDescription:@"downloadFileExpectation"];
@@ -150,8 +147,7 @@ CFSFolder *folder;
     __block NSString *fileDownloadUrl = nil;
     XCTestExpectation *getDownloadUrl = [self expectationWithDescription:@"getDownloadUrl"];
     
-    CFSFilesystem *fileSystem = [[CFSFilesystem alloc] initWithRestAdapter:[CFSFileTests getRestAdapter]];
-    [fileSystem rootWithCompletion:^(CFSFolder *root, CFSError *error) {
+    [((CFSSession *)[CFSBaseTests getSession]).fileSystem rootWithCompletion:^(CFSFolder *root, CFSError *error) {
         
         [self uploadContents:@"Hello World"
                     fileName:@"FileName"
@@ -178,8 +174,7 @@ CFSFolder *folder;
     __block NSInputStream *fileInputStream;
     XCTestExpectation *getInputStream = [self expectationWithDescription:@"getInputStream"];
     
-    CFSFilesystem *fileSystem = [[CFSFilesystem alloc] initWithRestAdapter:[CFSFileTests getRestAdapter]];
-    [fileSystem rootWithCompletion:^(CFSFolder *root, CFSError *error) {
+    [((CFSSession *)[CFSBaseTests getSession]).fileSystem rootWithCompletion:^(CFSFolder *root, CFSError *error) {
         [self uploadContents:@"Hello World"
                     fileName:@"FileName"
                     toFolder:root

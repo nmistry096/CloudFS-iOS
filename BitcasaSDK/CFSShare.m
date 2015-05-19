@@ -4,12 +4,12 @@
 //
 //  Bitcasa iOS SDK
 //  Copyright (C) 2015 Bitcasa, Inc.
-//  215 Castro Street, 2nd Floor
-//  Mountain View, CA 94041
+//  1200 Park Place, Suite 350
+//  San Mateo, CA 94403
 //
 //  All rights reserved.
 //
-//  For support, please send email to support@bitcasa.com.
+//  For support, please send email to sdks@bitcasa.com.
 //
 
 #import "CFSShare.h"
@@ -29,15 +29,16 @@ CFSRestAdapter *_restAdapter;
                  andRestAdapter:(CFSRestAdapter *)restAdapter;
 {
     self = [super init];
-    if (self)
-    {
+    if (self) {
         _restAdapter = restAdapter;
         _shareKey = dictionary[CFSShareResponseResultShareKey];
         _size = dictionary[@"share_size"];
         _name = dictionary[@"share_name"];
-        _dateContentLastModified = dictionary[@"single_item"][@"date_content_last_modified"];
-        _dateMetaLastModified = dictionary[@"single_item"][@"date_meta_last_modified"];
-        _applicationData = dictionary[@"single_item"][@"application_data"];
+        if (dictionary[@"single_item"] != [NSNull null]) {
+            _dateContentLastModified = dictionary[@"single_item"][@"date_content_last_modified"];
+            _dateMetaLastModified = dictionary[@"single_item"][@"date_meta_last_modified"];
+            _applicationData = dictionary[@"single_item"][@"application_data"];
+        }
     }
     
     return self;
@@ -83,9 +84,9 @@ CFSRestAdapter *_restAdapter;
     [_restAdapter receiveShare:self.shareKey path:path whenExists:operation completion:completion];
 }
 
-- (void)unlockShare:(NSString *)shareKey password:(NSString *)password completion:(void (^)(BOOL Success, CFSError *error))completion
+- (void)unlockShareWithPassword:(NSString *)password completion:(void (^)(BOOL Success, CFSError *error))completion
 {
-    [_restAdapter unlockShare:shareKey password:(NSString *)password completion:completion];
+    [_restAdapter unlockShare:self.shareKey password:(NSString *)password completion:completion];
 }
 
 - (BOOL)setName:(NSString *)newName usingCurrentPassword:(NSString *)password

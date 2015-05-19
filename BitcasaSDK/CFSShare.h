@@ -4,16 +4,19 @@
 //
 //  Bitcasa iOS SDK
 //  Copyright (C) 2015 Bitcasa, Inc.
-//  215 Castro Street, 2nd Floor
-//  Mountain View, CA 94041
+//  1200 Park Place, Suite 350
+//  San Mateo, CA 94403
 //
 //  All rights reserved.
 //
-//  For support, please send email to support@bitcasa.com.
+//  For support, please send email to sdks@bitcasa.com.
 //
 
 #import <Foundation/Foundation.h>
-#import "CFSContainer.h"
+#import "CFSRestAdapter.h"
+
+@class CFSContainer;
+@class CFSError;
 
 /*!
  *  Share class is used to create and manage shares in end-user's account
@@ -116,13 +119,11 @@
 /*!
  *  Unlocks the passed share for the duration of the login session.
  *
- *  @param shareKey   The share key of the share
  *  @param password   The password of the share that needs to be unlocked
  *  @param completion The completion handler to call afer completion of method
  */
-- (void)unlockShare:(NSString *)shareKey
-           password:(NSString *)password
-         completion:(void (^)(BOOL Success, CFSError *error))completion;
+- (void)unlockShareWithPassword:(NSString *)password
+                     completion:(void (^)(BOOL Success, CFSError *error))completion;
 
 /*!
  *  Sets the share name

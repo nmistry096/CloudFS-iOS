@@ -4,12 +4,12 @@
 //
 //  Bitcasa iOS SDK
 //  Copyright (C) 2015 Bitcasa, Inc.
-//  215 Castro Street, 2nd Floor
-//  Mountain View, CA 94041
+//  1200 Park Place, Suite 350
+//  San Mateo, CA 94403
 //
 //  All rights reserved.
 //
-//  For support, please send email to support@bitcasa.com.
+//  For support, please send email to sdks@bitcasa.com.
 //
 
 #import "CFSUser.h"
@@ -24,7 +24,7 @@
         _firstName = dictionary[@"first_name"];
         _lastName = dictionary[@"last_name"];
         _userName = dictionary[@"username"];
-        _userId = dictionary[@"account_state"][@"id"];
+        _userId = dictionary[@"id"];
         _lastLogin = [dictionary[@"last_login"] longLongValue];
         _createdAt = [dictionary[@"created_at"] longLongValue];
     }

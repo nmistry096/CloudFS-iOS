@@ -4,12 +4,12 @@
 //
 //  Bitcasa iOS SDK
 //  Copyright (C) 2015 Bitcasa, Inc.
-//  215 Castro Street, 2nd Floor
-//  Mountain View, CA 94041
+//  1200 Park Place, Suite 350
+//  San Mateo, CA 94403
 //
 //  All rights reserved.
 //
-//  For support, please send email to support@bitcasa.com.
+//  For support, please send email to sdks@bitcasa.com.
 //
 
 #import <Foundation/Foundation.h>
@@ -61,5 +61,14 @@
 + (CFSError *)createErrorFrom:(NSData *)responseData
                    statusCode:(NSInteger)code
                         error:(NSError *)error;
+
+/*!
+ *  Creates a Custom CFSError with a message given.
+ *
+ *  @param message      Message expalining error.
+ *
+ *  @return Returns a CFSError instance
+ */
++ (CFSError *)errorWithMessage:(NSString *)message;
 
 @end

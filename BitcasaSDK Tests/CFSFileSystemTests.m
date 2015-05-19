@@ -4,12 +4,12 @@
 //
 //  Bitcasa iOS SDK
 //  Copyright (C) 2015 Bitcasa, Inc.
-//  215 Castro Street, 2nd Floor
-//  Mountain View, CA 94041
+//  1200 Park Place, Suite 350
+//  San Mateo, CA 94403
 //
 //  All rights reserved.
 //
-//  For support, please send email to support@bitcasa.com.
+//  For support, please send email to sdks@bitcasa.com.
 //
 
 #import <UIKit/UIKit.h>
@@ -18,6 +18,7 @@
 #import "CFSFileSystem.h"
 #import "CFSBaseTests.h"
 #import "CFSFile.h"
+#import "CFSSession.h"
 
 @interface CFSFileSystemTests : CFSBaseTests
 
@@ -40,8 +41,7 @@
 {
     XCTestExpectation *rootExpectation = [self expectationWithDescription:@"root"];
     
-    CFSFilesystem *fileSystem = [[CFSFilesystem alloc] initWithRestAdapter:[CFSBaseTests getRestAdapter]];
-    [fileSystem rootWithCompletion:^(CFSFolder *root, CFSError *error) {
+    [((CFSSession *)[CFSBaseTests getSession]).fileSystem rootWithCompletion:^(CFSFolder *root, CFSError *error) {
         XCTAssertNil(error, "error should be nil");
         XCTAssertNotNil(root, "Root should not be nil");
         [rootExpectation fulfill];
@@ -61,13 +61,11 @@
                 toFolder:[self getTestFolder]
               whenExists:CFSExistsOverwrite
               completion:^(CFSFile *file, CFSError *error, int uploadedFileSize) {
-        CFSFilesystem *fileSystem = [[CFSFilesystem alloc] initWithRestAdapter:[CFSBaseTests getRestAdapter]];
-        [fileSystem getItem:file.path completion:^(CFSItem *item, CFSError *error) {
+        [((CFSSession *)[CFSBaseTests getSession]).fileSystem getItem:file.path completion:^(CFSItem *item, CFSError *error) {
             XCTAssertNil(error, "error should be nil");
             XCTAssertNotNil(item, "Root should not be nil");
             [getItemExpectation fulfill];
         }];
-        
     }];
     [self waitForExpectationsWithTimeout:300 handler:^(NSError *error) {}];
 }
@@ -78,8 +76,7 @@
 - (void)testListTrash
 {
     XCTestExpectation *listTrashExpectation = [self expectationWithDescription:@"listTrash"];
-    CFSFilesystem *fileSystem = [[CFSFilesystem alloc] initWithRestAdapter:[CFSBaseTests getRestAdapter]];
-    [fileSystem listTrashWithCompletion:^(NSArray *items, CFSError *error) {
+    [((CFSSession *)[CFSBaseTests getSession]).fileSystem listTrashWithCompletion:^(NSArray *items, CFSError *error) {
         XCTAssertNil(error, "error should be nil");
         XCTAssertNotNil(items, "Root should not be nil");
         [listTrashExpectation fulfill];

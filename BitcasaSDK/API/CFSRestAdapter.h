@@ -4,12 +4,12 @@
 //
 //  Bitcasa iOS SDK
 //  Copyright (C) 2015 Bitcasa, Inc.
-//  215 Castro Street, 2nd Floor
-//  Mountain View, CA 94041
+//  1200 Park Place, Suite 350
+//  San Mateo, CA 94403
 //
 //  All rights reserved.
 //
-//  For support, please send email to support@bitcasa.com.
+//  For support, please send email to sdks@bitcasa.com.
 //
 
 #import <Foundation/Foundation.h>
@@ -67,6 +67,10 @@ extern NSString *const CFSItemTypeFile;
 extern NSString *const CFSItemTypeFolder;
 extern NSString *const CFSItemTypeFileSystem;
 extern NSString *const CFSShareResponseResultShareKey;
+extern NSString *const CFSItemStateIsTrash;
+extern NSString *const CFSItemStateIsOldVersion;
+extern NSString *const CFSItemStateIsShare;
+extern NSString *const CFSItemShareKey;
 
 @interface CFSRestAdapter : NSObject
 
@@ -158,6 +162,14 @@ typedef NS_ENUM(NSInteger, RestoreOptions) {
 #pragma mark - List directory contents
 
 /*!
+ *  Retrieves the item list at this path.
+ *
+ *  @param completion The completion handler to call afer completion of method.
+ */
+- (void)listContentsOfPath:(NSString *)path
+                completion:(void (^)(NSArray *items, CFSError *error))completion;
+
+/*!
  *  Retrieves the item list at this items path.
  *
  *  @param completion The completion handler to call afer completion of method.
@@ -170,7 +182,7 @@ typedef NS_ENUM(NSInteger, RestoreOptions) {
  *
  *  @param completion The completion handler to call afer completion of method.
  */
-- (void)getContentsOfTrashWithCompletion:(void (^)(NSArray* items, CFSError *error))completion;
+- (void)getContentsOfTrashWithPath:(NSString *)path completion:(void (^)(NSArray* items, CFSError *error))completion;
 
 #pragma mark - Move item(
 /*!
@@ -191,13 +203,15 @@ typedef NS_ENUM(NSInteger, RestoreOptions) {
  *  Copy item to a given destination
  *
  *  @param itemToCopy    item to be copied.
- *  @param destItem      destination to copy item to, should be folder.
+ *  @param destination   destination to copy item to, should be folder.
  *  @param operation     action to take in case of a conflict with an existing item.
+ *  @param name          Name of the copied file.
  *  @param completion    the completion handler to call afer completion of method.
  */
 - (void)copyItem:(CFSItem*)itemToCopy
-              to:(CFSContainer*)destItem
+              to:(CFSContainer*)destination
       whenExists:(CFSExistsOperation)operation
+            name:(NSString *)name
       completion:(void (^)(CFSItem* newItem, CFSError *error))completion;
 
 #pragma mark - Delete item
@@ -274,11 +288,11 @@ typedef NS_ENUM(NSInteger, RestoreOptions) {
 /*!
  *  Create a new share
  *
- *  @param path       The path of the item
+ *  @param paths      The paths of the items
  *  @param password   Password for share if desired. If omitted, share will be freely accessable with the share key.
  *  @param completion completion The completion handler to call afer completion of method
  */
-- (void)createShare:(NSString *)path
+- (void)createShare:(NSArray *)paths
            password:(NSString *)password
          completion:(void (^)(CFSShare *share, CFSError *error))completion;
 
