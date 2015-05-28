@@ -13,6 +13,7 @@
 //
 
 #import <Foundation/Foundation.h>
+@class CFSPlan;
 
 /*!
  *  Account class defines properties of the end-user's CloudFS account
@@ -30,11 +31,6 @@
 @property (nonatomic, readonly) int64_t storageUsage;
 
 /*!
- *  Storage limit of the current account plan.
- */
-@property (nonatomic, readonly) int64_t storageLimit;
-
-/*!
  *  If CloudFS thinks you are currently over your storage quota.
  */
 @property (assign, readonly) BOOL overStorageLimit;
@@ -50,16 +46,6 @@
 @property (nonatomic, strong, readonly) NSString *stateId;
 
 /*!
- *  Human readable name of the accounts' CloudFS plan
- */
-@property (nonatomic, strong, readonly) NSString *planDisplayName;
-
-/*!
- *  Id of the CloudFS plan.
- */
-@property (nonatomic, strong, readonly) NSString *planId;
-
-/*!
  *  Locale of the current session.
  */
 @property (nonatomic, strong, readonly) NSString *sessionLocale;
@@ -68,6 +54,11 @@
  *  Locale of the account.
  */
 @property (nonatomic, strong, readonly) NSString *accountLocale;
+
+/*!
+ *  Current plan of the user.
+ */
+@property (nonatomic, strong, readonly) CFSPlan *plan;
 
 #pragma mark - Initilization
 

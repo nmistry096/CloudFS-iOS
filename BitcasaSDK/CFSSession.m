@@ -17,6 +17,7 @@
 #import "CFSUser.h"
 #import "CFSAccount.h"
 #import "CFSFilesystem.h"
+#import "CFSPlan.h"
 
 NSInteger const CFSActionHistoryDefaultStartVersion = -10;
 
@@ -51,13 +52,13 @@ static CFSSession *_sharedSession = nil;
             completion(nil, NO, error);
         } else {
             [_restAdapter  setAccessToken:token];
-            [self.restAdapter getProfileWithCompletion:^(NSDictionary *dictionary){
+            [self.restAdapter getProfileWithCompletion:^(NSDictionary *dictionary, CFSError *newError){
                 if (dictionary) {
                     self.user = [[CFSUser alloc] initWithDictionary:dictionary];
                     self.account = [[CFSAccount alloc] initWithDictionary:dictionary];
                     self.fileSystem = [[CFSFilesystem alloc] initWithRestAdapter:self.restAdapter];
                 }
-                completion(token, (dictionary ? YES : NO), error);
+                completion(token, (dictionary ? YES : NO), newError);
             }];
         }
     }];
@@ -91,7 +92,7 @@ static CFSSession *_sharedSession = nil;
     return self.isLinked ? _fileSystem : nil;
 }
 
--(void)actionHistoryWithCompletion:(void (^)(NSDictionary *history, CFSError *error))completion
+- (void)actionHistoryWithCompletion:(void (^)(NSDictionary *history, CFSError *error))completion
 {
      NSInteger startVersion  = CFSActionHistoryDefaultStartVersion;
      NSInteger stopVersion = 0;
@@ -103,7 +104,7 @@ static CFSSession *_sharedSession = nil;
      }];
 }
 
--(void)actionHistoryWithStartVersion:(NSInteger)startVersion
+- (void)actionHistoryWithStartVersion:(NSInteger)startVersion
                       andStopVersion:(NSInteger)stopVersion
                       completion:(void (^)(NSDictionary *history, CFSError *error))completion
 {
@@ -119,13 +120,13 @@ static CFSSession *_sharedSession = nil;
      }];
 }
 
--(void)setAdminCredentialsWithAdminClientId:(NSString *)adminClientId
+- (void)setAdminCredentialsWithAdminClientId:(NSString *)adminClientId
                           adminClientSecret:(NSString *)adminClientSecret
 {
     [_restAdapter setAdminCredentialsWithAdminClientId:adminClientId adminClientSecret:adminClientSecret];
 }
 
--(void)createAccountWithUsername:(NSString *)username
+- (void)createAccountWithUsername:(NSString *)username
                        password:(NSString *)password
                            email:(NSString *)email
                        firstName:(NSString *)firstName
@@ -144,7 +145,7 @@ static CFSSession *_sharedSession = nil;
          if (userDetails && !error) {
              user = [[CFSUser alloc] initWithDictionary:userDetails];
              if (logInTocreatedUser) {
-                 [self authenticateWithUsername:username andPassword:password completion:^(NSString* token, BOOL success, CFSError *error) {
+                 [self authenticateWithUsername:username andPassword:password completion:^(NSString *token, BOOL success, CFSError *error) {
                      completion(user, error);
                  }];
              } else {
@@ -154,6 +155,34 @@ static CFSSession *_sharedSession = nil;
              completion(user, error);
          }
     }];
+}
+
+- (void)createPlanWithName:(NSString *)name
+                     limit:(NSString *)limit
+                completion:(void (^)(CFSPlan *plan, CFSError *error))completion
+{
+    [_restAdapter createPlanWithName:name
+                               limit:limit completion:completion];
+}
+
+- (void)listPlansWithCompletion:(void (^)(NSArray *plans, CFSError *error))completion
+{
+    [_restAdapter listPlansWithCompletion:completion];
+}
+
+- (void)updateUserWithId:(NSString *)userId
+                userName:(NSString *)userName
+               firstName:(NSString *)firstName
+                lastName:(NSString *)lastName
+                planCode:(NSString *)plancode
+          WithCompletion:(void (^)(CFSUser *user, CFSError *error))completion
+{
+    [_restAdapter updateUserWithId:userId
+                          userName:userName
+                         firstName:firstName
+                          lastName:lastName
+                          planCode:plancode
+                    WithCompletion:completion];
 }
 
 @end

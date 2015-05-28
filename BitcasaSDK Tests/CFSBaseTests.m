@@ -20,6 +20,7 @@
 #import "CFSRestAdapter.h"
 #import "CFSFolder.h"
 #import "CFSFileSystem.h"
+#import "CFSUser.h"
 
 static CFSSession *session;
 int WAIT_TIME = 30;
@@ -47,10 +48,12 @@ int WAIT_TIME = 30;
 
 - (void)setUp {
     [super setUp];
+    CFSPlistReader *plistReader = [[CFSPlistReader alloc] initWithFileName:@"BitcasaConfig"];
+    NSString *email = [plistReader appConfigValueForKey:@"CFS_USER_EMAIL"];
     if (!session) {
         [self setUpInitalValues];
     }
-    else if(!session.isLinked)
+    else if(!session.isLinked ||![session.user.userName isEqualToString:email])
     {
         [self authenticate];
     }

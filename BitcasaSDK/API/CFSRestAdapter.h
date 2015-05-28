@@ -22,6 +22,7 @@
 @class CFSShare;
 @class CFSUser;
 @class CFSAccount;
+@class CFSPlan;
 
 /*! 
  *  This is the typedef for token retrieval completion block.
@@ -157,7 +158,7 @@ typedef NS_ENUM(NSInteger, RestoreOptions) {
  *
  *  @param completion Executes with user profile details when the details are received.
  */
-- (void)getProfileWithCompletion:(void(^)(NSDictionary* response))completion;
+- (void)getProfileWithCompletion:(void(^)(NSDictionary* response, CFSError *error))completion;
 
 #pragma mark - List directory contents
 
@@ -447,6 +448,39 @@ usingCurrentPassword:(NSString *)currentPassword
                        firstName:(NSString *)firstName
                         lastName:(NSString *)lastName
                       completion:(void (^)(NSDictionary * userDetails, CFSError *error))completion;
+/*!
+ *  Delete user plans. WARNING!!! Deleting a plan could cause various issues in a production environment.
+ *
+ *  @param planId     id of the plan toi be deleted
+ *  @param completion The completion block to execute when account creation task is done.
+ */
+- (void)deletePlan:(NSString *)planId
+        completion:(void(^)(BOOL success, CFSError *error))completion;
+
+/*!
+ *  Creates a new user plan
+ *
+ *  @param name                 name of the plan
+ *  @param limit                limit of the plan
+ *  @param completion           The completion block to execute when plan creation task is done.
+ */
+- (void)createPlanWithName:(NSString *)name
+                     limit:(NSString *)limit
+                completion:(void (^)(CFSPlan *plan, CFSError *error))completion;
+
+/*!
+ *  List all the user plans
+ *
+ *  @param completion       The completion block to execute when plan creation task is done.
+ */
+- (void)listPlansWithCompletion:(void (^)(NSArray *plans, CFSError *error))completion;
+
+- (void)updateUserWithId:(NSString *)userId
+                userName:(NSString *)userName
+               firstName:(NSString *)firstName
+                lastName:(NSString *)lastName
+                planCode:(NSString *)plancode
+          WithCompletion:(void (^)(CFSUser *user, CFSError *error))completion;
 
 /*!
  *  Set admin credetial for

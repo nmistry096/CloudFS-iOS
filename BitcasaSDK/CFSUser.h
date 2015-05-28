@@ -14,6 +14,8 @@
 
 #import <Foundation/Foundation.h>
 
+@class CFSPlan;
+
 /*!
  *  User class maintains user profile information
  */

@@ -102,7 +102,7 @@
 					<div class="section section-admin">
 						<a title="Admin-Operations" name="admin"></a>
 						<h2 class="subtitle subtitle-admin">Admin Operations</h2>
-						<p>You need to set the admin credentials in order to perform admin operations. You can create end users for an admin/paid account. If &#8216;logInToCreatedUser&#8217; is true, logs in to the user after creating it.</p>
+	
 					</div>
 					<div class="section-method">
 						<h3 class="method-title">
@@ -110,15 +110,60 @@
 						</h3>
 						<div class="method-info">
 							<div class="method-info-container">
+								<p>You need to set the admin credentials in order to perform admin operations. You can create end users for an admin/paid account. If ‘logInToCreatedUser’ is true, logs in to the user after creating it.</p><div class="method-subsection method-declaration">
+									<code>
+										<p>[session setAdminCredentialsWithAdminClientId:clientId adminClientSecret:adminSecret];</p><p>[session createAccountWithUsername:[self getRandomEmail] password:@"test123" email:nil firstName:nil lastName:nil logInTocreatedUser:NO WithCompletion:^(CFSUser user, CFSError error) { //YOUR CODE }];</p>
+										
+									</code>
+								</div>
+							</div>
+						</div>
+					<div class="section-method">
+						<h3 class="method-title">
+							<code><a target="_blank" href="BitcasaSDKDocs/html/Classes/CFSSession.html#//api/name/updateUserWithId:userName:firstName:lastName:planCode:WithCompletion:">&nbsp;&nbsp;Update Account</a></code>
+						</h3>
+						<div class="method-info">
+							<p>You can update user information including user plan information.</p><div class="method-info-container">
 								<div class="method-subsection method-declaration">
 									<code>
 										<p>[session setAdminCredentialsWithAdminClientId:clientId adminClientSecret:adminSecret];</p>
-										<p>[session createAccountWithUsername:[self getRandomEmail] password:@"test123" email:nil firstName:nil lastName:nil logInTocreatedUser:NO WithCompletion:^(CFSUser user, CFSError error) { //YOUR CODE }];</p>
+										<p>[session updateUserWithId:ses.account.accountId userName:nil firstName:@"TestUserNameChanged" lastName:@"TestUserLastNameChanged" planCode:plan.planId                        WithCompletion:^(CFSUser *updatedUser, CFSError *error) {  //YOUR CODE }];</p>
+									</code>
+								</div>
+							</div>
+						</div>
+					</div><div class="section-method">
+						<h3 class="method-title">
+							<code><a target="_blank" href="BitcasaSDKDocs/html/Classes/CFSSession.html#//api/name/createPlanWithName:limit:completion:">Create plan</a></code>
+						</h3>
+						<div class="method-info">
+							<p>You can create custom user plans. These plans can be assigned to a user.</p><div class="method-info-container">
+								<div class="method-subsection method-declaration">
+									<code>
+										<p>[session setAdminCredentialsWithAdminClientId:clientId adminClientSecret:adminSecret];</p>
+										<p>[session createPlanWithName:[self getRandomEmail] limit:@"1024" completion:^(CFSPlan *plan, CFSError *error) { //YOUR CODE }];</p>
+									</code>
+								</div>
+							</div>
+						</div>
+					</div><div class="section-method">
+						<h3 class="method-title">
+							<code><a target="_blank" href="BitcasaSDKDocs/html/Classes/CFSSession.html#//api/name/listPlansWithCompletion:">List plans</a></code>
+						</h3>
+						<p>You can list all the custom plans created.</p><div class="method-info">
+							<div class="method-info-container">
+								<div class="method-subsection method-declaration">
+									<code>
+										<p>[session setAdminCredentialsWithAdminClientId:clientId adminClientSecret:adminSecret];</p>
+										<p>[session listPlansWithCompletion:^(NSArray *plans, CFSError *error) { //YOUR CODE }];</p>
 									</code>
 								</div>
 							</div>
 						</div>
 					</div>
+                                        </div>
+                                        
+                                        
 					<div class="section section-filesystem">
 						<a title="File-System-Operations" name="filesystem"></a>
 						<h2 class="subtitle subtitle-filesystem">File System Operations</h2>

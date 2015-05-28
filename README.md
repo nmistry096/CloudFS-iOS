@@ -67,10 +67,14 @@ Creating a user (for paid accounts only)
 [session createAccountWithUsername:[self getRandomEmail] password:@"test123" email:nil firstName:nil lastName:nil logInTocreatedUser:NO WithCompletion:^(CFSUser user, CFSError error) { //YOUR CODE }];
 ```
 
+Create an user plan (for paid accounts only)
+
+```objective-c
+[session setAdminCredentialsWithAdminClientId:clientId adminClientSecret:adminSecret];
+[session createPlanWithName:[self getRandomEmail] limit:@"1024" completion:^(CFSPlan *plan, CFSError *error) { //YOUR CODE }];					
+```
+
 ## Test Suite
 
 The tests that exist are functional tests designed to be used with a CloudFS test user. They use API credentials on your free CloudFS account. You should add the credentials to the file 'BitcasaSDK Tests\BitcasaConfig.plist' (Use BitcasaSDK Tests\BitcasaConfigTemplate.plist as a reference to create the config file.
 To run the tests, open XCode and choose target as 'BitcasaSDK Tests' and run 'Test'.
-
-
-

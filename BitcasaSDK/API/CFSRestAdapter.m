@@ -28,6 +28,7 @@
 #import "CFSShare.h"
 #import "CFSAccount.h"
 #import "CFSErrorUtil.h"
+#import "CFSPlan.h"
 
 #import <AssetsLibrary/AssetsLibrary.h>
 #import <CommonCrypto/CommonDigest.h>
@@ -47,8 +48,10 @@ NSString *const CFSAPIEndpointShares = @"/shares/";
 NSString *const CFSAPIEndpointTrash = @"/trash/";
 NSString *const CFSAPIEndpointHistory = @"/history";
 NSString *const CFSAPIEndpointMeta = @"/meta";
-NSString *const CFSAPIEndpointAdmin = @"/admin/cloudfs/customers/";
+NSString *const CFSAPIEndpointAdminCustomers = @"/admin/cloudfs/customers/";
+NSString *const CFSAPIEndpointCustomers = @"/admin/customers/";
 NSString *const CFSAPIEndpointFilesystemAction = @"/filesystem/root";
+NSString *const CFSAPIEndpointPlan = @"plan/";
 
 NSString *const CFSHeaderContentType = @"Content-Type";
 NSString *const CFSHeaderAuth = @"Authorization";
@@ -103,6 +106,9 @@ NSString *const CFSFormParameterExistsKey = @"exists";
 NSString *const CFSFormParameterToKey = @"to";
 NSString *const CFSFormParameterRescueKey = @"rescue";
 NSString *const CFSFormParameterRecreateKey = @"recreate";
+NSString *const CFSFormParameterPlanName = @"name";
+NSString *const CFSFormParameterPlanLimit = @"limit";
+NSString *const CFSFormParameterPlanCode = @"plan_code";
 
 NSString *const CFSQueryParameterStartVersionKey = @"start-version";
 NSString *const CFSQueryParameterEndVersionKey = @"end-version";
@@ -238,7 +244,7 @@ NSString *const CFSResponseUsageHeaderKey= @"X-BCS-Account-Storage-Usage";
 }
 
 #pragma mark - Get profile
-- (void)getProfileWithCompletion:(void(^)(NSDictionary *response))completion
+- (void)getProfileWithCompletion:(void(^)(NSDictionary *response , CFSError *error))completion
 {
     NSString *profileEndpoint = [NSString stringWithFormat:@"%@%@", CFSAPIEndpointUser, CFSAPIEndpointProfile];
     NSURLRequest *profileRequest = [CFSURLRequestBuilder urlRequestForHttpMethod:CFSRestHTTPMethodGET
@@ -248,8 +254,11 @@ NSString *const CFSResponseUsageHeaderKey= @"X-BCS-Account-Storage-Usage";
                                     queryParameters:nil formParameters:nil accessToken:self.accessToken];
     [NSURLConnection sendAsynchronousRequest:profileRequest queue:[NSOperationQueue currentQueue] completionHandler:^(NSURLResponse *response, NSData *data, NSError *connectionError) {
          NSDictionary *resultDictionary = nil;
+        CFSError *error = nil;
          if ([self isResponeSucessful:response data:data]) {
-             resultDictionary = [self resultDictionaryFromResponseData:data];
+            resultDictionary = [self resultDictionaryFromResponseData:data];
+         } else {
+            error = [CFSErrorUtil createErrorFrom:data response:response error:connectionError];
          }
         if ([response isKindOfClass:[NSHTTPURLResponse class]]) {
             NSHTTPURLResponse *httpResponse = (NSHTTPURLResponse*)response;
@@ -260,7 +269,7 @@ NSString *const CFSResponseUsageHeaderKey= @"X-BCS-Account-Storage-Usage";
                 resultDictionary[CFSResponseStorageKey][CFSResponseUsageKey] = httpResponse.allHeaderFields[@"X-BCS-Account-Storage-Usage"];
             }
         }
-         completion(resultDictionary);
+         completion(resultDictionary, error);
      }];
 }
 
@@ -1109,8 +1118,9 @@ usingCurrentPassword:(NSString *)currentPassword
     NSURLRequest *createAccountRequest = [CFSURLRequestBuilder signedUrlRequestForHttpMethod:CFSHTTPMethodPOST
                                                                                    serverUrl:self.serverUrl
                                                                                   apiVersion:CFSRestApiVersion
-                                                                                    endpoint:CFSAPIEndpointAdmin
-                                                                             queryParameters:nil formParameters:formParams
+                                                                                    endpoint:CFSAPIEndpointAdminCustomers
+                                                                             queryParameters:nil
+                                                                              formParameters:formParams
                                                                                     clientId:self.adminId
                                                                                 clientSecret:self.adminSecret];
     [NSURLConnection sendAsynchronousRequest:createAccountRequest
@@ -1125,6 +1135,158 @@ usingCurrentPassword:(NSString *)currentPassword
                                }
                                completion(userDetails, error);
                            }];
+}
+
+- (void)createPlanWithName:(NSString *)name limit:(NSString *)limit completion:(void (^)(CFSPlan *plan, CFSError *error))completion
+{
+    NSParameterAssert(self.adminId);
+    NSParameterAssert(self.adminSecret);
+    NSAssert(name.length != 0, @"Name should not be empty");
+    NSAssert(limit.length != 0, @"Limit should not be empty");
+    
+    NSMutableDictionary *formParams = [[NSMutableDictionary alloc] init];
+    formParams[CFSFormParameterPlanName] = name;
+    formParams[CFSFormParameterPlanLimit] = limit;
+    NSString *planEndPoint = [NSString stringWithFormat:@"%@%@", CFSAPIEndpointCustomers, CFSAPIEndpointPlan];
+    NSURLRequest *createPlanRequest = [CFSURLRequestBuilder
+                                       signedUrlRequestForHttpMethod:CFSHTTPMethodPOST
+                                       serverUrl:self.serverUrl
+                                       apiVersion:CFSRestApiVersion
+                                       endpoint:planEndPoint
+                                       queryParameters:nil
+                                       formParameters:formParams
+                                       clientId:self.adminId
+                                       clientSecret:self.adminSecret];
+    
+    [NSURLConnection sendAsynchronousRequest:createPlanRequest
+                                       queue:[NSOperationQueue currentQueue]
+                           completionHandler:^(NSURLResponse *response, NSData *data, NSError *connectionError) {
+        NSDictionary *planDetails = nil;
+        CFSError *error = nil;
+        CFSPlan *plan = nil;
+        if([self isResponeSucessful:response data:data]) {
+            planDetails = [self resultDictionaryFromResponseData:data];
+            plan = [[CFSPlan alloc] initWithDictionary:planDetails];
+            
+        } else {
+            error = [CFSErrorUtil createErrorFrom:data response:response error:connectionError];
+        }
+
+        completion(plan, error);
+    }];
+}
+
+- (void)listPlansWithCompletion:(void (^)(NSArray *plans, CFSError *error))completion
+{
+    NSParameterAssert(self.adminId);
+    NSParameterAssert(self.adminSecret);
+    NSString *planEndPoint = [NSString stringWithFormat:@"%@%@", CFSAPIEndpointCustomers, CFSAPIEndpointPlan];
+    NSURLRequest *listPlanRequest = [CFSURLRequestBuilder
+                                     signedUrlRequestForHttpMethod:CFSHTTPMethodGET
+                                     serverUrl:self.serverUrl
+                                     apiVersion:CFSRestApiVersion
+                                     endpoint:planEndPoint
+                                     queryParameters:nil
+                                     formParameters:nil
+                                     clientId:self.adminId
+                                     clientSecret:self.adminSecret];
+    
+    [NSURLConnection sendAsynchronousRequest:listPlanRequest queue:[NSOperationQueue currentQueue] completionHandler:^(NSURLResponse *response, NSData *data, NSError *connectionError) {
+        CFSError *error = nil;
+        NSArray *plansArray = nil;
+        if([self isResponeSucessful:response data:data]) {
+            plansArray = [self getPlanArray:[self resultArrayFromResponseData:data]];
+        } else {
+            error = [CFSErrorUtil createErrorFrom:data response:response error:connectionError];
+        }
+        
+        completion(plansArray, error);
+    }];
+}
+
+- (void)updateUserWithId:(NSString *)userId
+                userName:(NSString *)userName
+               firstName:(NSString *)firstName
+                lastName:(NSString *)lastName
+                planCode:(NSString *)plancode
+          WithCompletion:(void (^)(CFSUser *user, CFSError *error))completion
+{
+    NSParameterAssert(self.adminId);
+    NSParameterAssert(self.adminSecret);
+    NSAssert(userId.length != 0, @"UserId should not be empty");
+    NSMutableDictionary *formParams = [[NSMutableDictionary alloc] init];
+    
+    if (userName.length) {
+        formParams[CFSFormParameterCreateAccountUserKey] = userName;
+    }
+    
+    if (plancode.length) {
+        formParams[CFSFormParameterPlanCode] = plancode;
+    }
+    
+    if (firstName.length) {
+        formParams[CFSFormParameterCreateAccountFirstNameKey] = firstName;
+    }
+    
+    if (lastName.length) {
+        formParams[CFSFormParameterCreateAccountLastNameKey] = lastName;
+    }
+    if (formParams.count == 0) {
+        formParams = nil;
+    }
+    
+    NSString *planEndPoint = [NSString stringWithFormat:@"%@%@", CFSAPIEndpointCustomers, userId];
+    NSURLRequest *updateUserRequest = [CFSURLRequestBuilder signedUrlRequestForHttpMethod:CFSHTTPMethodPOST
+                                                                                serverUrl:self.serverUrl
+                                                                               apiVersion:CFSRestApiVersion
+                                                                                 endpoint:planEndPoint
+                                                                          queryParameters:nil
+                                                                           formParameters:formParams
+                                                                                 clientId:self.adminId
+                                                                             clientSecret:self.adminSecret];
+    
+    [NSURLConnection sendAsynchronousRequest:updateUserRequest queue:[NSOperationQueue currentQueue] completionHandler:^(NSURLResponse *response, NSData *data, NSError *connectionError) {
+        NSDictionary *userDetails = nil;
+        CFSError *error = nil;
+        CFSUser *user = nil;
+        if([self isResponeSucessful:response data:data]) {
+            userDetails = [self resultDictionaryFromResponseData:data];
+            user = [[CFSUser alloc] initWithDictionary:userDetails];
+        } else {
+            error = [CFSErrorUtil createErrorFrom:data response:response error:connectionError];
+        }
+        completion(user, error);
+
+    }];
+
+}
+
+- (void)deletePlan:(NSString *)planId completion:(void(^)(BOOL success, CFSError *error))completion
+{
+    NSParameterAssert(self.adminId);
+    NSParameterAssert(self.adminSecret);
+    NSAssert(planId.length != 0, @"planId should not be empty");
+    NSString *planEndPoint = [NSString stringWithFormat:@"%@%@", CFSAPIEndpointCustomers, CFSAPIEndpointPlan];
+    NSString *endPoint = [[planEndPoint stringByAppendingString:planId] stringByAppendingString:@"/"];
+    NSURLRequest *deletePlanRequest = [CFSURLRequestBuilder signedUrlRequestForHttpMethod:CFSRestHTTPMethodDELETE
+                                                                                serverUrl:self.serverUrl
+                                                                               apiVersion:CFSRestApiVersion
+                                                                                 endpoint:endPoint
+                                                                          queryParameters:nil
+                                                                           formParameters:nil
+                                                                                 clientId:self.adminId
+                                                                             clientSecret:self.adminSecret];
+    [NSURLConnection sendAsynchronousRequest:deletePlanRequest
+                                       queue:[NSOperationQueue currentQueue]
+                           completionHandler:^(NSURLResponse *response, NSData *data, NSError *connectionError) {
+           CFSError *error = nil;
+           if (![self isResponeSucessful:response data:data]) {
+               error = [CFSErrorUtil createErrorFrom:data response:response error:connectionError];
+           }
+           
+           completion([self isResponeSucessful:response data:data], error);
+           
+       }];
 }
 
 #pragma mark - Versions
@@ -1417,7 +1579,18 @@ usingCurrentPassword:(NSString *)currentPassword
 {
     return [self getItemsArrayFrom:itemsDictArray withParentPath:parent.path withState:state];
 }
-                               
+
+- (NSArray *)getPlanArray:(NSArray *)plansArray
+{
+    NSMutableArray *newPlanArray = [NSMutableArray array];
+    for (NSDictionary *planDictionary in plansArray) {
+        CFSPlan *plan = [[CFSPlan alloc] initWithDictionary:planDictionary];
+        [newPlanArray addObject:plan];
+    }
+    
+    return newPlanArray;
+}
+
 - (NSArray *)getItemsArrayFrom:(NSArray *)itemsDictArray withParentPath:(NSString *)parentPath withState:(NSString *)state
 {
     NSMutableArray *itemArray = [NSMutableArray array];
@@ -1452,7 +1625,7 @@ usingCurrentPassword:(NSString *)currentPassword
                                      error:(NSError *)connectionError
 {
     NSMutableArray *sharesArray = [NSMutableArray array];
-    NSArray *sharesDictArray = [CFSRestAdapter resultArrayFromResponseData:data];
+    NSArray *sharesDictArray = [self resultArrayFromResponseData:data];
     for (NSDictionary *shareDict in sharesDictArray) {
         CFSShare *share = [[CFSShare alloc] initWithDictionary:shareDict andRestAdapter:self];
         [sharesArray addObject: share];
@@ -1461,7 +1634,7 @@ usingCurrentPassword:(NSString *)currentPassword
     return sharesArray;
 }
 
-+ (NSArray *)resultArrayFromResponseData:(NSData *)data
+- (NSArray *)resultArrayFromResponseData:(NSData *)data
 {
     NSError *error;
     NSDictionary *responseDict = [NSJSONSerialization JSONObjectWithData:data

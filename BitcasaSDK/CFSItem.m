@@ -20,7 +20,6 @@
 
 @interface CFSItem ()
 
-
 @property (nonatomic, retain, readwrite) NSString *path;
 @property (nonatomic, retain, readwrite) NSString *itemId;
 @property (nonatomic, retain, readwrite) NSString *type;
@@ -38,6 +37,7 @@
 @property (nonatomic, readwrite) BOOL isDead;
 @property (nonatomic, readwrite) NSDictionary *allowedOPerationList;
 @property (nonatomic, readwrite) NSString *shareKey;
+@property (nonatomic, retain) NSString *parentPath;
 
 @end
 
@@ -65,12 +65,6 @@ NSString *const CFSOperationRead = @"read";
 NSString *const CFSOperationList = @"list";
 NSString *const CFSOperationVersions = @"versions";
 NSString *const CFSOperationNotAllowedError = @"Operation not allowed.";
-
-@interface CFSItem()
-
-@property (nonatomic, retain) NSString *parentPath;
-
-@end
 
 @implementation CFSItem
 

@@ -18,6 +18,7 @@
 @class CFSFilesystem;
 @class CFSRestAdapter;
 @class CFSError;
+@class CFSPlan;
 
 /*!
  *  Establishes a session with the api server on behalf of an authenticated end-user
@@ -134,5 +135,39 @@
               logInTocreatedUser:(BOOL)logInTocreatedUser
                   WithCompletion:(void (^)(CFSUser *user, CFSError *error))completion;
 
+/*!
+ *  Creates a new user plan
+ *
+ *  @param name                 name of the plan
+ *  @param limit                limit of the plan
+ *  @param completion           The completion block to execute when plan creation task is done.
+ */
+- (void)createPlanWithName:(NSString *)name
+                     limit:(NSString *)limit
+                completion:(void (^)(CFSPlan *plan, CFSError *error))completion;
+
+/*!
+ *  List all the user plans
+ *
+ *  @param completion       The completion block to execute when plan creation task is done.
+ */
+- (void)listPlansWithCompletion:(void (^)(NSArray *plans, CFSError *error))completion;
+
+/*!
+ *  Update end-user
+ *
+ *  @param userId     id of the end-user
+ *  @param userName   new username to be changed
+ *  @param firstName  new firstName to be changed
+ *  @param lastName   new lastName to be changed
+ *  @param plancode   new plancode to be changed
+ *  @param completion The completion block to execute when plan creation task is done.
+ */
+- (void)updateUserWithId:(NSString *)userId
+                userName:(NSString *)userName
+               firstName:(NSString *)firstName
+                lastName:(NSString *)lastName
+                planCode:(NSString *)plancode
+          WithCompletion:(void (^)(CFSUser *user, CFSError *error))completion;
 @end
 

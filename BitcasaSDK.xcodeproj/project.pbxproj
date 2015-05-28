@@ -65,6 +65,7 @@
 		CD5FABD31AD3A3AD000D4B94 /* CFSSessionTests.m in Sources */ = {isa = PBXBuildFile; fileRef = CD5FABD21AD3A3AD000D4B94 /* CFSSessionTests.m */; };
 		CD61A88F1AE66180004D2B8E /* CFSBaseTests.m in Sources */ = {isa = PBXBuildFile; fileRef = CD61A88E1AE66180004D2B8E /* CFSBaseTests.m */; };
 		CD725B541AEB2F3100ACC9EB /* BitcasaConfig.plist in Resources */ = {isa = PBXBuildFile; fileRef = CD725B531AEB2F3100ACC9EB /* BitcasaConfig.plist */; };
+		CDCC6A121B0DA80B0089F565 /* CFSPlan.m in Sources */ = {isa = PBXBuildFile; fileRef = CDCC6A111B0DA80B0089F565 /* CFSPlan.m */; };
 		CDF3FFC11ADE5AFF0092F4D0 /* CFSFileSystemTests.m in Sources */ = {isa = PBXBuildFile; fileRef = CDF3FFC01ADE5AFF0092F4D0 /* CFSFileSystemTests.m */; };
 		CDF3FFC31ADEC7ED0092F4D0 /* CFSItemTests.m in Sources */ = {isa = PBXBuildFile; fileRef = CDF3FFC21ADEC7ED0092F4D0 /* CFSItemTests.m */; };
 		F3338DBC1AD5D6CE00EE9083 /* CFSRestAdapter.m in Sources */ = {isa = PBXBuildFile; fileRef = F3338DB71AD5D6CE00EE9083 /* CFSRestAdapter.m */; };
@@ -174,6 +175,8 @@
 		CD61A88E1AE66180004D2B8E /* CFSBaseTests.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = CFSBaseTests.m; sourceTree = "<group>"; };
 		CD61A8901AE6700E004D2B8E /* CFSBaseTests.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = CFSBaseTests.h; sourceTree = "<group>"; };
 		CD725B531AEB2F3100ACC9EB /* BitcasaConfig.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = BitcasaConfig.plist; sourceTree = "<group>"; };
+		CDCC6A101B0DA80B0089F565 /* CFSPlan.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CFSPlan.h; sourceTree = "<group>"; };
+		CDCC6A111B0DA80B0089F565 /* CFSPlan.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = CFSPlan.m; sourceTree = "<group>"; };
 		CDF3FFC01ADE5AFF0092F4D0 /* CFSFileSystemTests.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = CFSFileSystemTests.m; sourceTree = "<group>"; };
 		CDF3FFC21ADEC7ED0092F4D0 /* CFSItemTests.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = CFSItemTests.m; sourceTree = "<group>"; };
 		F3338DB61AD5D6CE00EE9083 /* CFSRestAdapter.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CFSRestAdapter.h; sourceTree = "<group>"; };
@@ -277,6 +280,8 @@
 				77BEB37F19A69E0200D4BE80 /* CFSUser.m */,
 				77BEB37819A69D2800D4BE80 /* CFSVideo.h */,
 				77BEB37919A69D2800D4BE80 /* CFSVideo.m */,
+				CDCC6A101B0DA80B0089F565 /* CFSPlan.h */,
+				CDCC6A111B0DA80B0089F565 /* CFSPlan.m */,
 			);
 			path = BitcasaSDK;
 			sourceTree = "<group>";
@@ -498,6 +503,7 @@
 				77BEB37119A69D2800D4BE80 /* CFSPhoto.m in Sources */,
 				77BEB38919A6A8B600D4BE80 /* CFSFilesystem.m in Sources */,
 				9D4F49E01AD3ABD100FC3508 /* CFSError.m in Sources */,
+				CDCC6A121B0DA80B0089F565 /* CFSPlan.m in Sources */,
 				77BEB36E19A69D2800D4BE80 /* CFSFile.m in Sources */,
 				F3338DCF1AD63C9100EE9083 /* NSString+CFSRestAdditions.m in Sources */,
 				9D4F49E21AD3ABD100FC3508 /* CFSErrorUtil.m in Sources */,

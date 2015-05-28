@@ -139,8 +139,9 @@ NSString *const CFSRestHTTPMethodDELETE = @"DELETE";
 
     NSMutableString *requestString = [NSMutableString stringWithString:httpMethod];
     [requestString appendString:[NSString stringWithFormat:@"&%@%@", version, endpoint]];
-
-    [requestString appendString:[NSString stringWithFormat:@"&%@", [self parameterStringWithCollection:formParams]]];
+    if (formParams) {
+        [requestString appendString:[NSString stringWithFormat:@"&%@", [self parameterStringWithCollection:formParams]]];
+    }
     [requestString appendString:[NSString stringWithFormat:@"&%@:%@", CFSRestHeaderContentTypeField, [CFSRestHeaderContentTypeForm encode]]];
 
     NSDateFormatter *dateFormatter = [CFSURLRequestBuilder getDateFormatter];

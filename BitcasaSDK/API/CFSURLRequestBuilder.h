@@ -32,7 +32,7 @@ extern NSString *const CFSRestHTTPMethodDELETE;
  *  @param httpMethod  The HTTP Method. Use defined CFSRestHTTPMethod constants.
  *  @param serverUrl   The Server URL.
  *  @param endpoint    The REST Endpoint which is appended to server url.
- *  @param apiVersion  The version of the REST API to communicate with.
+ *  @param version  The version of the REST API to communicate with.
  *  @param queryParams The query parameters to send along with the request.
  *  @param formParams  The form parameters to add to the body. This has to be either an NSArray or NSDictionary.
  *
@@ -50,11 +50,11 @@ extern NSString *const CFSRestHTTPMethodDELETE;
  *
  *  @param httpMethod  The HTTP Method. Use defined CFSRestHTTPMethod constants.
  *  @param serverUrl   The Server URL.
- *  @param apiVersion  The version of the REST API to communicate with.
+ *  @param version  The version of the REST API to communicate with.
  *  @param endpoint    The REST Endpoint which is appended to server url.
  *  @param queryParams The query parameters to send along with the request.
  *  @param formParams  The form parameters to add to the body. This has to be either an NSArray or NSDictionary.
- *  @param accessToken The access token to add to the header.
+ *  @param token The access token to add to the header.
  *
  *  @return Returns an initalized NSURLRequest.
  */
@@ -71,11 +71,11 @@ extern NSString *const CFSRestHTTPMethodDELETE;
  *
  *  @param httpMethod  The HTTP Method. Use defined CFSRestHTTPMethod constants. This can be either a 'POST' or 'PUT' in this case.
  *  @param serverUrl   The Server URL.
- *  @param apiVersion  The version of the REST API to communicate with.
+ *  @param version  The version of the REST API to communicate with.
  *  @param endpoint    The REST Endpoint which is appended to server url.
  *  @param queryParams The query parameters to send along with the request.
  *  @param inputStream The input stream containing the data to be sent.
- *  @param accessToken The access token to add to the header.
+ *  @param token The access token to add to the header.
  *
  *  @return Returns an initalized NSURLRequest.
  */
@@ -92,11 +92,10 @@ extern NSString *const CFSRestHTTPMethodDELETE;
  *
  *  @param httpMethod  The HTTP Method. Use defined CFSRestHTTPMethod constants.
  *  @param itemUrl     The direct URL to the item.
- *  @param apiVersion  The version of the REST API to communicate with.
  *  @param endpoint    The REST Endpoint which is appended to item url.
  *  @param queryParams The query parameters to send along with the request.
  *  @param formParams  The form parameters to add to the body. This has to be either an NSArray or NSDictionary.
- *  @param accessToken The access token to add to the header.
+ *  @param token The access token to add to the header.
  *
  *  @return Returns an initalized NSURLRequest.
  */
@@ -112,7 +111,7 @@ extern NSString *const CFSRestHTTPMethodDELETE;
  *
  *  @param httpMethod   The HTTP Method. Use defined CFSRestHTTPMethod constants.
  *  @param serverUrl    The Server URL.
- *  @param apiVersion   The version of the REST API to communicate with.
+ *  @param version   The version of the REST API to communicate with.
  *  @param endpoint     The REST Endpoint which is appended to server url.
  *  @param queryParams  The query parameters to send along with the request.
  *  @param formParams   The form parameters to add to the body. This has to be either an NSArray or NSDictionary.
@@ -135,7 +134,7 @@ extern NSString *const CFSRestHTTPMethodDELETE;
  *
  *  @param httpMethod   The HTTP Method. Use defined CFSRestHTTPMethod constants.
  *  @param serverUrl    The Server URL.
- *  @param apiVersion   The version of the REST API to communicate with.
+ *  @param version   The version of the REST API to communicate with.
  *  @param endpoint     The REST Endpoint which is appended to server url.
  *
  *  @return Returns an initalized NSURLRequest.

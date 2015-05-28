@@ -399,7 +399,7 @@ __weak XCTestExpectation *_deleteTrashItemExpectation;
     [file deleteWithCommit:NO force:NO completion:^(BOOL success, CFSError *error) {
         [file restoreToContainer:cfsContainer
                    restoreMethod:RestoreOptionsRecreate
-                 restoreArgument:@"ppo/kk"
+                 restoreArgument:@"ppo/ooo"
                 maintainValidity:YES
                       completion:^(BOOL success, CFSError *error) {
                           XCTAssertTrue(success, @"Response should be TRUE");

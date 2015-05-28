@@ -13,6 +13,11 @@
 //
 
 #import "CFSAccount.h"
+#import "CFSPlan.h"
+
+@interface CFSAccount ()
+    @property (nonatomic, strong, readwrite) CFSPlan *plan;
+@end
 
 @implementation CFSAccount
 
@@ -22,14 +27,16 @@
     if (self) {
         _accountId = dictionary[@"account_id"];
         _storageUsage = [dictionary[@"storage"][@"usage"] longLongValue];
-        _storageLimit = [dictionary[@"storage"][@"limit"] longLongValue];
         _overStorageLimit = [dictionary[@"storage"][@"otl"] boolValue];
         _stateDisplayName = dictionary[@"account_state"][@"display_name"];
         _stateId = dictionary[@"account_state"][@"id"];
-        _planDisplayName = dictionary[@"account_plan"][@"display_name"];
-        _planId = dictionary[@"account_plan"][@"id"];
         _sessionLocale = dictionary[@"session"][@"locale"];
         _accountLocale = dictionary[@"locale"];
+        NSMutableDictionary *newDictionary = [NSMutableDictionary dictionary];
+        newDictionary[@"name"] = dictionary[@"account_plan"][@"display_name"];
+        newDictionary[@"id"] = dictionary[@"account_plan"][@"id"];
+        newDictionary[@"storage"] = dictionary[@"storage"][@"limit"];
+        self.plan = [[CFSPlan alloc] initWithDictionary:newDictionary];
     }
     
     return self;

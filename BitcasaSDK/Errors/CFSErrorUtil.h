@@ -30,7 +30,7 @@
 /*!
  *  Creates CFSError instance from the NSError provided
  *
- *  @param code The NSError instance
+ *  @param error The NSError instance
  *
  *  @return Returns a CFSError instance
  */

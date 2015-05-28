@@ -67,11 +67,8 @@
     
     XCTAssert([account.accountId isEqualToString:accountId], "Should be Equal");
     XCTAssert(account.storageUsage == storageUsage, "Should be Equal");
-    XCTAssert(account.storageLimit ==  storageLimit, "Should be Equal");
     XCTAssert(account.overStorageLimit == storageOtl.boolValue, "Should be Equal");
     XCTAssert([account.stateDisplayName isEqualToString:accountStateDisplayName], "Should be Equal");
-    XCTAssert([account.planDisplayName isEqualToString:accountPlanDisplayName], "Should be Equal");
-    XCTAssert([account.planId isEqualToString:accountPlanId], "Should be Equal");
     XCTAssert([account.sessionLocale isEqualToString:sessionLocale], "Should be Equal");
     XCTAssert([account.accountLocale isEqualToString:locale], "Should be Equal");
 }
