@@ -1,13 +1,13 @@
 # CloudFS SDK for iOS
   
-The **CloudFS SDK for iOS** enables iOS developers to easily work with [CloudFS Cloud Storage Platform](https://www.bitcasa.com/cloudfs/) and build scalable solutions.
+The ** CloudFS SDK for iOS** enables iOS developers to easily work with [CloudFS Cloud Storage Platform](https://www.bitcasa.com/) and build scalable solutions.
 
-* [REST API Documentation](https://developer.bitcasa.com/cloudfs-api-documentation/)
+* [REST API Documentation](https://www.bitcasa.com/cloudfs-api-docs/)
 * [Blog](http://blog.bitcasa.com/) 
 
 ## Getting Started
 
-If you have already [signed up](http://access.bitcasa.com/Sign-Up/Info/Prototype/) and obtained your credentials you can get started in minutes.
+If you have already [signed up](https://www.bitcasa.com/cloudfs/pricing) and obtained your credentials you can get started in minutes.
 
 
 Cloning the git repository
@@ -18,7 +18,7 @@ Cloning the git repository
 
 ## Using the SDK
 
-Use the credentials you obtained from Bitcasa admin console to create a client session. This session can be used for all future requests to Bitcasa.
+Use the credentials you obtained from CloudFS admin console to create a client session. This session can be used for all future requests to CloudFS.
 
 ```objective-c
 CFSSession *session = [[CFSSession alloc] initWithServerURL:serverUrl clientId:appId clientSecret:appSecret];
@@ -76,9 +76,5 @@ Create an user plan (for paid accounts only)
 
 ## Test Suite
 
-The tests that exist are functional tests designed to be used with a CloudFS test user. They use API credentials on your free CloudFS account. You should add the credentials to the file 'BitcasaSDK Tests\BitcasaConfig.plist' (Use BitcasaSDK Tests\BitcasaConfigTemplate.plist as a reference to create the config file.
-To run the tests, open XCode and choose target as 'BitcasaSDK Tests' and run 'Test'.
-
-## Support
-
-If you have any questions, comments or encounter any bugs please contact us at sdks@bitcasa.com.
+The tests that exist are functional tests designed to be used with a CloudFS test user. They use API credentials on your free CloudFS account. You should add the credentials to the file 'CloudFS SDK Tests\ CloudFSConfig.plist' (Use CloudFS SDK Tests\ CloudFSConfigTemplate.plist as a reference to create the config file.
+To run the tests, open XCode and choose target as 'CloudFS SDK Tests' and run 'Test'.
