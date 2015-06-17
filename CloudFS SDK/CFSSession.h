@@ -83,9 +83,9 @@
 /*!
  *  Checks whether the user is authenticated.
  *
- *  @return True If the access code is valid, otherwise false.
+ *  @param completion The completion block to execute when authentication results are retrieved.
  */
-- (BOOL)isLinked;
+- (void)isLinkedWithCompletion:(void (^)(BOOL response, CFSError *error))completion;
 
 #pragma mark - History
 /*!

@@ -177,7 +177,22 @@
 - (void)testIsLinked
 {
     [[CFSBaseTests getSession] unlink];
-    XCTAssertTrue(![[CFSBaseTests getSession] isLinked], "Session should be unlinked.");
+    XCTestExpectation *isLinkedExpectation = [self expectationWithDescription:@"isLinked"];
+    [[CFSBaseTests getSession] isLinkedWithCompletion:^(BOOL response, CFSError *error) {
+        XCTAssertTrue(!response, "Session should be unlinked.");
+        [isLinkedExpectation fulfill];
+    }];
+    [self waitForExpectationsWithTimeout:30 handler:^(NSError *error) {}];
+}
+
+- (void)testIsLinkedTrue
+{
+    XCTestExpectation *isLinkedExpectation = [self expectationWithDescription:@"isLinked"];
+    [[CFSBaseTests getSession] isLinkedWithCompletion:^(BOOL ping, CFSError *error) {
+        XCTAssertFalse(!ping, "Session should be unlinked.");
+        [isLinkedExpectation fulfill];
+    }];
+    [self waitForExpectationsWithTimeout:300 handler:^(NSError *error) {}];
 }
 
 /*!
@@ -186,7 +201,12 @@
 - (void)testUnlink
 {
     [[CFSBaseTests getSession] unlink];
-    XCTAssertTrue(![[CFSBaseTests getSession] isLinked], "Session should be unlinked.");
+    XCTestExpectation *isLinkedExpectation = [self expectationWithDescription:@"isLinked"];
+    [[CFSBaseTests getSession] isLinkedWithCompletion:^(BOOL ping, CFSError *error) {
+        XCTAssertTrue(!ping, "Session should be unlinked.");
+        [isLinkedExpectation fulfill];
+    }];
+    [self waitForExpectationsWithTimeout:30 handler:^(NSError *error) {}];
 }
 
 /*!
@@ -195,12 +215,9 @@
 - (void)testUser
 {
     CFSUser *user = [CFSBaseTests getSession].user;
-    if (![[CFSBaseTests getSession] isLinked]) {
-        XCTAssertNil(user, "user should be nil");
-    } else {
-        CFSUser *user = [CFSBaseTests getSession].user;
-        XCTAssertNotNil(user, "user should not be nil");
-    }
+    XCTAssertNotNil(user, "user should not be nil");
+    [[CFSBaseTests getSession] unlink];
+    XCTAssertNil(user, "user should be nil");
 }
 
 /*!
@@ -209,11 +226,9 @@
 - (void)testAccount
 {
     CFSAccount *account = [CFSBaseTests getSession].account;
-    if (![[CFSBaseTests getSession] isLinked]) {
-        XCTAssertNil(account, "account should be nil");
-    } else {
-        XCTAssertNotNil(account, "account should not be nil");
-    }
+    XCTAssertNotNil(account, "account should not be nil");
+    [[CFSBaseTests getSession] unlink];
+    XCTAssertNil(account, "account should be nil");
 }
 
 /*!
@@ -222,11 +237,9 @@
 - (void)testFileSystem
 {
     CFSFilesystem *filesystem = [CFSBaseTests getSession].fileSystem;
-    if (![[CFSBaseTests getSession] isLinked]) {
-        XCTAssertNil(filesystem, "filesystem should be nil");
-    } else {
-        XCTAssertNotNil(filesystem, "filesystem should not be nil");
-    }
+    XCTAssertNotNil(filesystem, "filesystem should not be nil");
+    [[CFSBaseTests getSession] unlink];
+    XCTAssertNil(filesystem, "filesystem should be nil");
 }
 
 - (NSString *)getRandomEmail

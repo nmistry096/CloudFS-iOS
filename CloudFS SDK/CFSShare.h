@@ -123,7 +123,7 @@
  *  @param completion The completion handler to call afer completion of method
  */
 - (void)unlockShareWithPassword:(NSString *)password
-                     completion:(void (^)(BOOL Success, CFSError *error))completion;
+                     completion:(void (^)(BOOL success, CFSError *error))completion;
 
 /*!
  *  Sets the share name

@@ -72,24 +72,32 @@ static CFSSession *_sharedSession = nil;
     self.fileSystem = nil;
 }
 
-- (BOOL)isLinked
+- (void)isLinkedWithCompletion:(void (^)(BOOL response, CFSError *error))completion
 {
-    return (_restAdapter.accessToken && ![_restAdapter.accessToken isEqualToString:@""]);
+    BOOL isLinked = NO;
+    if (_restAdapter.accessToken && ![_restAdapter.accessToken isEqualToString:@""])
+    {
+        [_restAdapter pingWithCompletion:^(BOOL response, CFSError *error) {
+            completion(response, error);
+        }];
+    } else {
+        completion(isLinked, nil);
+    }
 }
 
 - (CFSAccount *)account
 {
-    return self.isLinked ? _account : nil;
+    return _account;
 }
 
 - (CFSUser *)user
 {
-    return self.isLinked ? _user : nil;
+    return _user ;
 }
 
 - (CFSFilesystem *)fileSystem
 {
-    return self.isLinked ? _fileSystem : nil;
+    return _fileSystem ;
 }
 
 - (void)actionHistoryWithCompletion:(void (^)(NSDictionary *history, CFSError *error))completion

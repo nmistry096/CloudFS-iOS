@@ -60,8 +60,9 @@ CFSFolder *folder;
         meta[@"version"] = [@(file.version) stringValue];
         
         [file changeAttributes:meta ifConflict:VersionExistsIgnore];
+        [file changeAttributes:meta ifConflict:VersionExistsIgnore];
         
-        [file versionsWithStartVersion:@(file.version-1)
+        [file versionsWithStartVersion:@(file.version-2)
                         endVersion:@(file.version)
                              limit:@(2)
                     withCompletion:^(NSArray *items, CFSError *error) {

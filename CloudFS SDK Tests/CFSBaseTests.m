@@ -52,10 +52,14 @@ int WAIT_TIME = 30;
     NSString *email = [plistReader appConfigValueForKey:@"CFS_USER_EMAIL"];
     if (!session) {
         [self setUpInitalValues];
-    }
-    else if(!session.isLinked ||![session.user.userName isEqualToString:email])
-    {
+    } else if (![session.user.userName isEqualToString:email]) {
         [self authenticate];
+    } else {
+        [session isLinkedWithCompletion:^(BOOL ping, CFSError *error) {
+            if(!ping) {
+                [self authenticate];
+            }
+        }];
     }
 }
 

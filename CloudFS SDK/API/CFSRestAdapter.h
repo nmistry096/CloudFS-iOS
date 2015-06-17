@@ -160,6 +160,13 @@ typedef NS_ENUM(NSInteger, RestoreOptions) {
  */
 - (void)getProfileWithCompletion:(void(^)(NSDictionary* response, CFSError *error))completion;
 
+/*!
+ *  Checks if user session is valid.
+ *
+ *  @param completion Handler to be executed when ping results received.
+ */
+- (void)pingWithCompletion:(void(^)(BOOL response , CFSError *error))completion;
+
 #pragma mark - List directory contents
 
 /*!

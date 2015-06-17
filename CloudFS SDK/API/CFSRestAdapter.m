@@ -123,6 +123,7 @@ NSString *const CFSRestAPIEndpointInfo = @"/info";
 NSString *const CFSRestAPIEndpointUnlock = @"/unlock";
 NSString *const CFSRestAPIEndpointMeta = @"/meta";
 NSString *const CFSRestApiEndPointVersions  = @"/versions";
+NSString *const CFSRestApiEndPointPing  = @"/ping";
 
 NSString *const CFSQueryParameterOperation = @"operation";
 NSString *const CFSQueryParameterOperationMove = @"move";
@@ -271,6 +272,30 @@ NSString *const CFSResponseUsageHeaderKey= @"X-BCS-Account-Storage-Usage";
         }
          completion(resultDictionary, error);
      }];
+}
+
+- (void)pingWithCompletion:(void(^)(BOOL response , CFSError *error))completion
+{
+    NSURLRequest *pingRequest = [CFSURLRequestBuilder urlRequestForHttpMethod:CFSRestHTTPMethodGET
+                                                                    serverUrl:self.serverUrl
+                                                                   apiVersion:CFSRestApiVersion
+                                                                     endpoint:CFSRestApiEndPointPing
+                                                              queryParameters:nil
+                                                               formParameters:nil
+                                                                  accessToken:self.accessToken];
+    
+    
+    [NSURLConnection sendAsynchronousRequest:pingRequest
+                                       queue:[NSOperationQueue currentQueue]
+                           completionHandler:^(NSURLResponse *response, NSData *data, NSError *connectionError) {
+        CFSError *error = nil;
+        if (![self isResponeSucessful:response data:data]) {
+            error = [CFSErrorUtil createErrorFrom:data
+                                         response:response
+                                            error:connectionError];
+        }
+        completion([self isResponeSucessful:response data:data], error);
+    }];
 }
 
 - (void)listContentsOfPath:(NSString *)path

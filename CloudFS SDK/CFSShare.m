@@ -84,7 +84,7 @@ CFSRestAdapter *_restAdapter;
     [_restAdapter receiveShare:self.shareKey path:path whenExists:operation completion:completion];
 }
 
-- (void)unlockShareWithPassword:(NSString *)password completion:(void (^)(BOOL Success, CFSError *error))completion
+- (void)unlockShareWithPassword:(NSString *)password completion:(void (^)(BOOL success, CFSError *error))completion
 {
     [_restAdapter unlockShare:self.shareKey password:(NSString *)password completion:completion];
 }
