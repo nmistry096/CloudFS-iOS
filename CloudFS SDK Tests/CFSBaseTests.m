@@ -14,13 +14,13 @@
 
 #import <UIKit/UIKit.h>
 #import <XCTest/XCTest.h>
-#import "CFSSession.h"
 #import "CFSBaseTests.h"
 #import "CFSPlistReader.h"
 #import "CFSRestAdapter.h"
 #import "CFSFolder.h"
 #import "CFSFileSystem.h"
 #import "CFSUser.h"
+#import "CFSSession.h"
 
 static CFSSession *session;
 int WAIT_TIME = 30;
@@ -48,12 +48,8 @@ int WAIT_TIME = 30;
 
 - (void)setUp {
     [super setUp];
-    CFSPlistReader *plistReader = [[CFSPlistReader alloc] initWithFileName:@"CloudFSConfig"];
-    NSString *email = [plistReader appConfigValueForKey:@"CFS_USER_EMAIL"];
     if (!session) {
         [self setUpInitalValues];
-    } else if (![session.user.userName isEqualToString:email]) {
-        [self authenticate];
     } else {
         [session isLinkedWithCompletion:^(BOOL ping, CFSError *error) {
             if(!ping) {

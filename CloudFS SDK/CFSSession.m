@@ -54,8 +54,6 @@ static CFSSession *_sharedSession = nil;
             [_restAdapter  setAccessToken:token];
             [self.restAdapter getProfileWithCompletion:^(NSDictionary *dictionary, CFSError *newError){
                 if (dictionary) {
-                    self.user = [[CFSUser alloc] initWithDictionary:dictionary];
-                    self.account = [[CFSAccount alloc] initWithDictionary:dictionary];
                     self.fileSystem = [[CFSFilesystem alloc] initWithRestAdapter:self.restAdapter];
                 }
                 completion(token, (dictionary ? YES : NO), newError);
@@ -67,8 +65,6 @@ static CFSSession *_sharedSession = nil;
 - (void)unlink
 {
     [_restAdapter setAccessToken:@""];
-    self.account = nil;
-    self.user = nil;
     self.fileSystem = nil;
 }
 
@@ -85,15 +81,28 @@ static CFSSession *_sharedSession = nil;
     }
 }
 
-- (CFSAccount *)account
+- (void)accountWithCompletion:(void (^)(CFSAccount *account, CFSError *error))completion
 {
-    return _account;
+    [self.restAdapter getProfileWithCompletion:^(NSDictionary *dictionary, CFSError *newError){
+        CFSAccount *account = nil;
+        if (dictionary) {
+            account = [[CFSAccount alloc] initWithDictionary:dictionary];
+        }
+        completion(account, newError);
+    }];
 }
 
-- (CFSUser *)user
+- (void)userWithCompletion:(void (^)(CFSUser *user, CFSError *error))completion
 {
-    return _user ;
+    [self.restAdapter getProfileWithCompletion:^(NSDictionary *dictionary, CFSError *newError){
+        CFSUser *user = nil;
+        if (dictionary) {
+            user = [[CFSUser alloc] initWithDictionary:dictionary];
+        }
+        completion(user, newError);
+    }];
 }
+
 
 - (CFSFilesystem *)fileSystem
 {

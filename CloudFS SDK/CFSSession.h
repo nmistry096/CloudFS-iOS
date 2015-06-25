@@ -26,16 +26,6 @@
 @interface CFSSession : NSObject
 
 /*!
- *  User Gets the bitcasa CFSUser associated with this session.
- */
-@property (nonatomic, strong) CFSUser *user;
-
-/*!
- *  End-user's account linked with this session.
- */
-@property (nonatomic, strong) CFSAccount *account;
-
-/*!
  *  CFSFileSystem associated with this session.
  */
 @property (nonatomic, strong) CFSFilesystem *fileSystem;
@@ -169,5 +159,19 @@
                 lastName:(NSString *)lastName
                 planCode:(NSString *)plancode
           WithCompletion:(void (^)(CFSUser *user, CFSError *error))completion;
+
+/*!
+ *  Get account for the session.
+ *
+ *  @param completion The completion block to execute when account is received
+ */
+- (void)accountWithCompletion:(void (^)(CFSAccount *account, CFSError *error))completion;
+
+/*!
+ *  Get user for the session.
+ *
+ *  @param completion The completion block to execute when account is received
+ */
+- (void)userWithCompletion:(void (^)(CFSUser *user, CFSError *error))completion;
 @end
 

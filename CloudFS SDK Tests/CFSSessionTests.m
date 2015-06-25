@@ -44,8 +44,8 @@
     
     XCTestExpectation *actionHistoryExpectation = [self expectationWithDescription:@"history"];
     [[CFSBaseTests getSession] actionHistoryWithCompletion:^(NSDictionary *history, CFSError *error) {
-            XCTAssertNil(error, "action history error should be nil");
-            XCTAssertNotNil(history, "history should not be nil");
+            XCTAssertNil(error, "Action history error should be nil.");
+            XCTAssertNotNil(history, "History should not be nil.");
         [actionHistoryExpectation fulfill];
     }];
     [self waitForExpectationsWithTimeout:10 handler:^(NSError *error) {}];
@@ -70,8 +70,8 @@
                           lastName:nil
                 logInTocreatedUser:NO
                     WithCompletion:^(CFSUser *user, CFSError *error) {
-            XCTAssertNil(error, "create account error should be nil");
-            XCTAssertNotNil(user, "user should not be nil");
+            XCTAssertNil(error, "Create account error should be nil.");
+            XCTAssertNotNil(user, "User should not be nil.");
         [createAccountExpectation fulfill];
     }];
     [self waitForExpectationsWithTimeout:30 handler:^(NSError *error) {}];
@@ -96,27 +96,30 @@
                                                 lastName:nil
                                       logInTocreatedUser:YES
                                           WithCompletion:^(CFSUser *user, CFSError *error) {
-          XCTAssertNil(error, "create account error should be nil");
-          XCTAssertNotNil(user, "user should not be nil");
+          XCTAssertNil(error, "Create account error should be nil.");
+          XCTAssertNotNil(user, "User should not be nil.");
           if (user) {
               [[CFSBaseTests getSession] listPlansWithCompletion:^(NSArray *plans, CFSError *error) {
                   CFSPlan *plan = plans[0];
-                  XCTAssertNil(error, "create plan error should be nil");
-                  XCTAssertNotNil(plan, "plan should not be nil");
+                  XCTAssertNil(error, "Create plan error should be nil.");
+                  XCTAssertNotNil(plan, "Plan should not be nil.");
                   CFSSession *ses = [CFSBaseTests getSession];
-                  [[CFSBaseTests getSession] updateUserWithId:ses.account.accountId
-                                                     userName:nil firstName:@"TestUserNameChanged"
-                                                     lastName:@"TestUserLastNameChanged"
-                                                     planCode:nil
-                                               WithCompletion:^(CFSUser *updatedUser, CFSError *error) {
-                      XCTAssertNil(error, "updatedAccount error should be nil");
-                      XCTAssertNotNil(updatedUser, "user should not be nil");
-                      [[CFSBaseTests getSession] authenticateWithUsername:updatedUser.userName
-                                                              andPassword:@"user@123"
-                                                               completion:^(NSString *token, BOOL success, CFSError *error) {
-                          XCTAssertNil(error, "error should be nil");
-                          XCTAssertNotNil(token, "token should not be nil");
-                          [updateUserExpectation fulfill];
+                  [ses accountWithCompletion:^(CFSAccount *account, CFSError *error) {
+                      [[CFSBaseTests getSession] updateUserWithId:account.accountId
+                                                         userName:nil firstName:@"TestUserNameChanged"
+                                                         lastName:@"TestUserLastNameChanged"
+                                                         planCode:nil
+                                                   WithCompletion:^(CFSUser *updatedUser, CFSError *error) {
+                          XCTAssertNil(error, "UpdatedAccount error should be nil.");
+                          XCTAssertNotNil(updatedUser, "User should not be nil.");
+                          [[CFSBaseTests getSession] authenticateWithUsername:updatedUser.userName
+                                                                  andPassword:@"user@123"
+                                                                   completion:^(NSString *token, BOOL success, CFSError *error) {
+                              XCTAssertNil(error, "Error should be nil.");
+                              XCTAssertNotNil(token, "Token should not be nil.");
+                              [[CFSBaseTests getSession] unlink];
+                              [updateUserExpectation fulfill];
+                          }];
                       }];
                   }];
               }];
@@ -141,10 +144,10 @@
     
     [[CFSBaseTests getSession] createPlanWithName:[self getRandomEmail]
                                             limit:@"1024" completion:^(CFSPlan *plan, CFSError *error) {
-        XCTAssertNil(error, "create plan error should be nil");
-        XCTAssertNotNil(plan, "plan should not be nil");
+        XCTAssertNil(error, "Create plan error should be nil.");
+        XCTAssertNotNil(plan, "Plan should not be nil.");
         [[CFSBaseTests getRestAdapter]  deletePlan:plan.planId completion:^(BOOL success, CFSError *error) {
-            XCTAssertNil(error, "delete plan error should be nil");
+            XCTAssertNil(error, "Delete plan error should be nil.");
             [createPlanExpectation fulfill];
         }];
     }];
@@ -164,8 +167,8 @@
     XCTestExpectation *listPlanExpectation = [self expectationWithDescription:@"authentication"];
     
     [[CFSBaseTests getSession] listPlansWithCompletion:^(NSArray *plans, CFSError *error) {
-        XCTAssertNil(error, "list plans error should be nil");
-        XCTAssertNotNil(plans, "list plans not be nil");
+        XCTAssertNil(error, "List plans error should be nil.");
+        XCTAssertNotNil(plans, "List plans not be nil.");
         [listPlanExpectation fulfill];
     }];
     [self waitForExpectationsWithTimeout:30 handler:^(NSError *error) {}];
@@ -214,10 +217,12 @@
  */
 - (void)testUser
 {
-    CFSUser *user = [CFSBaseTests getSession].user;
-    XCTAssertNotNil(user, "user should not be nil");
-    [[CFSBaseTests getSession] unlink];
-    XCTAssertNil(user, "user should be nil");
+    XCTestExpectation *testUserExpectation = [self expectationWithDescription:@"user"];
+    [[CFSBaseTests getSession] userWithCompletion:^(CFSUser *user, CFSError *error) {
+        XCTAssertNotNil(user, "User should not be nil.");
+        [testUserExpectation fulfill];
+    }];
+    [self waitForExpectationsWithTimeout:30 handler:^(NSError *error) {}];
 }
 
 /*!
@@ -225,10 +230,13 @@
  */
 - (void)testAccount
 {
-    CFSAccount *account = [CFSBaseTests getSession].account;
-    XCTAssertNotNil(account, "account should not be nil");
-    [[CFSBaseTests getSession] unlink];
-    XCTAssertNil(account, "account should be nil");
+    XCTestExpectation *testAccountExpectation = [self expectationWithDescription:@"user"];
+    
+    [[CFSBaseTests getSession] accountWithCompletion:^(CFSAccount *account, CFSError *error) {
+        XCTAssertNotNil(account, "Account should not be nil.");
+        [testAccountExpectation fulfill];
+    }];
+    [self waitForExpectationsWithTimeout:30 handler:^(NSError *error) {}];
 }
 
 /*!
@@ -237,9 +245,9 @@
 - (void)testFileSystem
 {
     CFSFilesystem *filesystem = [CFSBaseTests getSession].fileSystem;
-    XCTAssertNotNil(filesystem, "filesystem should not be nil");
+    XCTAssertNotNil(filesystem, "Filesystem should not be nil.");
     [[CFSBaseTests getSession] unlink];
-    XCTAssertNil(filesystem, "filesystem should be nil");
+    XCTAssertNil(filesystem, "Filesystem should be nil.");
 }
 
 - (NSString *)getRandomEmail
