@@ -1,13 +1,15 @@
 # CloudFS SDK for iOS
   
-The ** CloudFS SDK for iOS** enables iOS developers to easily work with [CloudFS Cloud Storage Platform](https://www.bitcasa.com/) and build scalable solutions.
+This SDK enables iOS developers to easily work with the [CloudFS Storage Platform](https://www.bitcasa.com/cloudfs/) and build scalable solutions.  CloudFS provides developers with a seamless and secure way to integrate cloud storage, access, and sharing functionality into applications.
 
-* [REST API Documentation](https://www.bitcasa.com/cloudfs-api-docs/)
+* [CloudFS FAQs](https://developer.bitcasa.com/faqs/)
+* [REST API Documentation](https://developer.bitcasa.com/cloudfs-api-documentation/)
 * [Blog](http://blog.bitcasa.com/) 
+* [Free Prototype Account](https://access.bitcasa.com/Sign-Up/Info/Prototype/) 
 
 ## Getting Started
 
-If you have already [signed up](https://www.bitcasa.com/cloudfs/pricing) and obtained your credentials you can get started in minutes.
+If you have already [signed up](https://access.bitcasa.com/Sign-Up/Info/Prototype/) and obtained your credentials you can get started in minutes.
 
 
 Cloning the git repository
@@ -78,3 +80,7 @@ Create an user plan (for paid accounts only)
 
 The tests that exist are functional tests designed to be used with a CloudFS test user. They use API credentials on your free CloudFS account. You should add the credentials to the file 'CloudFS SDK Tests\ CloudFSConfig.plist' (Use CloudFS SDK Tests\ CloudFSConfigTemplate.plist as a reference to create the config file.
 To run the tests, open XCode and choose target as 'CloudFS SDK Tests' and run 'Test'.
+
+## Support
+
+If you have any questions, comments or encounter any bugs please contact us at sdks@bitcasa.com.
